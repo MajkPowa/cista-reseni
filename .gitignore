@@ -3,3 +3,4 @@ qa/
 *.log
 dist/assets/hero-garden.png
 __pycache__/
+dist/assets/source/

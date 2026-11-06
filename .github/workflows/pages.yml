@@ -13,6 +13,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -22,7 +23,22 @@ jobs:
         with:
           node-version: '22'
       - name: Check JavaScript
-        run: node --check dist/app.js
+        run: |
+          node --check dist/app.js
+          node --check dist/content.js
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install media build dependencies
+        run: python -m pip install Pillow==12.1.0 requests==2.32.5
+      - uses: actions/cache@v4
+        with:
+          path: dist/assets/source
+          key: source-media-${{ hashFiles('docs/source-inventory/content.json', 'scripts/restore_media.py') }}
+      - name: Restore verified public media
+        run: python scripts/restore_media.py
+      - name: Check pages and local links
+        run: python3 scripts/check_site.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

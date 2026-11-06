@@ -1,0 +1,64 @@
+ČISTÁ ŘEŠENÍ — INVENTURA MIGRACE VEŘEJNÉHO OBSAHU
+Datum převzetí: 2026-11-07
+Zdroj: https://www.cistareseni.cz/
+
+ROZSAH
+Veřejných HTML zdrojových URL: 52 (včetně úvodu)
+Detailů realizací: 41
+Produktových a službových podstránek: 10
+Snímků v galeriích realizací (fotografie a vyobrazení): 278
+Z toho 3 snímky pocházejí z přehledu realizací, protože původní detail nemá vlastní galerii. Produktový řez akumulační nádrže u realizace Tábor 10/2023 je viditelně označen jako ilustrační vyobrazení.
+Samostatných dokumentů PDF: 5
+Lokálních mediálních souborů: 336 / 336
+Chyb při stahování: 0
+Nových HTML podstránek: 57
+
+ZACHOVÁNÍ OBSAHU
+Plné tělo všech článků, seznamy, tabulky, parametrické údaje, odkazy a obrázky. Nový vizuální obal používá font, barvy a navigaci návrhu. Z původních HTML se nepřenášejí skripty, externí styly ani původní formuláře.
+Fotografie jsou lokální WebP, maximální rozměr 2000 px, kvalita 90; mění se pouze rozměry a komprese, nikoli obsah. PDF jsou stažena beze změny. SHA-256 a zdrojová URL jsou u každého assetu v inventory.json.
+Pro karty a galerie jsou vytvořeny náhledy maximálně 720 px při kvalitě WebP 81. Kliknutí otevře plnou fotografii. Náhledy se načítají lazy a mají explicitní rozměry.
+Robots.txt i sitemap.xml zdrojového webu jsou dostupné. Všech 37 URL v sitemapě (32 HTML a 5 PDF) je pokryto; sitemap neobsahuje všechny novější reference, které jsou převzaty z navigace webu. Podrobnosti: sitemap-verification.json.
+Na původním webu nebyla v odkazované navigaci nalezena samostatná stránka právních podmínek nebo ochrany osobních údajů. Tyto texty nebyly vymyšleny.
+Poptávkový formulář není v této změně napojen na server ani automatické odesílání. Telefony a e-mailové odkazy jsou skutečné kontakty uvedené na zdrojovém webu.
+Údaje a produktová tvrzení odpovídají podkladům stávajícího webu k datu převzetí, nikoli nezávislé technické certifikaci.
+
+CHYBNÉ ODKAZY NA PŮVODNÍM WEBU
+[
+  {
+    "source": "https://www.cistareseni.cz/",
+    "href": "kk",
+    "label": "Více",
+    "resolved_url": "https://www.cistareseni.cz/",
+    "http_status": 200,
+    "page_title": "Čistá řešení - Hospodaříme s vodou"
+  },
+  {
+    "source": "https://www.cistareseni.cz/",
+    "href": "Přejít na stránku",
+    "label": "Více",
+    "resolved_url": "https://www.cistareseni.cz/",
+    "http_status": 200,
+    "page_title": "Čistá řešení - Hospodaříme s vodou"
+  },
+  {
+    "source": "https://www.cistareseni.cz/",
+    "href": "Realizace • Zprovoznění • Servis • Nezávislé posouzení • Optimalizace",
+    "label": "Více",
+    "resolved_url": "https://www.cistareseni.cz/",
+    "http_status": 200,
+    "page_title": "Čistá řešení - Hospodaříme s vodou"
+  }
+]
+Tyto chybné cíle nemají dostupné články. Jejich veřejně uvedené názvy služeb jsou zachovány na stránce sluzby.html, s kontaktem pro upřesnění, bez vymyšlených parametrů.
+
+CHYBY STAHOVÁNÍ
+[]
+
+SOUBORY
+docs/source-inventory/inventory.json — inventura URL, souborů a kontrolních součtů.
+docs/source-inventory/link-map.json — mapování původních článků na nové stránky.
+docs/source-inventory/content.json — úplná obsahová data pro opakovatelné sestavení.
+docs/source-inventory/html/ — zdrojové veřejné HTML podklady.
+dist/data/content-index.json — přehled veřejných stránek pro další integraci.
+scripts/crawl_content.py — čtení zdroje, stažení médií, evidence.
+scripts/build_content.py — sestavení podstránek.

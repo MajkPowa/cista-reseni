@@ -1,0 +1,526 @@
+{
+  "source": "https://www.cistareseni.cz/",
+  "retrieved": "2026-11-07",
+  "reference_count": 41,
+  "service_count": 10,
+  "gallery_image_count": 278,
+  "document_count": 5,
+  "pages": [
+    {
+      "title": "Konzultace a poradenství",
+      "url": "sluzby/konzultace-a-poradenstvi.html",
+      "source": "https://www.cistareseni.cz/produkty-a-sluzby/konzultace-a-poradenstvi.html",
+      "kind": "service",
+      "categories": [],
+      "thumbnail": null
+    },
+    {
+      "title": "Čerpací šachty",
+      "url": "sluzby/cerpaci-sachty.html",
+      "source": "https://www.cistareseni.cz/produkty-a-sluzby/cerpaci-sachty.html",
+      "kind": "service",
+      "categories": [],
+      "thumbnail": "assets/source/82a8a97a5d96-cov-img5.webp"
+    },
+    {
+      "title": "Zpracování projektové dokumentace",
+      "url": "sluzby/zpracovani-projektove-dokumentace.html",
+      "source": "https://www.cistareseni.cz/produkty-a-sluzby/zpracovani-projektove-dokumentace.html",
+      "kind": "service",
+      "categories": [],
+      "thumbnail": null
+    },
+    {
+      "title": "Hospodaření s dešťovou vodou",
+      "url": "sluzby/hospodareni-s-destovou-vodou.html",
+      "source": "https://www.cistareseni.cz/produkty-a-sluzby/hospodareni-s-destovou-vodou.html",
+      "kind": "service",
+      "categories": [],
+      "thumbnail": "assets/source/710d77c87160-cov-img3.webp"
+    },
+    {
+      "title": "Čištění odpadních vod",
+      "url": "sluzby/cisteni-odpadnich-vod.html",
+      "source": "https://www.cistareseni.cz/produkty-a-sluzby/cisteni-odpadnich-vod.html",
+      "kind": "service",
+      "categories": [],
+      "thumbnail": "assets/source/e9e00985b517-cov-img1.webp"
+    },
+    {
+      "title": "Zajištění povolení stavby",
+      "url": "sluzby/zajisteni-povoleni-stavby.html",
+      "source": "https://www.cistareseni.cz/produkty-a-sluzby/zajisteni-povoleni-stavby.html",
+      "kind": "service",
+      "categories": [],
+      "thumbnail": null
+    },
+    {
+      "title": "Prodej ČOV a dešťových nádrží",
+      "url": "sluzby/prodej-cov-a-destovych-nadrzi.html",
+      "source": "https://www.cistareseni.cz/produkty-a-sluzby/prodej-cov-a-destovych-nadrzi.html",
+      "kind": "service",
+      "categories": [],
+      "thumbnail": null
+    },
+    {
+      "title": "Montáž a instalace technologií",
+      "url": "sluzby/montaz-a-instalace-technologii.html",
+      "source": "https://www.cistareseni.cz/produkty-a-sluzby/montaz-a-instalace-technologii.html",
+      "kind": "service",
+      "categories": [],
+      "thumbnail": null
+    },
+    {
+      "title": "Prodej náhradních dílů",
+      "url": "sluzby/prodej-nahradnich-dilu.html",
+      "source": "https://www.cistareseni.cz/produkty-a-sluzby/prodej-nahradnich-dilu.html",
+      "kind": "service",
+      "categories": [],
+      "thumbnail": null
+    },
+    {
+      "title": "BC 50 po 25 letech provozu – kompletní obnova technologie a nový začátek 09 / 2026",
+      "url": "realizace/41-bc-50-po-25-letech-provozu-kompletni-obnova-technologie-a-no.html",
+      "source": "https://www.cistareseni.cz/reference/41-bc-50-po-25-letech-provozu-kompletni-obnova-technologie-novy-zacatek-09-2026.html",
+      "kind": "reference",
+      "categories": [
+        "cov",
+        "servis"
+      ],
+      "thumbnail": "assets/source/4f20b1def728-bc-50-po-25-letech-provozu-kompletni-obnova-t.webp"
+    },
+    {
+      "title": "Od problémů se zápachem ke správně fungující domovní ČOV 8 / 2026",
+      "url": "realizace/40-od-problemu-se-zapachem-ke-spravne-fungujici-domovni-cov-8-2.html",
+      "source": "https://www.cistareseni.cz/reference/40-od-problemu-se-zapachem-ke-spravne-fungujici-domovni-cov-8-2026.html",
+      "kind": "reference",
+      "categories": [
+        "cov",
+        "servis"
+      ],
+      "thumbnail": "assets/source/2ea8b3176258-od-problemu-se-zapachem-ke-spravne-fungujici-.webp"
+    },
+    {
+      "title": "Přehořov u Soběslavi – Domovní čistírna odpadních vod BC 4 COMFORT DUO s pískovým filtrem 07/ 2026",
+      "url": "realizace/38-prehorov-u-sobeslavi-domovni-cistirna-odpadnich-vod-bc-4-com.html",
+      "source": "https://www.cistareseni.cz/reference/38-prehorov-u-sobeslavi-domovni-cistirna-odpadnich-vod-bc-4-comfort-duo-s-piskovym-filtrem-07-2026.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/a9dbf1303a31-prehorov-u-sobeslavi-domovni-cistirna-odpadni.webp"
+    },
+    {
+      "title": "Komplexní řešení odvádění splaškových vod – výrobní areál Písek 08/2026",
+      "url": "realizace/39-komplexni-reseni-odvadeni-splaskovych-vod-vyrobni-areal-pise.html",
+      "source": "https://www.cistareseni.cz/reference/39-komplexni-reseni-odvadeni-splaskovych-vod-vyrobni-areal-pisek-082026.html",
+      "kind": "reference",
+      "categories": [
+        "ostatni",
+        "cerpani"
+      ],
+      "thumbnail": "assets/source/354cd320fcb4-komplexni-reseni-odvadeni-splaskovych-vod-vyr.webp"
+    },
+    {
+      "title": "Realizace domovní čistírny odpadních vod v Hrušově Lhotě 06/2026",
+      "url": "realizace/37-realizace-domovni-cistirny-odpadnich-vod-v-hrusove-lhote-06-.html",
+      "source": "https://www.cistareseni.cz/reference/37-realizace-domovni-cistirny-odpadnich-vod-v-hrusove-lhote-062026.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/ad58a9af18ee-realizace-domovni-cistirny-odpadnich-vod-v-hr.webp"
+    },
+    {
+      "title": "Úprava vody z pozdemního zdroje pro rodinný dům 05/ 2026",
+      "url": "realizace/36-uprava-vody-z-pozdemniho-zdroje-pro-rodinny-dum-05-2026.html",
+      "source": "https://www.cistareseni.cz/reference/36-uprava-vody-z-pozdemniho-zdroje-pro-rodinny-dum-05-2026.html",
+      "kind": "reference",
+      "categories": [
+        "ostatni"
+      ],
+      "thumbnail": "assets/source/512dd7c2bf4c-uprava-vody-z-pozdemniho-zdroje-pro-rodinny-d.webp"
+    },
+    {
+      "title": "BC 10 SBR pro mateřskou školku – Týn nad Vltavou 02 / 2026",
+      "url": "realizace/35-bc-10-sbr-pro-materskou-skolku-tyn-nad-vltavou-02-2026.html",
+      "source": "https://www.cistareseni.cz/reference/35-bc-10-sbr-pro-materskou-skolku-tyn-nad-vltavou-02-2026.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/1608aafd8c0e-bc-10-sbr-pro-materskou-skolku-tyn-nad-vltavo.webp"
+    },
+    {
+      "title": "Servis a údržba",
+      "url": "sluzby/servis-a-udrzba.html",
+      "source": "https://www.cistareseni.cz/produkty-a-sluzby/servis-a-udrzba.html",
+      "kind": "service",
+      "categories": [],
+      "thumbnail": null
+    },
+    {
+      "title": "Řešení odpadních a dešťových vod pro individuální bydlení 01 / 2026",
+      "url": "realizace/34-reseni-odpadnich-a-destovych-vod-pro-individualni-bydleni-01.html",
+      "source": "https://www.cistareseni.cz/reference/34-reseni-odpadnich-destovych-vod-pro-individualni-bydleni-01-2026.html",
+      "kind": "reference",
+      "categories": [
+        "ostatni",
+        "destovka"
+      ],
+      "thumbnail": "assets/source/93cd816d8f42-reseni-odpadnich-destovych-vod-pro-individual.webp"
+    },
+    {
+      "title": "Servis pro DČOV ASIO AS-VARIOcomp 5k: Proč se nevyplácí instalace ČOV svépomocí?",
+      "url": "realizace/28-servis-pro-dcov-asio-as-variocomp-5k-proc-se-nevyplaci-insta.html",
+      "source": "https://www.cistareseni.cz/reference/28-servis-pro-dcov-asio-as-variocomp-5k-proc-se-nevyplaci-instalace-cov-svepomoci.html",
+      "kind": "reference",
+      "categories": [
+        "cov",
+        "servis"
+      ],
+      "thumbnail": "assets/source/e674782dca2c-servis-pro-dcov-asio-as-variocomp-5k-17563579.webp"
+    },
+    {
+      "title": "Servis a znovuzprovoznění DČOV BC 12 po záplavách Bechyně 07/2025",
+      "url": "realizace/27-servis-a-znovuzprovozneni-dcov-bc-12-po-zaplavach-bechyne-07.html",
+      "source": "https://www.cistareseni.cz/reference/27-servis-znovuzprovozneni-dcov-bc-12-po-zaplavach-bechyne-072025.html",
+      "kind": "reference",
+      "categories": [
+        "cov",
+        "servis"
+      ],
+      "thumbnail": "assets/source/ec2dbd8a74c4-servis-dcov-bc-12-optima-bechyne-072025-17563.webp"
+    },
+    {
+      "title": "Instalace a zprovoznění DČOV BC 4 OPTIMA Pojbuky u Pelhřimova 07/ 2025",
+      "url": "realizace/25-instalace-a-zprovozneni-dcov-bc-4-optima-pojbuky-u-pelhrimov.html",
+      "source": "https://www.cistareseni.cz/reference/25-instalace-zprovozneni-dcov-bc-4-optima-pojbuky-u-pelhrimova-07-2025.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/7501829e1fff-instalace-zprovozneni-dcov-bc-4-optima-pojbuk.webp"
+    },
+    {
+      "title": "Instalace a zprovoznění DČOV BC 4 OPTIMA s akumulační nádrží – svépomoc pod odborným dohledem 09 / 2025",
+      "url": "realizace/30-instalace-a-zprovozneni-dcov-bc-4-optima-s-akumulacni-nadrzi.html",
+      "source": "https://www.cistareseni.cz/reference/30-instalace-zprovozneni-dcov-bc-4-optima-s-akumulacni-nadrzi-svepomoc-pod-odbornym-dohledem-09-2025.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/bd46984bdb10-instalace-zprovozneni-dcov-bc-6-optima-votice.webp"
+    },
+    {
+      "title": "Instalace a zprovoznění DČOV BC 4 OPTIMA Suchdol nad Lužnicí 08/2025",
+      "url": "realizace/24-instalace-a-zprovozneni-dcov-bc-4-optima-suchdol-nad-luznici.html",
+      "source": "https://www.cistareseni.cz/reference/24-instalace-zprovozneni-dcov-bc-4-optima-suchdol-nad-luznici-082025.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/ae44d82fe221-instalace-zprovozneni-dcov-bc-4-optima-suchdo.webp"
+    },
+    {
+      "title": "Instalace a zprovoznění DČOV BC 6 OPTIMA Rychnov nad Kněžnou 08/2025",
+      "url": "realizace/23-instalace-a-zprovozneni-dcov-bc-6-optima-rychnov-nad-kneznou.html",
+      "source": "https://www.cistareseni.cz/reference/23-instalace-zprovozneni-dcov-bc-6-optima-rychnov-nad-kneznou-082025.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/8df8b8f367e2-instalace-zprovozneni-dcov-bc-6-optima-rychno.webp"
+    },
+    {
+      "title": "DČOV Bernartice 04/2025",
+      "url": "realizace/4-dcov-bernartice-04-2025.html",
+      "source": "https://www.cistareseni.cz/reference/4-dcov-bernartice-042025.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/67f44b942bff-dcov-bernartice-042025-1750943819.webp"
+    },
+    {
+      "title": "Rekonstrukce jímky pro splašky s rotomouldingovou nádrží 08/2025",
+      "url": "realizace/22-rekonstrukce-jimky-pro-splasky-s-rotomouldingovou-nadrzi-08-.html",
+      "source": "https://www.cistareseni.cz/reference/22-rekonstrukce-jimky-pro-splasky-s-rotomouldingovou-nadrzi-082025.html",
+      "kind": "reference",
+      "categories": [
+        "ostatni",
+        "servis",
+        "cerpani"
+      ],
+      "thumbnail": "assets/source/676d0286dddd-rekonstrukce-jimky-pro-splasky-s-rotomoulding.webp"
+    },
+    {
+      "title": "DČOV Kámen 11/2024",
+      "url": "realizace/8-dcov-kamen-11-2024.html",
+      "source": "https://www.cistareseni.cz/reference/8-dcov-kamen-112024.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/c7f2890b2fcc-dcov-kamen-112024-1750943956.webp"
+    },
+    {
+      "title": "Žďár u Písku – kombinace DČOV a hospodaření s dešťovou vodou 12 / 2025",
+      "url": "realizace/33-zdar-u-pisku-kombinace-dcov-a-hospodareni-s-destovou-vodou-1.html",
+      "source": "https://www.cistareseni.cz/reference/33-zdar-u-pisku-kombinace-dcov-hospodareni-s-destovou-vodou-12-2025.html",
+      "kind": "reference",
+      "categories": [
+        "cov",
+        "destovka"
+      ],
+      "thumbnail": "assets/source/50b1d64bddb9-zdar-u-pisku-kombinace-dcov-hospodareni-s-des.webp"
+    },
+    {
+      "title": "Instalace a zprovoznění ASIO AS-MONOcomp 4 Písek 07/2025",
+      "url": "realizace/29-instalace-a-zprovozneni-asio-as-monocomp-4-pisek-07-2025.html",
+      "source": "https://www.cistareseni.cz/reference/29-instalace-zprovozneni-asio-as-monocomp-4-pisek-072025.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/5f3ebfa17f30-instalace-zprovozneni-asio-as-monocomp-4-pise.webp"
+    },
+    {
+      "title": "BC 20 COMFORT – Penzion Stráž nad Nežárkou 11 / 2025",
+      "url": "realizace/31-bc-20-comfort-penzion-straz-nad-nezarkou-11-2025.html",
+      "source": "https://www.cistareseni.cz/reference/31-bc-20-comfort-penzion-straz-nad-nezarkou-11-2025.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/b504be3ebe32-bc-20-comfort-penzion-straz-nad-nezarkou-1766.webp"
+    },
+    {
+      "title": "Servis, zprovoznění a zaškolení pro DČOV ASIO AS-MONOcomp 4",
+      "url": "realizace/26-servis-zprovozneni-a-zaskoleni-pro-dcov-asio-as-monocomp-4.html",
+      "source": "https://www.cistareseni.cz/reference/26-servis-zprovozneni-zaskoleni-pro-dcov-asio-as-monocomp-4.html",
+      "kind": "reference",
+      "categories": [
+        "cov",
+        "servis"
+      ],
+      "thumbnail": "assets/source/9bdd72b39162-servis-zprovozneni-zaskoleni-pro-dcov-asio-as.webp"
+    },
+    {
+      "title": "DČOV Smilkov 11/2024",
+      "url": "realizace/9-dcov-smilkov-11-2024.html",
+      "source": "https://www.cistareseni.cz/reference/9-dcov-smilkov-112024.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/acf6944efe54-dcov-smilkov-112024-1750943985.webp"
+    },
+    {
+      "title": "Druhý život pro starou čistírnu – rekonstrukce technologie po 25 letech provozu",
+      "url": "realizace/2-druhy-zivot-pro-starou-cistirnu-rekonstrukce-technologie-po-.html",
+      "source": "https://www.cistareseni.cz/reference/2-druhy-zivot-pro-starou-cistirnu-rekonstrukce-technologie-po-25-letech-provozu.html",
+      "kind": "reference",
+      "categories": [
+        "ostatni",
+        "servis"
+      ],
+      "thumbnail": "assets/source/e55afec6f080-druhy-zivot-pro-starou-cistirnu-rekonstrukce-.webp"
+    },
+    {
+      "title": "DČOV Řásná 04/2025",
+      "url": "realizace/3-dcov-rasna-04-2025.html",
+      "source": "https://www.cistareseni.cz/reference/3-dcov-rasna-042025.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/8bbe938ee3e4-dcov-rasna-042025-1750943771.webp"
+    },
+    {
+      "title": "DČOV Dynín 03/2025",
+      "url": "realizace/5-dcov-dynin-03-2025.html",
+      "source": "https://www.cistareseni.cz/reference/5-dcov-dynin-032025.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/b5e40f7c8d75-dcov-dynin-032025-1750943844.webp"
+    },
+    {
+      "title": "DČOV Volary 11/2024",
+      "url": "realizace/7-dcov-volary-11-2024.html",
+      "source": "https://www.cistareseni.cz/reference/7-dcov-volary-112024.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/4a0f45d2b71c-dcov-volary-112024-1750943912.webp"
+    },
+    {
+      "title": "Chlum u Třeboně – kanalizace a ČOV pro dva rodinné domy 12 / 2025",
+      "url": "realizace/32-chlum-u-trebone-kanalizace-a-cov-pro-dva-rodinne-domy-12-202.html",
+      "source": "https://www.cistareseni.cz/reference/32-chlum-u-trebone-kanalizace-cov-pro-dva-rodinne-domy-12-2025.html",
+      "kind": "reference",
+      "categories": [
+        "cov",
+        "cerpani"
+      ],
+      "thumbnail": "assets/source/55f42b2f21de-chlum-u-trebone-kanalizace-cov-pro-dva-rodinn.webp"
+    },
+    {
+      "title": "DČOV Vydří 11/2024",
+      "url": "realizace/10-dcov-vydri-11-2024.html",
+      "source": "https://www.cistareseni.cz/reference/10-dcov-vydri-112024.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/97c8c384e419-dcov-vydri-112024-1750944013.webp"
+    },
+    {
+      "title": "DČOV Libenice 10/2024",
+      "url": "realizace/11-dcov-libenice-10-2024.html",
+      "source": "https://www.cistareseni.cz/reference/11-dcov-libenice-102024.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/fa7d910eeded-dcov-libenice-102024-1750944044.webp"
+    },
+    {
+      "title": "Servisujeme také čistírny ASIO – včetně starších typů",
+      "url": "realizace/1-servisujeme-take-cistirny-asio-vcetne-starsich-typu.html",
+      "source": "https://www.cistareseni.cz/reference/1-servisujeme-take-cistirny-asio-vcetne-starsich-typu.html",
+      "kind": "reference",
+      "categories": [
+        "ostatni",
+        "servis"
+      ],
+      "thumbnail": "assets/source/ccb25024931b-servisujeme-take-cistirny-asio-vcetne-starsic.webp"
+    },
+    {
+      "title": "Dešťovka Mělník 09/2024",
+      "url": "realizace/12-destovka-melnik-09-2024.html",
+      "source": "https://www.cistareseni.cz/reference/12-destovka-melnik-092024.html",
+      "kind": "reference",
+      "categories": [
+        "ostatni",
+        "destovka"
+      ],
+      "thumbnail": "assets/source/6ad5bc47818e-destovka-melnik-092024-1750944072.webp"
+    },
+    {
+      "title": "DČOV Myslkovice 02/2025",
+      "url": "realizace/6-dcov-myslkovice-02-2025.html",
+      "source": "https://www.cistareseni.cz/reference/6-dcov-myslkovice-022025.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/881652a320e1-dcov-myslkovice-022025-1750943870.webp"
+    },
+    {
+      "title": "Čerpací jímka splaškové kanalizace Bechyně 08/2024",
+      "url": "realizace/13-cerpaci-jimka-splaskove-kanalizace-bechyne-08-2024.html",
+      "source": "https://www.cistareseni.cz/reference/13-cerpaci-jimka-splaskove-kanalizace-bechyne-082024.html",
+      "kind": "reference",
+      "categories": [
+        "ostatni",
+        "cerpani"
+      ],
+      "thumbnail": "assets/source/1ddc589b8ecf-cerpaci-jimka-splaskove-kanalizace-bechyne-08.webp"
+    },
+    {
+      "title": "Dešťovka Písek 08/2024",
+      "url": "realizace/14-destovka-pisek-08-2024.html",
+      "source": "https://www.cistareseni.cz/reference/14-destovka-pisek-082024.html",
+      "kind": "reference",
+      "categories": [
+        "ostatni",
+        "destovka"
+      ],
+      "thumbnail": "assets/source/d04c1c25a9de-destovka-pisek-082024-1750944138.webp"
+    },
+    {
+      "title": "DČOV Javorník 05/2024",
+      "url": "realizace/15-dcov-javornik-05-2024.html",
+      "source": "https://www.cistareseni.cz/reference/15-dcov-javornik-052024.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/7b02a2a41548-dcov-javornik-052024-1750944164.webp"
+    },
+    {
+      "title": "DČOV Nové Hrady 04/2024",
+      "url": "realizace/17-dcov-nove-hrady-04-2024.html",
+      "source": "https://www.cistareseni.cz/reference/17-dcov-nove-hrady-042024.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/02ae35e09c4b-dcov-nove-hrady-042024-1750944225.webp"
+    },
+    {
+      "title": "DČOV Roudná 03/2024",
+      "url": "realizace/18-dcov-roudna-03-2024.html",
+      "source": "https://www.cistareseni.cz/reference/18-dcov-roudna-032024.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/abc5fb3258bd-dcov-roudna-032024-1750944258.webp"
+    },
+    {
+      "title": "Dešťovka Vřesina u Opavy 07/2022",
+      "url": "realizace/19-destovka-vresina-u-opavy-07-2022.html",
+      "source": "https://www.cistareseni.cz/reference/19-destovka-vresina-u-opavy-072022.html",
+      "kind": "reference",
+      "categories": [
+        "ostatni",
+        "destovka"
+      ],
+      "thumbnail": "assets/source/1e3f34a41374-destovka-vresina-u-opavy-072022-1750944288.webp"
+    },
+    {
+      "title": "Dešťovka Tábor 10/2023",
+      "url": "realizace/20-destovka-tabor-10-2023.html",
+      "source": "https://www.cistareseni.cz/reference/20-destovka-tabor-102023.html",
+      "kind": "reference",
+      "categories": [
+        "ostatni",
+        "destovka"
+      ],
+      "thumbnail": "assets/source/59efe09f9cc5-destovka-tabor-102023-1750944312.webp"
+    },
+    {
+      "title": "DČOV Sázava 12/2023",
+      "url": "realizace/16-dcov-sazava-12-2023.html",
+      "source": "https://www.cistareseni.cz/reference/16-dcov-sazava-122023.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/a0edf94ee692-dcov-sazava-122023-1750944196.webp"
+    },
+    {
+      "title": "DČOV Bechyně 09/2023",
+      "url": "realizace/21-dcov-bechyne-09-2023.html",
+      "source": "https://www.cistareseni.cz/reference/21-dcov-bechyne-092023.html",
+      "kind": "reference",
+      "categories": [
+        "cov"
+      ],
+      "thumbnail": "assets/source/0fd3107a53ac-dcov-bechyne-092023-1750944334.webp"
+    }
+  ],
+  "navigation": {
+    "services": "sluzby.html",
+    "references": "reference.html",
+    "gallery": "galerie.html",
+    "downloads": "dokumenty.html",
+    "about": "o-nas.html",
+    "contact": "kontakt.html"
+  }
+}

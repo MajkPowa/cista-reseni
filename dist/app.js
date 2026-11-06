@@ -17,12 +17,14 @@ const services = {
   servis: { title: 'Servis a rekonstrukce', description: 'Stávající zařízení nemusí znamenat nové starosti. Prohlédneme jeho stav a navrhneme vhodnou údržbu, opravu nebo obnovu technologie.', items: ['Servis a údržba domovních čistíren', 'Rekonstrukce a opětovné zprovoznění', 'Náhradní díly a kamerové zkoušky kanalizace'] },
   poradit: { title: 'Potřebuji poradit' }
 };
+const servicePaths = {cov:'sluzby/cisteni-odpadnich-vod.html',destovka:'sluzby/hospodareni-s-destovou-vodou.html',cerpani:'sluzby/cerpaci-sachty.html',servis:'sluzby/servis-a-udrzba.html'};
 const dialog = $('#service-dialog');
 let activeService;
 $$('[data-service]').forEach(button => button.addEventListener('click', () => {
   activeService = button.dataset.service;
   const service = services[activeService];
   $('#service-dialog-title').textContent = service.title;
+  $('#service-detail').href = servicePaths[activeService];
   $('#service-dialog-description').textContent = service.description;
   $('#service-dialog-list').replaceChildren(...service.items.map(text => { const item = document.createElement('li'); item.textContent = text; return item; }));
   dialog.showModal();
