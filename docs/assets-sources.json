@@ -1,0 +1,116 @@
+{
+  "assets": [
+    {
+      "file": "dist/assets/ref-prehorov.webp",
+      "source_url": "https://www.cistareseni.cz/assets/img/references/prehorov-u-sobeslavi-domovni-cistirna-odpadnich-vod-bc-4-comfort-duo-s-piskovym-filtrem-07-2026_1784301410.jpg",
+      "source_page": "https://www.cistareseni.cz/reference/38-prehorov-u-sobeslavi-domovni-cistirna-odpadnich-vod-bc-4-comfort-duo-s-piskovym-filtrem-07-2026.html",
+      "description": "Čistírna pro rodinný dům v Přehořově",
+      "source_owner": "Čistá řešení / WHITE ELEPHANT s.r.o. (published website)",
+      "retrieved_on": "2026-11-06",
+      "source_dimensions": [
+        1600,
+        1200
+      ],
+      "output_dimensions": [
+        1200,
+        900
+      ],
+      "processing": "EXIF orientation; proportional resize max 1200 px; WebP quality 86",
+      "bytes": 372992
+    },
+    {
+      "file": "dist/assets/ref-tabor.webp",
+      "source_url": "https://www.cistareseni.cz/assets/img/references/cista_reseni_001_gc8s1750945794.jpg",
+      "source_page": "https://www.cistareseni.cz/reference/12-destovka-melnik-092024.html",
+      "description": "Dešťová voda pro zahradu v Mělníku; instalace nádrže Roterra 3500 L, 09/2024",
+      "source_owner": "Čistá řešení / WHITE ELEPHANT s.r.o. (published website)",
+      "retrieved_on": "2026-11-06",
+      "source_dimensions": [
+        1600,
+        1200
+      ],
+      "output_dimensions": [
+        1200,
+        900
+      ],
+      "processing": "EXIF orientation; proportional resize max 1200 px; WebP quality 86",
+      "bytes": 274020,
+      "visual_note": "Skutečná fotografie z galerie realizace Mělník 09/2024. Původní název souboru ref-tabor.webp zachován kvůli integraci; obsah a související text musí uvádět Mělník, nikoli Tábor."
+    },
+    {
+      "file": "dist/assets/ref-pisek.webp",
+      "source_url": "https://www.cistareseni.cz/assets/img/references/komplexni-reseni-odvadeni-splaskovych-vod-vyrobni-areal-pisek-082026_1786890150.jpg",
+      "source_page": "https://www.cistareseni.cz/reference/39-komplexni-reseni-odvadeni-splaskovych-vod-vyrobni-areal-pisek-082026.html",
+      "description": "Nové odvádění splašků v areálu v Písku",
+      "source_owner": "Čistá řešení / WHITE ELEPHANT s.r.o. (published website)",
+      "retrieved_on": "2026-11-06",
+      "source_dimensions": [
+        1600,
+        901
+      ],
+      "output_dimensions": [
+        1200,
+        676
+      ],
+      "processing": "EXIF orientation; proportional resize max 1200 px; WebP quality 86",
+      "bytes": 290290
+    },
+    {
+      "file": "dist/assets/ref-servis.webp",
+      "source_url": "https://www.cistareseni.cz/assets/img/references/bc-50-po-25-letech-provozu-kompletni-obnova-technologie-novy-zacatek_1788606926.jpg",
+      "source_page": "https://www.cistareseni.cz/reference/41-bc-50-po-25-letech-provozu-kompletni-obnova-technologie-novy-zacatek-09-2026.html",
+      "description": "Druhý život pro 25letou čistírnu BC 50",
+      "source_owner": "Čistá řešení / WHITE ELEPHANT s.r.o. (published website)",
+      "retrieved_on": "2026-11-06",
+      "source_dimensions": [
+        1600,
+        901
+      ],
+      "output_dimensions": [
+        1200,
+        676
+      ],
+      "processing": "EXIF orientation; proportional resize max 1200 px; WebP quality 86",
+      "bytes": 263038
+    },
+    {
+      "file": "dist/assets/team-about.webp",
+      "source_url": "https://www.cistareseni.cz/assets/img/about.jpg",
+      "source_page": "https://www.cistareseni.cz/",
+      "description": "Fotografie z původní sekce O nás",
+      "source_owner": "Čistá řešení / WHITE ELEPHANT s.r.o. (published website)",
+      "retrieved_on": "2026-11-06",
+      "source_dimensions": [
+        614,
+        456
+      ],
+      "output_dimensions": [
+        614,
+        456
+      ],
+      "processing": "EXIF orientation; proportional resize max 1200 px; WebP quality 86",
+      "bytes": 16640,
+      "visual_note": "Detail listu a kapky vody; nejde o fotografii týmu."
+    },
+    {
+      "file": "dist/assets/partner-envi-pur.svg",
+      "source_url": "https://www.cistareseni.cz/assets/img/logo-envi-pur.svg",
+      "source_page": "https://www.cistareseni.cz/",
+      "description": "Originální logo ENVI-PUR z webu Čistá řešení",
+      "source_owner": "Čistá řešení / WHITE ELEPHANT s.r.o. (published website)",
+      "retrieved_on": "2026-11-06",
+      "processing": "Original SVG, unchanged",
+      "bytes": 17228
+    },
+    {
+      "file": "dist/assets/partner-asio.svg",
+      "source_url": "https://www.cistareseni.cz/assets/img/logo-asio.svg",
+      "source_page": "https://www.cistareseni.cz/",
+      "description": "Originální logo ASIO z webu Čistá řešení",
+      "source_owner": "Čistá řešení / WHITE ELEPHANT s.r.o. (published website)",
+      "retrieved_on": "2026-11-06",
+      "processing": "Original SVG, unchanged",
+      "bytes": 16060
+    }
+  ]
+}

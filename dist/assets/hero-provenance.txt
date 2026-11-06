@@ -1,0 +1,12 @@
+Asset: hero-garden.png / hero-garden.webp
+Created: 2026-11-06
+Tool: built-in image_gen (no CLI fallback)
+Purpose: Conceptual mood photograph for website design preview, NOT a photograph of an actual company realization.
+Source image ID: exec-91599663-0562-42c9-8fcf-e4003c7f638e.png
+Compression: Pillow WebP, quality 88, method 6, maximum dimension 1800 pixels; no image manipulation.
+
+FINAL PROMPT:
+Use case: photorealistic-natural.
+Asset type: premium architecture / garden photographic hero for a Czech residential water engineering website, landscape 3:2.
+A quiet contemporary single-storey Czech family house in a believable South Bohemian garden just after a light rain. Restrained gabled roof, warm pale plaster, subtle natural timber, physically plausible gutters and a discrete charcoal rainwater collection barrel connected to a roof downpipe near the side wall. House occupies the right half, a generous soft natural garden fills the left half. View through softly out of focus rain-wet leaves in the near left foreground; fresh perennial planting, grasses, a few young trees and an understated stone garden path. A small beautiful functional family garden, not an estate. Calm soft morning sun breaking through clouds, fine droplets on vegetation, nuanced light, gentle natural reflections, realistic scale and architecture. Editorial architectural photography shot on a high end cinematic camera, 35mm perspective, richly detailed real materials, subtle depth, natural muted forest greens and warm cream, cool teal shade. The message is a thoughtful relationship between home, garden and water. No people, no pools, no underground cutaway, no impossible fountains, no technical diagram, no logos, no text or watermark. Avoid oversaturation, artificial plastic textures, excessive bloom and surreal architecture. This is a conceptual mood photograph, not a documentary image of a specific real project.
+
