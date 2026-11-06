@@ -1,0 +1,2 @@
+* text=auto eol=lf
+docs/source-inventory/html/** whitespace=-blank-at-eol,-blank-at-eof
