@@ -70,3 +70,8 @@ form.addEventListener('submit', event => {
 });
 $('#edit-inquiry').addEventListener('click', () => { showForm(); setStep(2); $('#name').focus({ preventScroll: true }); });
 $('#year').textContent = new Date().getFullYear();
+const requestedSolution = new URLSearchParams(window.location.search).get('reseni');
+if (Object.hasOwn(services, requestedSolution)) {
+  const requestedChoice = $$('input[name="service"]').find(input => input.value === requestedSolution);
+  if (requestedChoice) requestedChoice.checked = true;
+}

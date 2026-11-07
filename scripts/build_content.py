@@ -47,7 +47,9 @@ def lightbox():
     return '''<dialog id="photo-lightbox" class="lightbox" aria-label="Detail snímku"><button class="lightbox-close" aria-label="Zavřít snímek">×</button><figure><img alt=""><figcaption></figcaption></figure><div class="lightbox-controls"><button data-photo-prev aria-label="Předchozí snímek">← Předchozí</button><output aria-live="polite"></output><button data-photo-next aria-label="Další snímek">Další →</button></div></dialog>'''
 def page(current,title,body,description='',has_gallery=False):
     meta=esc(short(description or title,155))
-    return f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#0c383b"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="https://majkpowa.github.io/cista-reseni/assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.ttf',current)}" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script></head><body class="content-page">{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
+    service_assets='<link rel="stylesheet" href="services.css"><script src="services.js" defer></script>' if current=='sluzby.html' else ''
+    body_class='content-page solutions-page' if current=='sluzby.html' else 'content-page'
+    return f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#0c383b"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="https://majkpowa.github.io/cista-reseni/assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.ttf',current)}" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script>{service_assets}</head><body class="{body_class}">{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
 def save(current,title,body,description='',has_gallery=False):
     f=DIST/current;f.parent.mkdir(parents=True,exist_ok=True);f.write_text(page(current,title,body,description,has_gallery),encoding='utf-8')
 def hero(current,title,eyebrow,intro='',parent=None,meta=''):
@@ -119,11 +121,14 @@ body+='</div><div id="empty-state" class="empty-state" hidden><h2>Takovou realiz
 save(current,'Naše realizace',body)
 
 current='sluzby.html'
-body=hero(current,'Od prvního návrhu po pravidelný servis.','NAŠE ŘEŠENÍ','Čistíme odpadní vodu, využíváme dešťovku a řešíme čerpání. Vyberte si oblast, která vás zajímá, nebo s námi proberte svůj projekt.')+'<section class="container content-body"><div class="service-list">'
-for i,p in enumerate(services):
-    body+=f'<a href="{rel(p["local"],current)}"><span class="service-kind">{i+1:02d} / {"TECHNOLOGIE" if i<3 else "SLUŽBA"}</span><h2>{esc(p["title"])}</h2><p>{esc(short(p["body_text"],200))}</p><span class="text-link">Více o řešení {icon()}</span></a>'
-body+=f'<article><span class="service-kind">DALŠÍ SLUŽBY</span><h2>Kamerové zkoušky kanalizace</h2><p>Potřebujete prohlédnout kanalizaci? Proberte s námi konkrétní situaci a vhodný postup.</p><a class="text-link" href="{rel("index.html#poptavka",current)}">Probrat potřebu {icon()}</a></article><article><span class="service-kind">PÉČE O TECHNOLOGIE</span><h2>Zprovoznění, rekonstrukce a optimalizace</h2><p>Realizace, zprovoznění, servis, nezávislé posouzení a optimalizace vodohospodářských řešení.</p><a class="text-link" href="{rel("sluzby/servis-a-udrzba.html",current)}">Servis a údržba {icon()}</a></article></div></section>'+cta(current)
-save(current,'Produkty a služby',body)
+body=(ROOT/'scripts/templates/services.html').read_text(encoding='utf-8')
+body=body.replace('{{WATER_SYSTEMS}}',(ROOT/'scripts/templates/water-systems.inline.svg').read_text(encoding='utf-8'))
+for token,reference_id in [('RAIN',12),('CLEAN',38),('PUMP',39),('CARE',41)]:
+    reference=next(p for p in refs if p['local'].startswith(f'realizace/{reference_id}-'))
+    body=body.replace('{{REF_'+token+'}}',esc(reference['local']))
+directory=''.join(f'<a href="{esc(p["local"])}">{esc(p["title"])}</a>' for p in services)
+body=body.replace('{{ALL_SERVICE_LINKS}}',directory)
+save(current,'Naše řešení — voda pro váš dům',body,'Objevte řešení pro dešťovou vodu, domovní čistírny, čerpání a servis. Interaktivní schéma, skutečné realizace a péče od návrhu po provoz.')
 
 current='galerie.html'
 total_images=sum(len(p['images']) for p in refs)

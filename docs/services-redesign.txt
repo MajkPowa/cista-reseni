@@ -1,0 +1,18 @@
+NAŠE ŘEŠENÍ — INTERAKTIVNÍ ROZCESTNÍK
+
+Záměr: přehled vodohospodářských řešení pro návštěvníka, který zatím nemusí znát technologii.
+Charakter: klidný, konkrétní, řemeslný.
+Vizuální svět: dům, zahrada, voda a skutečné realizace; zachovaná petrolejová a Manrope.
+Hlavní moment: vlastní vektorové schéma s průřezem půdy a třemi systémy, které reaguje na výběr.
+Jednotící detail: viditelná cesta vody propojená s konkrétní službou.
+
+Původní stav: dvanáct podobných textových bloků, málo vizuální hierarchie, žádná produktová interakce.
+Nový stav: čtyři možnosti podle potřeby, schéma + fotografie realizace + podrobnosti; služby uspořádané do čtyř fází zakázky. Přímé odkazy na všech deset služeb zůstávají také v nativním rozbalovacím přehledu.
+
+Pohyb: jednorázový nástup 700 ms, změna panelu 420–550 ms, tok vody 2,6 s s možností přehrání. Žádná automatická změna výběru ani nekonečná animace. Pohyb se zastaví mimo viditelnou stránku; prefers-reduced-motion ponechá statické zvýraznění.
+Ovládání: skutečná tlačítka, role tablist/tab/tabpanel, roving tabindex, šipky/Home/End, aktuální stav, viditelný focus. Výběr řešení je možné přenést do existujícího poptávkového formuláře.
+Schéma je ilustrace, nikoli návrh zapojení konkrétní stavby. Fotografie jsou skutečné podklady původního webu a jejich odkazy vedou na odpovídající realizace.
+
+Reprodukce: scripts/build_content.py načítá scripts/templates/services.html a water-systems.inline.svg. Styl a chování jsou v dist/services.css/js a nepřepisují ostatní podstránky.
+Kontrola: 28/28 DOM testů přepínání, klávesnice, ARIA, omezení pohybu, konečnosti animace a předvyplnění formuláře prošlo. Zároveň prošla kontrola všech 58 stránek a původních textů. Vektorové schéma bylo zkontrolováno v renderovaném náhledu. Závěrečné vizuální ověření celé stránky v prohlížeči nebylo možné: Computer Use zastavil práci kvůli nespolehlivému rozpoznání aktuální URL.
+Metodická inspirace: Unslop, Damir Sokolovsky (@heydamir), CC BY 4.0 — https://heydamir.design/unslop . Kód a ilustrace tohoto návrhu jsou vytvořené pro Čistá řešení.

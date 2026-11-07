@@ -9,6 +9,7 @@ https://majkpowa.github.io/cista-reseni/
 ## Co funguje
 
 - Mobilní navigace, detaily čtyř oblastí služeb v dialogu a předvyplnění zvoleného řešení.
+- Interaktivní přehled „Naše řešení“: vlastní SVG schéma domu, čtyři volby, animovaná cesta vody, skutečné realizace a klikací průběh zakázky. Výběr se předá do poptávky; všechny služby zůstávají i v rozbalovacím adresáři.
 - Kompletní lokální archiv 41 realizací s plnými popisy, vyhledáváním a filtrováním.
 - 10 detailních stránek produktů a služeb, samostatné kontakty a informace o firmě.
 - Fotogalerie s 278 snímky a produktovými vyobrazeními, filtrem podle realizace a ovládáním zvětšených snímků klávesnicí.
@@ -46,7 +47,10 @@ Velká média nejsou součástí historie Git. Při čerstvém klonování spus�
 ```sh
 node --check dist/app.js
 node --check dist/content.js
+node --check dist/services.js
 python scripts/check_site.py
 ```
 
 Kontrola ověřuje místní odkazy, soubory, kotvy, nadpisy, duplicitní ID, textové alternativy obrázků a pokrytí původních článků. Výsledek je v `docs/site-validation.json`. Úvodní stránka byla navíc ověřena v prohlížeči na počítači i mobilním rozměru, včetně navigace, filtru a formuláře; dodatečné podstránky prošly statickou a obsahovou kontrolou.
+
+Vektorové schéma služeb je ilustrační, nikoli projekt konkrétní stavby. Animace má konečný průběh, lze ji přehrát znovu a respektuje omezený pohyb. Rozcestník se opakovaně sestavuje z `scripts/templates/services.html` a `water-systems.inline.svg`; návrhové poznámky jsou v `docs/services-redesign.txt`.
