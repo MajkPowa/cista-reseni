@@ -14,32 +14,52 @@ const search = document.getElementById('reference-search');
 const filterButtons = [...document.querySelectorAll('[data-content-filter]')];
 const referenceCards = [...document.querySelectorAll('[data-reference-card]')];
 let chosenCategory = 'all';
+let referenceLimit = 12;
+const moreReferences = document.querySelector('[data-load-references]');
+let matchingReferences = referenceCards;
 function filterReferences() {
-  const query = normalize(search?.value.trim() || ''); let visible = 0;
-  referenceCards.forEach(card => {
-    const matched = (chosenCategory === 'all' || card.dataset.categories.split(' ').includes(chosenCategory)) && normalize(card.dataset.search).includes(query);
-    card.hidden = !matched; if(matched) visible++;
-  });
+  const query = normalize(search?.value.trim() || '');
+  matchingReferences = referenceCards.filter(card => (chosenCategory === 'all' || card.dataset.categories.split(' ').includes(chosenCategory)) && normalize(card.dataset.search).includes(query));
+  const shown = moreReferences ? matchingReferences.slice(0, referenceLimit) : matchingReferences;
+  const visible = new Set(shown);
+  referenceCards.forEach(card => { card.hidden = !visible.has(card); });
   const status = document.getElementById('result-count');
-  if(status) status.textContent = `Zobrazeno ${visible} z ${referenceCards.length} realizací`;
-  const empty = document.getElementById('empty-state'); if(empty) empty.hidden = visible > 0;
+  if(status) status.textContent = `Zobrazeno ${shown.length} z ${matchingReferences.length} odpovídajících realizací`;
+  const empty = document.getElementById('empty-state'); if(empty) empty.hidden = matchingReferences.length > 0;
+  if(moreReferences) moreReferences.hidden = shown.length >= matchingReferences.length;
 }
 filterButtons.forEach(button => button.addEventListener('click', () => {
   chosenCategory = button.dataset.contentFilter;
+  referenceLimit = 12;
   filterButtons.forEach(b => b.setAttribute('aria-pressed', String(b === button)));
   filterReferences();
 }));
-search?.addEventListener('input', filterReferences);
+search?.addEventListener('input', () => { referenceLimit = 12; filterReferences(); });
+moreReferences?.addEventListener('click', () => {
+  const firstNew = matchingReferences[referenceLimit];
+  referenceLimit += 12;
+  filterReferences();
+  firstNew?.focus({ preventScroll: true });
+});
 if(referenceCards.length) filterReferences();
 const gallerySelect = document.getElementById('gallery-project');
-gallerySelect?.addEventListener('change', () => {
-  let count = 0;
-  document.querySelectorAll('[data-gallery-project]').forEach(item => {
-    item.hidden = gallerySelect.value !== 'all' && gallerySelect.value !== item.dataset.galleryProject;
-    if(!item.hidden) count++;
-  });
-  document.getElementById('gallery-count').textContent = `Zobrazeno ${count} snímků`;
+const moreGallery = document.querySelector('[data-load-gallery]');
+const galleryCards = [...document.querySelectorAll('[data-gallery-project]')];
+let galleryLimit = 24, matchingGallery = galleryCards;
+function filterGallery() {
+  if (!gallerySelect) return;
+  matchingGallery = galleryCards.filter(item => gallerySelect.value === 'all' || gallerySelect.value === item.dataset.galleryProject);
+  const shown = moreGallery ? matchingGallery.slice(0, galleryLimit) : matchingGallery;
+  const visible = new Set(shown);
+  galleryCards.forEach(item => { item.hidden = !visible.has(item); });
+  document.getElementById('gallery-count').textContent = `Zobrazeno ${shown.length} z ${matchingGallery.length} snímků`;
+  if (moreGallery) moreGallery.hidden = shown.length >= matchingGallery.length;
+}
+gallerySelect?.addEventListener('change', () => { galleryLimit = 24; filterGallery(); });
+moreGallery?.addEventListener('click', () => {
+  const firstNew = matchingGallery[galleryLimit]; galleryLimit += 24; filterGallery(); firstNew?.focus({ preventScroll: true });
 });
+filterGallery();
 const lightbox = document.getElementById('photo-lightbox');
 let galleryItems = [], galleryIndex = 0, galleryTrigger = null;
 function showPhoto(index) {
@@ -53,8 +73,10 @@ function showPhoto(index) {
 document.querySelectorAll('[data-lightbox]').forEach(item => item.addEventListener('click', e => {
   if(!lightbox || typeof lightbox.showModal !== 'function' || e.ctrlKey || e.metaKey || e.shiftKey) return;
   e.preventDefault(); galleryTrigger = item;
-  galleryItems = [...document.querySelectorAll('[data-lightbox]')].filter(a => !a.closest('[hidden]'));
-  showPhoto(galleryItems.indexOf(item)); lightbox.showModal();
+  const unique = new Map();
+  document.querySelectorAll('[data-lightbox]').forEach(a => { if (!a.closest('[hidden]') && !unique.has(a.href)) unique.set(a.href, a); });
+  galleryItems = [...unique.values()];
+  showPhoto(galleryItems.findIndex(a => a.href === item.href)); lightbox.showModal();
 }));
 lightbox?.querySelector('.lightbox-close').addEventListener('click', () => lightbox.close());
 lightbox?.querySelector('[data-photo-prev]').addEventListener('click', () => showPhoto(galleryIndex - 1));

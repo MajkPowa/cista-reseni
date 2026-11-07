@@ -75,3 +75,48 @@ if (Object.hasOwn(services, requestedSolution)) {
   const requestedChoice = $$('input[name="service"]').find(input => input.value === requestedSolution);
   if (requestedChoice) requestedChoice.checked = true;
 }
+
+// Accessible service tabs keep the photograph, explanation and destination together.
+const homeSolutionTabs = $$('[data-home-solution]');
+const homeReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+function selectHomeSolution(key, { focus = false, animate = true } = {}) {
+  const tab = homeSolutionTabs.find(item => item.dataset.homeSolution === key);
+  const panel = tab && document.getElementById(tab.getAttribute('aria-controls'));
+  if (!tab || !panel) return;
+  const changed = tab.getAttribute('aria-selected') !== 'true';
+  homeSolutionTabs.forEach(item => {
+    const selected = item === tab;
+    item.setAttribute('aria-selected', String(selected));
+    item.tabIndex = selected ? 0 : -1;
+    document.getElementById(item.getAttribute('aria-controls')).hidden = !selected;
+  });
+  if (focus) tab.focus({ preventScroll: true });
+  if (changed && animate && !homeReducedMotion.matches && typeof panel.animate === 'function') {
+    panel.getAnimations().forEach(animation => animation.cancel());
+    panel.animate([{ opacity: .25, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 320, easing: 'cubic-bezier(.16,1,.3,1)' });
+  }
+}
+homeSolutionTabs.forEach((tab, index) => {
+  tab.addEventListener('click', () => selectHomeSolution(tab.dataset.homeSolution));
+  tab.addEventListener('keydown', event => {
+    let next;
+    if (event.key === 'ArrowRight') next = (index + 1) % homeSolutionTabs.length;
+    if (event.key === 'ArrowLeft') next = (index - 1 + homeSolutionTabs.length) % homeSolutionTabs.length;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = homeSolutionTabs.length - 1;
+    if (next === undefined) return;
+    event.preventDefault();
+    selectHomeSolution(homeSolutionTabs[next].dataset.homeSolution, { focus: true });
+  });
+});
+$$('[data-inquiry-service]').forEach(link => link.addEventListener('click', () => {
+  const choice = $$('input[name="service"]').find(input => input.value === link.dataset.inquiryService);
+  if (!choice) return;
+  showForm();
+  setStep(1);
+  choice.checked = true;
+}));
+homeReducedMotion.addEventListener('change', event => {
+  if (event.matches) $$('.home-solution-panel').forEach(panel => panel.getAnimations().forEach(animation => animation.cancel()));
+});
+if (requestedSolution) selectHomeSolution(requestedSolution, { animate: false });

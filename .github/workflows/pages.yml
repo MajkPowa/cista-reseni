@@ -27,6 +27,7 @@ jobs:
           node --check dist/app.js
           node --check dist/content.js
           node --check dist/services.js
+          node --check dist/experience.js
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'

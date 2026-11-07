@@ -34,8 +34,9 @@ preserved=0
 for p in data['pages']:
     path=(DIST/p['local']).resolve();s=soups.get(path)
     if not s:errors.append({'file':p['local'],'error':'Missing migrated page'});continue
-    article=s.select_one('.article-copy')
-    if not article or normalized(article.get_text(' ',strip=True))!=normalized(p['body_text']):errors.append({'file':p['local'],'error':'Full source text differs'})
+    articles=s.select('.article-copy')
+    article_text=' '.join(article.get_text(' ',strip=True) for article in articles)
+    if not articles or normalized(article_text)!=normalized(p['body_text']):errors.append({'file':p['local'],'error':'Full source text differs'})
     else:preserved+=1
 for u,a in data['assets'].items():
     p=DIST/a.get('local','__missing__')

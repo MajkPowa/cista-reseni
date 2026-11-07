@@ -1,7 +1,9 @@
 """Build all migrated public content pages, without changing homepage files."""
 from pathlib import Path
 from urllib.parse import urljoin, urlparse, urldefrag
-import json, html, re, posixpath, sys
+import json, html, re, posixpath, sys, hashlib
+from detail_design import render_detail
+from overview_design import render_overview
 from bs4 import BeautifulSoup
 from PIL import Image
 
@@ -45,13 +47,32 @@ def footer(current):
     return f'''<footer class="footer container"><div class="footer-links">{links}</div><div class="footer-top"><a class="brand" href="{rel('index.html',current)}"><img src="{rel('assets/brand-symbol.svg',current)}" width="43" height="46" alt=""><span>Čistá řešení<small>by White Elephant</small></span></a><p>Lidická 2483, 390 03 Tábor<br><a href="tel:+420736403795">+420 736 403 795</a> · <a href="mailto:info@cistareseni.cz">info@cistareseni.cz</a></p></div><div class="footer-bottom"><span>© 2026 WHITE ELEPHANT s.r.o.</span><span>IČ 06245676 · DIČ CZ06245676</span><span>Návrh webu · Poptávka se neodesílá automaticky</span></div></footer>'''
 def lightbox():
     return '''<dialog id="photo-lightbox" class="lightbox" aria-label="Detail snímku"><button class="lightbox-close" aria-label="Zavřít snímek">×</button><figure><img alt=""><figcaption></figcaption></figure><div class="lightbox-controls"><button data-photo-prev aria-label="Předchozí snímek">← Předchozí</button><output aria-live="polite"></output><button data-photo-next aria-label="Další snímek">Další →</button></div></dialog>'''
+def stamp_assets(document,current):
+    def stamped(match):
+        attr,url=match.groups()
+        parsed=urlparse(url)
+        if parsed.scheme or parsed.netloc:return match.group(0)
+        candidate=(DIST/posixpath.dirname(current)/parsed.path).resolve()
+        if not candidate.is_file() or not candidate.is_relative_to(DIST.resolve()):return match.group(0)
+        if candidate.suffix not in ('.css','.js') and candidate.name not in ('brand-symbol.svg','water-systems.svg'):return match.group(0)
+        fingerprint=hashlib.sha256(candidate.read_bytes()).hexdigest()[:12]
+        return f'{attr}="{parsed.path}?v={fingerprint}"'
+    return re.sub(r'(href|src)="([^"]+)"',stamped,document)
+
 def page(current,title,body,description='',has_gallery=False):
     meta=esc(short(description or title,155))
     service_assets='<link rel="stylesheet" href="services.css"><script src="services.js" defer></script>' if current=='sluzby.html' else ''
-    body_class='content-page solutions-page' if current=='sluzby.html' else 'content-page'
-    return f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#0c383b"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="https://majkpowa.github.io/cista-reseni/assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.ttf',current)}" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script>{service_assets}</head><body class="{body_class}">{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
+    is_detail=current.startswith(('sluzby/','realizace/'))
+    detail_assets='<link rel="stylesheet" href="'+rel('details.css',current)+'">' if is_detail else ''
+    experience_assets=f'<link rel="stylesheet" href="{rel("experience.css",current)}"><script src="{rel("experience.js",current)}" defer></script>'
+    body_class='content-page experience-page'+(' solutions-page' if current=='sluzby.html' else '')+(' service-detail' if current.startswith('sluzby/') else ' reference-detail' if current.startswith('realizace/') else '')
+    progress='<div class="reading-progress" aria-hidden="true"></div>' if is_detail else ''
+    document=f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#12375b"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="https://majkpowa.github.io/cista-reseni/assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.ttf',current)}" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script>{service_assets}{detail_assets}{experience_assets}</head><body class="{body_class}">{progress}{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
+    return stamp_assets(document,current)
 def save(current,title,body,description='',has_gallery=False):
-    f=DIST/current;f.parent.mkdir(parents=True,exist_ok=True);f.write_text(page(current,title,body,description,has_gallery),encoding='utf-8')
+    document=page(current,title,body,description,has_gallery)
+    document='\n'.join(line.rstrip() for line in document.splitlines())+'\n'
+    f=DIST/current;f.parent.mkdir(parents=True,exist_ok=True);f.write_text(document,encoding='utf-8',newline='\n')
 def hero(current,title,eyebrow,intro='',parent=None,meta=''):
     crumbs=f'<a href="{rel("index.html",current)}">Úvod</a><span aria-hidden="true">/</span>'
     if parent: crumbs+=f'<a href="{rel(parent[0],current)}">{esc(parent[1])}</a><span aria-hidden="true">/</span>'
@@ -93,32 +114,14 @@ refs=sorted([p for p in PAGES if p['kind']=='reference'],key=lambda p:int(re.sea
 services=[p for p in PAGES if p['kind']=='service']
 service_order=['cisteni-odpadnich-vod','hospodareni-s-destovou-vodou','cerpaci-sachty','konzultace-a-poradenstvi','zpracovani-projektove-dokumentace','zajisteni-povoleni-stavby','prodej-cov-a-destovych-nadrzi','montaz-a-instalace-technologii','servis-a-udrzba','prodej-nahradnich-dilu']
 services.sort(key=lambda p:service_order.index(Path(p['local']).stem) if Path(p['local']).stem in service_order else 99)
+CTX={name:globals()[name] for name in ('esc','rel','short','asset_url','thumb_url','clean_body','gallery_item','gallery_caption','cta','refs','services','ASSETS','ILLUSTRATIONS','date_title','DATA','LABELS')}
 for p in PAGES:
-    current=p['local']; is_ref=p['kind']=='reference'; title,date=date_title(p)
-    meta=''
-    if is_ref:
-        tags=''.join(f'<span class="content-tag">{esc(LABELS[c])}</span>' for c in p['categories'])
-        meta=f'<div class="hero-meta">{tags}<span>{esc(date)}</span><a class="source-link" href="{esc(p["url"])}" target="_blank" rel="noopener">Původní reference ↗</a></div>'
-    body=hero(current,title,'SKUTEČNÁ REALIZACE' if is_ref else 'PRODUKTY A SLUŽBY',parent=('reference.html','Realizace') if is_ref else ('sluzby.html','Naše řešení'),meta=meta)
-    body+=f'<section class="container content-body article-layout"><article class="article-copy">{clean_body(p)}</article>{aside(current)}</section>'
-    if p['images']:
-        body+='<section class="container gallery-section"><p class="eyebrow">ZBLÍZKA</p><h2>Galerie</h2><div class="media-grid">'
-        body+=''.join(gallery_item(u,gallery_caption(u,title,i),current) for i,u in enumerate(p['images']))+'</div></section>'
-    body+=cta(current)
+    current=p['local'];title,date=date_title(p)
+    body=render_detail(p,CTX)
     save(current,title,body,p['body_text'],bool(p['images']))
 
 current='reference.html'
-body=hero(current,'Řešení, která už fungují.','Z NAŠÍ PRÁCE',f'{len(refs)} skutečných realizací. Od domovní čistírny přes využití dešťové vody až po servis technologií. Projděte si fotografie, vyobrazení a podrobnosti jednotlivých projektů.')
-body+='<section class="container content-body"><div class="listing-toolbar"><div class="listing-search"><label for="reference-search">Hledat realizaci</label><input id="reference-search" type="search" placeholder="Město, technologie nebo typ řešení…" autocomplete="off"></div><p class="result-count" id="result-count" aria-live="polite"></p></div><div class="content-filters" role="group" aria-label="Typ realizace">'
-body+='<button data-content-filter="all" aria-pressed="true">Všechny realizace</button>'+''.join(f'<button data-content-filter="{k}" aria-pressed="false">{v}</button>' for k,v in LABELS.items())+'</div><div class="content-card-grid">'
-for p in refs:
-    title,date=date_title(p);image=p.get('thumbnail'); cat=LABELS.get(p['categories'][0],'Realizace')
-    pic_alt=f'Ilustrační vyobrazení — {title}' if image in ILLUSTRATIONS else title
-    pic=f'<img src="{thumb_url(image,current)}" alt="{esc(pic_alt)}" width="{ASSETS.get(image,{}).get("width",800)}" height="{ASSETS.get(image,{}).get("height",600)}" loading="lazy">' if image else ''
-    illustration_note=' · Ilustrační vyobrazení' if image in ILLUSTRATIONS else ''
-    body+=f'<a class="content-card" href="{rel(p["local"],current)}" data-reference-card data-categories="{esc(" ".join(p["categories"]))}" data-search="{esc(title+" "+p["body_text"])}"><div class="card-picture">{pic}<span>{esc(cat.upper())}</span></div><div class="card-meta">{esc(date+illustration_note)}</div><h2>{esc(title)}</h2><p>{esc(short(p["body_text"],150))}</p><span class="text-link">Prohlédnout realizaci {icon()}</span></a>'
-body+='</div><div id="empty-state" class="empty-state" hidden><h2>Takovou realizaci jsme nenašli.</h2><p>Zkuste jiné slovo nebo zvolte všechny typy řešení.</p></div></section>'+cta(current)
-save(current,'Naše realizace',body)
+save(current,'Naše realizace',render_overview(current,CTX),'Skutečné realizace čistíren, dešťových nádrží, čerpání a servisu. Prohlédněte si projekty, fotografie a technické podrobnosti.')
 
 current='sluzby.html'
 body=(ROOT/'scripts/templates/services.html').read_text(encoding='utf-8')
@@ -130,42 +133,9 @@ directory=''.join(f'<a href="{esc(p["local"])}">{esc(p["title"])}</a>' for p in 
 body=body.replace('{{ALL_SERVICE_LINKS}}',directory)
 save(current,'Naše řešení — voda pro váš dům',body,'Objevte řešení pro dešťovou vodu, domovní čistírny, čerpání a servis. Interaktivní schéma, skutečné realizace a péče od návrhu po provoz.')
 
-current='galerie.html'
 total_images=sum(len(p['images']) for p in refs)
-body=hero(current,'Naše práce v obrazech.','GALERIE',f'{total_images} snímků — fotografie a vyobrazení k realizacím. Vyberte si konkrétní projekt a prohlédněte si jednotlivé snímky ve větším detailu.')+'<section class="container content-body"><div class="gallery-controls"><div class="gallery-control"><label for="gallery-project">Vybrat realizaci</label><select id="gallery-project"><option value="all">Všechny realizace</option>'
-body+=''.join(f'<option value="{esc(p["local"])}">{esc(p["title"])}</option>' for p in refs)+'</select></div><p id="gallery-count" aria-live="polite">Zobrazeno '+str(total_images)+' snímků</p></div><div class="media-grid global-gallery">'
-for p in refs:
-    title,_=date_title(p)
-    body+=''.join(gallery_item(u,gallery_caption(u,title,i),current,p['local']) for i,u in enumerate(p['images']))
-body+='</div></section>'+cta(current)
-save(current,'Galerie realizací',body,has_gallery=True)
-
-current='dokumenty.html'
-body=hero(current,'Podklady, které máte po ruce.','KE STAŽENÍ','Návody k obsluze, prohlášení o vlastnostech a přehledy technologií. Dokumenty můžete otevřít nebo uložit jako PDF.')+'<section class="container content-body"><div class="documents-list">'
-for d in DATA['documents']:
-    a=d['asset'];size=f'{a["bytes"]/1024/1024:.1f} MB' if a['bytes']>1024*1024 else f'{round(a["bytes"]/1024)} kB'
-    u=rel(a['local'],current)
-    body+=f'<article class="document-item"><span class="pdf-icon" aria-hidden="true">PDF</span><div><h2>{esc(d["title"])}</h2><p>PDF · {size}</p></div><div class="document-links"><a class="button" href="{u}" target="_blank" rel="noopener">Otevřít PDF {icon()}</a><a class="document-download" href="{u}" download>Stáhnout</a></div></article>'
-body+='</div></section>'+cta(current,'Potřebujete jiný podklad?','Napište nám, jakou technologii řešíte. Pomůžeme vám zorientovat se v dokumentaci.')
-save(current,'Dokumenty ke stažení',body)
-
-current='o-nas.html'
-body=hero(current,'Voda je naše společná práce.','O NÁS','Rodinná obchodní, projekční a realizační firma z Tábora. Pro domácnosti, obce, developery i stavební firmy.')+'<section class="container content-body article-layout"><article class="article-copy">'
-body+=''.join(f'<p>{esc(p)}</p>' for p in DATA['about'] if p)
-partners=[('ENVI-PUR','https://www.envi-pur.cz/kontakty-nasi-partneri/','logo-envi-pur.svg'),('ASIO','https://www.asio.cz/','logo-asio.svg'),('Vodohospodář','https://vodohospodar.cz/','logo-vodohospodar.png'),('ROTO','https://roto-group.eu/','logo-roto.png')]
-body+='<h2>Technologie a partneři</h2><div class="partner-list">'
-for name,href,filename in partners:
-    source=BASE+'assets/img/'+filename
-    body+=f'<a href="{href}" target="_blank" rel="noopener" aria-label="{esc(name)} — web partnera"><img src="{asset_url(source,current)}" alt="{esc(name)}" loading="lazy"></a>'
-body+='</div>'
-about_img=next((u for u in ASSETS if u.endswith('/about.jpg')),None)
-if about_img:body+=f'<img class="content-about-image" src="{asset_url(about_img,current)}" alt="Fotografie z původního webu Čistá řešení" width="{ASSETS[about_img].get("width",800)}" height="{ASSETS[about_img].get("height",600)}" loading="lazy">'
-body+=f'</article>{aside(current)}</section>'+cta(current)
-save(current,'O nás',body)
-
-current='kontakt.html'
-body=hero(current,'Pojďme najít vaše řešení.','KONTAKT','Napište nám, zavolejte nebo si připravte nezávaznou poptávku. Začneme tím, co váš dům a pozemek potřebují.')+f'''<section class="container content-body contact-details"><div><h2>Jsme na příjmu.</h2><a class="company-contact" href="tel:+420736403795">+420 736 403 795</a><a class="company-contact" href="mailto:info@cistareseni.cz">info@cistareseni.cz</a><p>Máte fotografie nebo dokumentaci? Můžete je připojit k e-mailu.</p><a class="button" href="{rel('index.html#poptavka',current)}">Připravit poptávku {icon()}</a></div><div><h2>Čistá řešení</h2><p><strong>WHITE ELEPHANT s.r.o.</strong><br>Lidická 2483<br>390 03 Tábor</p><p>IČ: 06245676<br>DIČ: CZ06245676</p><a class="text-link" href="https://www.google.com/maps/search/?api=1&amp;query=Lidick%C3%A1%202483%2C%20T%C3%A1bor" target="_blank" rel="noopener">Zobrazit adresu na mapě {icon()}</a></div></section>'''
-save(current,'Kontakt',body)
+for current,title in [('galerie.html','Galerie realizací'),('dokumenty.html','Dokumenty ke stažení'),('o-nas.html','O nás'),('kontakt.html','Kontakt')]:
+    save(current,title,render_overview(current,CTX),has_gallery=current=='galerie.html')
 
 index={'source':BASE,'retrieved':DATA['retrieved'],'reference_count':len(refs),'service_count':len(services),'gallery_image_count':total_images,'document_count':len(DATA['documents']),'pages':[{'title':p['title'],'url':p['local'],'source':p['url'],'kind':p['kind'],'categories':p['categories'],'thumbnail':ASSETS.get(p['thumbnail'],{}).get('local')} for p in PAGES],'navigation':{'services':'sluzby.html','references':'reference.html','gallery':'galerie.html','downloads':'dokumenty.html','about':'o-nas.html','contact':'kontakt.html'}}
 (DIST/'data'/'content-index.json').write_text(json.dumps(index,ensure_ascii=False,indent=2),encoding='utf-8')
@@ -212,3 +182,8 @@ scripts/build_content.py — sestavení podstránek.
 '''
 (DOC/'migration-report.txt').write_text(report,encoding='utf-8')
 print(json.dumps({'built_detail_pages':len(PAGES),'built_index_pages':6,'references':len(refs),'gallery_images':total_images,'services':len(services),'documents':len(DATA['documents'])},ensure_ascii=False))
+
+# Apply the same cache-safe asset references to the hand-authored homepage.
+homepage=DIST/'index.html'
+homepage_document=stamp_assets(homepage.read_text(encoding='utf-8'),'index.html')
+homepage.write_text('\n'.join(line.rstrip() for line in homepage_document.splitlines())+'\n',encoding='utf-8',newline='\n')
