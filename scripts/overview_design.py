@@ -1,5 +1,7 @@
 """Visual overview pages; public source records remain the source of truth."""
 from pathlib import Path
+from urllib.parse import quote
+from partner_testimonial import render_partner_testimonial
 
 
 def render_overview(current, ctx):
@@ -7,6 +9,7 @@ def render_overview(current, ctx):
     refs, data, assets = ctx['refs'], ctx['DATA'], ctx['ASSETS']
     thumb, asset_url = ctx['thumb_url'], ctx['asset_url']
     date_title, labels = ctx['date_title'], ctx['LABELS']
+    business, company = ctx['BUSINESS'], ctx['COMPANY']
 
     def crumbs(title):
         return f'<div class="breadcrumbs"><a href="index.html">Úvod</a><span aria-hidden="true">/</span><span aria-current="page">{esc(title)}</span></div>'
@@ -17,14 +20,23 @@ def render_overview(current, ctx):
     def project_card(p):
         title, date = date_title(p)
         image = p.get('thumbnail')
-        category = labels.get(p['categories'][0], 'Realizace') if p['categories'] else 'Realizace'
+        categories = p.get('display_categories', p['categories'])
+        category = labels.get(categories[0], 'Realizace') if categories else 'Realizace'
         illustration = image in ctx['ILLUSTRATIONS']
         picture = ''
         if image:
             a = assets[image]
             picture = f'<img src="{thumb(image,current)}" width="{a.get("width",800)}" height="{a.get("height",600)}" alt="{esc(("Ilustrační vyobrazení — " if illustration else "")+title)}" loading="lazy">'
         note = ' · Ilustrační vyobrazení' if illustration else ''
-        return f'<a class="content-card project-card" href="{rel(p["local"],current)}" data-reference-card data-categories="{esc(" ".join(p["categories"]))}" data-search="{esc(title+" "+p["body_text"])}"><div class="card-picture">{picture}<span>{esc(category)}</span><b class="card-round-arrow" aria-hidden="true">↗</b></div><div class="card-meta">{esc(date+note)}</div><h2>{esc(title)}</h2><p>{esc(short(p["body_text"],125))}</p><span class="text-link">Prohlédnout projekt <span aria-hidden="true">↗</span></span></a>'
+        facts = ''.join(f'<div><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>' for k,v in p.get('project_facts',[]) if k not in ('Rozsah služeb','Rozsah prací'))
+        scope = p.get('compact_scope', short(p['body_text'],125))
+        return f'<a class="content-card project-card" href="{rel(p["local"],current)}" data-reference-card data-categories="{esc(" ".join(categories))}" data-search="{esc(title+" "+p["body_text"])}"><div class="card-picture">{picture}<span>{esc(category)}</span><b class="card-round-arrow" aria-hidden="true">↗</b></div><div class="card-meta">{esc(date+note)}</div><h2>{esc(title)}</h2><p>{esc(scope)}</p><dl class="project-card-facts">{facts}</dl><span class="text-link">Prohlédnout projekt <span aria-hidden="true">↗</span></span></a>'
+
+    def service_proof():
+        cards = ''
+        for item in business['service_proof']:
+            cards += f'<article><p class="ed-kicker">{esc(item["location"])} / {esc(item["service"])}</p><div class="proof-capacity"><strong>{item["capacity"]["value"]}</strong><span>{esc(item["capacity"]["unit"])}<small>kapacita ČOV</small></span></div><h3>{esc(item["client"])}</h3><a class="text-link" href="sluzby/servis-a-udrzba.html">Prozkoumat servisní služby ↗</a></article>'
+        return '<section class="container service-proof-section" data-reveal><div class="section-caption"><div><p class="ed-kicker">Servis také pro komerční provozy</p><h2>Péče o zařízení<br>v každodenním provozu.</h2></div><p>Servisujeme také čistírny,<br>které jsme sami nedodávali.</p></div><div class="service-proof-grid">'+cards+'</div></section>'
 
     if current == 'reference.html':
         featured = next(p for p in refs if p['local'].startswith('realizace/38-'))
@@ -33,7 +45,7 @@ def render_overview(current, ctx):
         body += '<section class="container project-library" id="projekty"><div class="section-caption"><div><p class="ed-kicker">Najděte podobný záměr</p><h2>Projekty v detailu</h2></div><a class="text-link" href="galerie.html">Procházet fotografie ↗</a></div><div class="listing-toolbar"><div class="listing-search"><label for="reference-search">Co vás zajímá?</label><input id="reference-search" type="search" placeholder="Místo, technologie nebo typ řešení…" autocomplete="off"></div><p class="result-count" id="result-count" role="status"></p></div><div class="content-filters" role="group" aria-label="Typ realizace"><button data-content-filter="all" aria-pressed="true">Všechny projekty</button>'
         body += ''.join(f'<button data-content-filter="{k}" aria-pressed="false">{v}</button>' for k,v in labels.items())
         body += '</div><div class="content-card-grid project-library-grid">'+''.join(project_card(p) for p in refs)+'</div><div id="empty-state" class="empty-state" hidden><h2>Takový projekt jsme nenašli.</h2><p>Zkuste jiné slovo nebo vyberte všechny typy řešení.</p></div><div class="load-more-row"><button class="button button-outline" data-load-references hidden>Zobrazit další projekty <span aria-hidden="true">+</span></button></div></section>'
-        return body + ctx['cta'](current,'Má váš pozemek podobný příběh?','Probereme, co potřebujete vyřešit, a navrhneme další postup.')
+        return body + service_proof() + ctx['cta'](current,'Co potřebuje váš dům nebo provoz?','Probereme novou technologii, servis i obnovu stávajícího zařízení.')
 
     if current == 'galerie.html':
         count = sum(len(p['images']) for p in refs)
@@ -61,13 +73,14 @@ def render_overview(current, ctx):
         return body + ctx['cta'](current,'Potřebujete se v podkladech zorientovat?','Napište nám, jakou technologii řešíte. Pomůžeme vám vybrat další postup.')
 
     if current == 'o-nas.html':
-        body = heading('O nás','Voda je naše<br><span>společná práce.</span>','Rodinná obchodní, projekční a realizační firma z Tábora. Spojujeme návrh, realizaci a následnou péči.', '<a class="text-link" href="kontakt.html">Poznejme váš záměr ↗</a>')
+        body = heading('O nás','Voda je naše<br><span>společná práce.</span>','Rodinná obchodní, projekční, realizační a servisní firma z Tábora. Řešení pro domácnosti, firmy, obce i průmyslové provozy zajišťujeme vlastními kapacitami nebo s odbornými partnery.', '<a class="text-link" href="kontakt.html">Poznejme váš záměr ↗</a>')
         body += '<section class="container about-story" data-reveal><div class="about-story-image"><img src="assets/team-about.webp" alt="Kapka vody na zeleném listu" width="614" height="456"><span>Čistá řešení<br><small>by White Elephant / Tábor</small></span></div><div class="about-principles"><p class="ed-kicker">Od návrhu po provoz</p><h2>Jedna návaznost.<br><span>Od začátku do konce.</span></h2><div class="about-points"><a href="sluzby/zpracovani-projektove-dokumentace.html"><span>01</span><div><strong>Promyslet</strong><p>Projektanti a návrh vhodného řešení.</p></div><b aria-hidden="true">↗</b></a><a href="sluzby/montaz-a-instalace-technologii.html"><span>02</span><div><strong>Realizovat</strong><p>Montážní technici, instalatéři a elektrikáři.</p></div><b aria-hidden="true">↗</b></a><a href="sluzby/servis-a-udrzba.html"><span>03</span><div><strong>Pečovat</strong><p>Poradenství, údržba a následný servis.</p></div><b aria-hidden="true">↗</b></a></div></div></section>'
         headings = ['Lidé za Čistými řešeními','Smysl naší práce','Pro koho pracujeme','Technologie, kterým se věnujeme']
         body += '<section class="container about-details"><div><p class="ed-kicker">Blíž k nám</p><h2>Co je pro nás<br><span>důležité.</span></h2></div><div class="source-accordions">'
         for i,p in enumerate(x for x in data['about'] if x.strip()):
             body += f'<details {"open" if i==0 else ""}><summary>{esc(headings[i])}<span aria-hidden="true">+</span></summary><div class="about-source"><p>{esc(p)}</p></div></details>'
-        body += '</div></section><section class="container partner-section"><div class="section-caption"><div><p class="ed-kicker">Technologie a spolupráce</p><h2>Na čem stavíme</h2></div></div><div class="partner-deck">'
+        body += '</div></section>' + render_partner_testimonial(current, ctx)
+        body += '<section class="container partner-section"><div class="section-caption"><div><p class="ed-kicker">Technologie a spolupráce</p><h2>Na čem stavíme</h2></div></div><div class="partner-deck">'
         for name,href,filename in [('ENVI-PUR','https://www.envi-pur.cz/kontakty-nasi-partneri/','logo-envi-pur.svg'),('ASIO','https://www.asio.cz/','logo-asio.svg'),('Vodohospodář','https://vodohospodar.cz/','logo-vodohospodar.png'),('ROTO','https://roto-group.eu/','logo-roto.png')]:
             source=data['source']+'assets/img/'+filename
             body += f'<a href="{href}" target="_blank" rel="noopener" aria-label="{name} — web partnera"><img src="{asset_url(source,current)}" alt="{name}" loading="lazy"><span aria-hidden="true">↗</span></a>'
@@ -75,9 +88,11 @@ def render_overview(current, ctx):
 
     if current == 'kontakt.html':
         body = heading('Kontakt','Každé řešení<br><span>začíná rozhovorem.</span>','Nemusíte mít vybranou technologii. Zavolejte nám, napište nebo začněte tím, co právě potřebujete vyřešit.')
-        body += '<section class="container contact-hub"><div class="contact-channels"><a href="tel:+420736403795" class="contact-channel"><span>Zavolejte nám</span><strong>736 403 795</strong><b aria-hidden="true">↗</b></a><a href="mailto:info@cistareseni.cz" class="contact-channel"><span>Napište nám</span><strong>info@cistareseni.cz</strong><b aria-hidden="true">↗</b></a><div class="contact-copy-row"><p>Fotografie a dokumentaci můžete připojit k e-mailu.</p><button type="button" data-copy-text="info@cistareseni.cz" data-copy-label="E-mail zkopírován">Kopírovat e-mail</button></div></div><div class="address-card"><p class="ed-kicker">Čistá řešení / WHITE ELEPHANT s.r.o.</p><h2>Tábor</h2><p class="street-address">Lidická 2483<br>390 03 Tábor</p><div class="address-actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=Lidick%C3%A1%202483%2C%20T%C3%A1bor" target="_blank" rel="noopener">Zobrazit adresu na mapě ↗</a><button type="button" data-copy-text="Lidická 2483, 390 03 Tábor" data-copy-label="Adresa zkopírována">Kopírovat adresu</button></div><small>IČ 06245676 / DIČ CZ06245676</small></div><p class="sr-only" id="copy-status" role="status"></p></section>'
+        street, city, address = esc(company['street']), esc(company['city']), esc(company['address'])
+        map_query = quote(company['address'])
+        body += f'<section class="container contact-hub"><div class="contact-channels"><a href="tel:+420736403795" class="contact-channel"><span>Zavolejte nám</span><strong>736 403 795</strong><b aria-hidden="true">↗</b></a><a href="mailto:info@cistareseni.cz" class="contact-channel"><span>Napište nám</span><strong>info@cistareseni.cz</strong><b aria-hidden="true">↗</b></a><div class="contact-copy-row"><p>Fotografie a dokumentaci můžete připojit k e-mailu.</p><button type="button" data-copy-text="info@cistareseni.cz" data-copy-label="E-mail zkopírován">Kopírovat e-mail</button></div></div><div class="address-card"><p class="ed-kicker">Čistá řešení / WHITE ELEPHANT s.r.o.</p><h2>Tábor</h2><p class="street-address">{street}<br>{city}</p><div class="address-actions"><a href="https://www.google.com/maps/search/?api=1&amp;query={map_query}" target="_blank" rel="noopener">Zobrazit adresu na mapě ↗</a><button type="button" data-copy-text="{address}" data-copy-label="Adresa zkopírována">Kopírovat adresu</button></div><small>IČ 06245676 / DIČ CZ06245676</small></div><p class="sr-only" id="copy-status" role="status"></p></section>'
         body += '<section class="container contact-intents"><div class="section-caption"><div><p class="ed-kicker">Pojďme rovnou k věci</p><h2>Co vás přivádí?</h2></div><p>Volbou připravíte poptávku<br>pro konkrétní oblast.</p></div><div class="intent-grid">'
-        for number,key,title,desc in [('01','destovka','Dešťová voda','Chci využít vodu ze střechy.'),('02','cov','Domovní čistírna','Řeším odpadní vody.'),('03','cerpani','Čerpání vody','Potřebuji vodu dostat dál.'),('04','servis','Servis a obnova','Stávající zařízení potřebuje péči.'),('05','poradit','Potřebuji poradit','Pomozte mi vybrat další krok.')]:
+        for number,key,title,desc in [('01','cov','Nová domovní ČOV','Řešení pro dům nebo rekreační objekt.'),('02','cov_firmy','ČOV pro firmy a obce','Penzion, obec, komerční nebo průmyslový provoz.'),('03','servis','Servis nebo oprava','Také u zařízení, která jsme nedodávali.'),('04','zprovozneni','Zprovoznění ČOV','Kontrola, nastavení a uvedení do provozu.'),('05','skoleni','Školení obsluhy','Praktické zaškolení a podpora provozovatele.'),('06','rekonstrukce','Rekonstrukce ČOV','Modernizace a intenzifikace stávající technologie.'),('07','destovka','Dešťová voda','Využití zachycené vody.'),('08','cerpani','Čerpání vody','Čerpací šachty a technologie.'),('09','poradit','Odborná konzultace','Pomoc s výběrem dalšího kroku.')]:
             body += f'<a href="index.html?reseni={key}#poptavka"><span>{number}</span><div><h3>{title}</h3><p>{desc}</p></div><b aria-hidden="true">↗</b></a>'
         return body + '</div></section>'
     raise ValueError(f'Unsupported overview: {current}')

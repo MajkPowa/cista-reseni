@@ -1,9 +1,13 @@
-"""Build all migrated public content pages, without changing homepage files."""
+"""Build migrated and expanded pages; synchronize the homepage navigation."""
 from pathlib import Path
 from urllib.parse import urljoin, urlparse, urldefrag
 import json, html, re, posixpath, sys, hashlib
 from detail_design import render_detail
 from overview_design import render_overview
+from site_shell import COMPANY, render_header, render_footer
+from service_extensions import EXTENSION_PAGES, render_extension
+from reference_enrichment import enrich_references
+from partner_testimonial import render_partner_testimonial
 from bs4 import BeautifulSoup
 from PIL import Image
 
@@ -11,6 +15,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 ROOT=Path(__file__).resolve().parents[1]; DIST=ROOT/'dist'; DOC=ROOT/'docs'/'source-inventory'
 DATA=json.loads((DOC/'content.json').read_text(encoding='utf-8'))
 PAGES=DATA['pages']; ASSETS=DATA['assets']; BASE=DATA['source']
+BUSINESS=json.loads((ROOT/'docs/business-expansion.json').read_text(encoding='utf-8'))
 MAP={p['url']:p['local'] for p in PAGES}
 THUMBS={}
 for source,asset in ASSETS.items():
@@ -21,7 +26,7 @@ for source,asset in ASSETS.items():
         image.save(target,'WEBP',quality=81,method=6)
     with Image.open(target) as image:width,height=image.size
     THUMBS[source]={'local':target.relative_to(DIST).as_posix(),'width':width,'height':height,'bytes':target.stat().st_size}
-LABELS={'cov':'Čistírny','destovka':'Dešťová voda','cerpani':'Čerpací technika','servis':'Servis a obnova','ostatni':'Další řešení'}
+LABELS={'cov':'Domovní ČOV','commercial':'Firmy, obce a průmysl','servis':'Servis a rekonstrukce','destovka':'Dešťová voda','cerpani':'Čerpací technika','ostatni':'Další řešení'}
 ILLUSTRATIONS={'https://www.cistareseni.cz/assets/img/references/destovka-tabor-102023_1750944312.jpg'}
 def esc(s): return html.escape(str(s),quote=True)
 def rel(target,current):
@@ -41,10 +46,9 @@ def date_title(p):
 def icon(name='arrow'):
     return '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></svg>'
 def header(current):
-    return f'''<a class="skip-link" href="#main">Přejít na obsah</a><div class="preview-bar"><span><i></i> Návrh nového webu</span><a href="https://www.cistareseni.cz/" target="_blank" rel="noopener">Současný web {icon()}</a></div><header class="header"><div class="container header-inner"><a class="brand" href="{rel('index.html',current)}" aria-label="Čistá řešení — úvod"><img src="{rel('assets/brand-symbol.svg',current)}" width="43" height="46" alt=""><span>Čistá řešení<small>by White Elephant</small></span></a><button class="menu-toggle" aria-label="Otevřít nabídku" aria-expanded="false" aria-controls="navigation"><span></span><span></span></button><nav id="navigation" aria-label="Hlavní navigace"><a href="{rel('sluzby.html',current)}">Naše řešení</a><a href="{rel('reference.html',current)}">Realizace</a><a href="{rel('o-nas.html',current)}">O nás</a><a href="{rel('dokumenty.html',current)}">Ke stažení</a><a href="{rel('kontakt.html',current)}">Kontakt</a><a class="button button-small" href="{rel('index.html#poptavka',current)}">Probrat můj projekt {icon()}</a></nav></div></header>'''
+    return render_header(current, rel, icon)
 def footer(current):
-    links=''.join(f'<a href="{rel(path,current)}">{label}</a>' for path,label in [('sluzby.html','Produkty a služby'),('reference.html','Realizace'),('galerie.html','Galerie'),('dokumenty.html','Ke stažení'),('o-nas.html','O nás'),('kontakt.html','Kontakt')])
-    return f'''<footer class="footer container"><div class="footer-links">{links}</div><div class="footer-top"><a class="brand" href="{rel('index.html',current)}"><img src="{rel('assets/brand-symbol.svg',current)}" width="43" height="46" alt=""><span>Čistá řešení<small>by White Elephant</small></span></a><p>Lidická 2483, 390 03 Tábor<br><a href="tel:+420736403795">+420 736 403 795</a> · <a href="mailto:info@cistareseni.cz">info@cistareseni.cz</a></p></div><div class="footer-bottom"><span>© 2026 WHITE ELEPHANT s.r.o.</span><span>IČ 06245676 · DIČ CZ06245676</span><span>Návrh webu · Poptávka se neodesílá automaticky</span></div></footer>'''
+    return render_footer(current, rel)
 def lightbox():
     return '''<dialog id="photo-lightbox" class="lightbox" aria-label="Detail snímku"><button class="lightbox-close" aria-label="Zavřít snímek">×</button><figure><img alt=""><figcaption></figcaption></figure><div class="lightbox-controls"><button data-photo-prev aria-label="Předchozí snímek">← Předchozí</button><output aria-live="polite"></output><button data-photo-next aria-label="Další snímek">Další →</button></div></dialog>'''
 def stamp_assets(document,current):
@@ -65,9 +69,13 @@ def page(current,title,body,description='',has_gallery=False):
     is_detail=current.startswith(('sluzby/','realizace/'))
     detail_assets='<link rel="stylesheet" href="'+rel('details.css',current)+'">' if is_detail else ''
     experience_assets=f'<link rel="stylesheet" href="{rel("experience.css",current)}"><script src="{rel("experience.js",current)}" defer></script>'
+    shell_assets=f'<link rel="stylesheet" href="{rel("business.css",current)}"><link rel="stylesheet" href="{rel("navigation.css",current)}"><script src="{rel("navigation.js",current)}" defer></script>'
+    extension_assets=f'<link rel="stylesheet" href="{rel("service-extensions.css",current)}">' if current in EXTENSION_PAGES else ''
+    if current=='o-nas.html':
+        extension_assets+=f'<link rel="stylesheet" href="{rel("partner-testimonial.css",current)}">'
     body_class='content-page experience-page'+(' solutions-page' if current=='sluzby.html' else '')+(' service-detail' if current.startswith('sluzby/') else ' reference-detail' if current.startswith('realizace/') else '')
     progress='<div class="reading-progress" aria-hidden="true"></div>' if is_detail else ''
-    document=f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#12375b"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="https://majkpowa.github.io/cista-reseni/assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.ttf',current)}" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script>{service_assets}{detail_assets}{experience_assets}</head><body class="{body_class}">{progress}{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
+    document=f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#12375b"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="https://majkpowa.github.io/cista-reseni/assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.ttf',current)}" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script>{service_assets}{detail_assets}{experience_assets}{extension_assets}{shell_assets}</head><body class="{body_class}">{progress}{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
     return stamp_assets(document,current)
 def save(current,title,body,description='',has_gallery=False):
     document=page(current,title,body,description,has_gallery)
@@ -111,14 +119,24 @@ def gallery_caption(url,title,index):
     return f'{title} — Ilustrační vyobrazení akumulační nádrže' if url in ILLUSTRATIONS else f'{title} — fotografie {index+1}'
 
 refs=sorted([p for p in PAGES if p['kind']=='reference'],key=lambda p:int(re.search(r'/reference/(\d+)',p['url']).group(1)),reverse=True)
+refs=enrich_references(refs)
+reference_map={p['local']:p for p in refs}
 services=[p for p in PAGES if p['kind']=='service']
 service_order=['cisteni-odpadnich-vod','hospodareni-s-destovou-vodou','cerpaci-sachty','konzultace-a-poradenstvi','zpracovani-projektove-dokumentace','zajisteni-povoleni-stavby','prodej-cov-a-destovych-nadrzi','montaz-a-instalace-technologii','servis-a-udrzba','prodej-nahradnich-dilu']
 services.sort(key=lambda p:service_order.index(Path(p['local']).stem) if Path(p['local']).stem in service_order else 99)
-CTX={name:globals()[name] for name in ('esc','rel','short','asset_url','thumb_url','clean_body','gallery_item','gallery_caption','cta','refs','services','ASSETS','ILLUSTRATIONS','date_title','DATA','LABELS')}
+CTX={name:globals()[name] for name in ('esc','rel','short','asset_url','thumb_url','clean_body','gallery_item','gallery_caption','cta','refs','services','ASSETS','ILLUSTRATIONS','date_title','DATA','LABELS','COMPANY','BUSINESS')}
 for p in PAGES:
     current=p['local'];title,date=date_title(p)
-    body=render_detail(p,CTX)
-    save(current,title,body,p['body_text'],bool(p['images']))
+    p=reference_map.get(current,p)
+    if current in EXTENSION_PAGES:
+        meta=EXTENSION_PAGES[current]
+        save(current,meta['title'],render_extension(current,CTX),meta['description'])
+    else:
+        save(current,title,render_detail(p,CTX),p['body_text'],bool(p['images']))
+
+for current,meta in EXTENSION_PAGES.items():
+    if current not in {p['local'] for p in PAGES}:
+        save(current,meta['title'],render_extension(current,CTX),meta['description'])
 
 current='reference.html'
 save(current,'Naše realizace',render_overview(current,CTX),'Skutečné realizace čistíren, dešťových nádrží, čerpání a servisu. Prohlédněte si projekty, fotografie a technické podrobnosti.')
@@ -130,14 +148,25 @@ for token,reference_id in [('RAIN',12),('CLEAN',38),('PUMP',39),('CARE',41)]:
     reference=next(p for p in refs if p['local'].startswith(f'realizace/{reference_id}-'))
     body=body.replace('{{REF_'+token+'}}',esc(reference['local']))
 directory=''.join(f'<a href="{esc(p["local"])}">{esc(p["title"])}</a>' for p in services)
+directory+=''.join(f'<a href="{esc(path)}">{esc(meta["title"])}</a>' for path,meta in EXTENSION_PAGES.items() if path not in {p['local'] for p in services})
 body=body.replace('{{ALL_SERVICE_LINKS}}',directory)
-save(current,'Naše řešení — voda pro váš dům',body,'Objevte řešení pro dešťovou vodu, domovní čistírny, čerpání a servis. Interaktivní schéma, skutečné realizace a péče od návrhu po provoz.')
+save(current,'Řešení pro domácnosti, firmy i obce',body,'Domovní a větší ČOV, dešťová voda, servis, zprovoznění, školení a modernizace. Od návrhu technologie po péči o její provoz.')
 
 total_images=sum(len(p['images']) for p in refs)
 for current,title in [('galerie.html','Galerie realizací'),('dokumenty.html','Dokumenty ke stažení'),('o-nas.html','O nás'),('kontakt.html','Kontakt')]:
     save(current,title,render_overview(current,CTX),has_gallery=current=='galerie.html')
 
 index={'source':BASE,'retrieved':DATA['retrieved'],'reference_count':len(refs),'service_count':len(services),'gallery_image_count':total_images,'document_count':len(DATA['documents']),'pages':[{'title':p['title'],'url':p['local'],'source':p['url'],'kind':p['kind'],'categories':p['categories'],'thumbnail':ASSETS.get(p['thumbnail'],{}).get('local')} for p in PAGES],'navigation':{'services':'sluzby.html','references':'reference.html','gallery':'galerie.html','downloads':'dokumenty.html','about':'o-nas.html','contact':'kontakt.html'}}
+index['service_count']=len(services)+sum(path not in {p['local'] for p in services} for path in EXTENSION_PAGES)
+for entry in index['pages']:
+    if entry['url'] in reference_map:
+        enriched=reference_map[entry['url']]
+        entry['categories']=enriched['display_categories']
+        entry['project_facts']=enriched['project_facts']
+for path,meta in EXTENSION_PAGES.items():
+    if path not in {p['url'] for p in index['pages']}:
+        index['pages'].append({'title':meta['title'],'url':path,'kind':'service','source':'clientbrief2026-11-08','categories':[],'thumbnail':None})
+index['company']=COMPANY
 (DIST/'data'/'content-index.json').write_text(json.dumps(index,ensure_ascii=False,indent=2),encoding='utf-8')
 (DOC/'thumbnails.json').write_text(json.dumps(THUMBS,ensure_ascii=False,indent=2),encoding='utf-8')
 report=f'''ČISTÁ ŘEŠENÍ — INVENTURA MIGRACE VEŘEJNÉHO OBSAHU
@@ -181,9 +210,21 @@ scripts/crawl_content.py — čtení zdroje, stažení médií, evidence.
 scripts/build_content.py — sestavení podstránek.
 '''
 (DOC/'migration-report.txt').write_text(report,encoding='utf-8')
-print(json.dumps({'built_detail_pages':len(PAGES),'built_index_pages':6,'references':len(refs),'gallery_images':total_images,'services':len(services),'documents':len(DATA['documents'])},ensure_ascii=False))
+print(json.dumps({'built_detail_pages':len(index['pages']),'built_index_pages':6,'references':len(refs),'gallery_images':total_images,'services':index['service_count'],'documents':len(DATA['documents'])},ensure_ascii=False))
 
 # Apply the same cache-safe asset references to the hand-authored homepage.
-homepage=DIST/'index.html'
-homepage_document=stamp_assets(homepage.read_text(encoding='utf-8'),'index.html')
-homepage.write_text('\n'.join(line.rstrip() for line in homepage_document.splitlines())+'\n',encoding='utf-8',newline='\n')
+if '--skip-home' not in sys.argv:
+    homepage=DIST/'index.html'
+    home_soup=BeautifulSoup(homepage.read_text(encoding='utf-8'),'html.parser')
+    for old in home_soup.select('.skip-link,.preview-bar,header.header,footer.footer'): old.decompose()
+    home_soup.body.insert(0,BeautifulSoup(header('index.html'),'html.parser'))
+    home_soup.body.append(BeautifulSoup(footer('index.html'),'html.parser'))
+    for old in home_soup.select('#partner-testimonial'): old.decompose()
+    home_soup.select_one('section.about').insert_after(BeautifulSoup(render_partner_testimonial('index.html',CTX),'html.parser'))
+    for name in ('business.css','navigation.css','partner-testimonial.css'):
+        if not home_soup.select_one(f'link[href^="{name}"]'):
+            tag=home_soup.new_tag('link',rel='stylesheet',href=name);home_soup.head.append(tag)
+    if not home_soup.select_one('script[src^="navigation.js"]'):
+        tag=home_soup.new_tag('script',src='navigation.js',defer='');home_soup.head.append(tag)
+    homepage_document=stamp_assets(str(home_soup),'index.html')
+    homepage.write_text('\n'.join(line.rstrip() for line in homepage_document.splitlines())+'\n',encoding='utf-8',newline='\n')

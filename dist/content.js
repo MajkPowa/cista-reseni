@@ -1,14 +1,4 @@
 'use strict';
-const menuButton = document.querySelector('.menu-toggle');
-const navigation = document.getElementById('navigation');
-function closeMenu() { menuButton?.setAttribute('aria-expanded', 'false'); menuButton?.setAttribute('aria-label', 'Otevřít nabídku'); navigation?.classList.remove('is-open'); }
-menuButton?.addEventListener('click', () => {
-  const open = menuButton.getAttribute('aria-expanded') !== 'true';
-  menuButton.setAttribute('aria-expanded', String(open)); menuButton.setAttribute('aria-label', open ? 'Zavřít nabídku' : 'Otevřít nabídku'); navigation?.classList.toggle('is-open', open);
-});
-navigation?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
-window.matchMedia('(min-width: 901px)').addEventListener('change', e => { if(e.matches) closeMenu(); });
 const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const search = document.getElementById('reference-search');
 const filterButtons = [...document.querySelectorAll('[data-content-filter]')];

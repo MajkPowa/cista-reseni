@@ -2,7 +2,7 @@
   "source": "https://www.cistareseni.cz/",
   "retrieved": "2026-11-07",
   "reference_count": 41,
-  "service_count": 10,
+  "service_count": 14,
   "gallery_image_count": 278,
   "document_count": 5,
   "pages": [
@@ -84,10 +84,19 @@
       "source": "https://www.cistareseni.cz/reference/41-bc-50-po-25-letech-provozu-kompletni-obnova-technologie-novy-zacatek-09-2026.html",
       "kind": "reference",
       "categories": [
-        "cov",
         "servis"
       ],
-      "thumbnail": "assets/source/4f20b1def728-bc-50-po-25-letech-provozu-kompletni-obnova-t.webp"
+      "thumbnail": "assets/source/4f20b1def728-bc-50-po-25-letech-provozu-kompletni-obnova-t.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 50, řídicí jednotka COMFORT a dmychadlo FPZ 20"
+        ],
+        [
+          "Rozsah prací",
+          "Obnova technologického a elektrického vybavení, funkční zkoušky, zprovoznění a zaškolení obsluhy."
+        ]
+      ]
     },
     {
       "title": "Od problémů se zápachem ke správně fungující domovní ČOV 8 / 2026",
@@ -95,10 +104,20 @@
       "source": "https://www.cistareseni.cz/reference/40-od-problemu-se-zapachem-ke-spravne-fungujici-domovni-cov-8-2026.html",
       "kind": "reference",
       "categories": [
-        "cov",
-        "servis"
+        "servis",
+        "cov"
       ],
-      "thumbnail": "assets/source/2ea8b3176258-od-problemu-se-zapachem-ke-spravne-fungujici-.webp"
+      "thumbnail": "assets/source/2ea8b3176258-od-problemu-se-zapachem-ke-spravne-fungujici-.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "ASIO VARIOcomp 5K"
+        ],
+        [
+          "Rozsah prací",
+          "Diagnostika, oprava technologického zapojení, stabilizace biologie a sedimentační zkoušky."
+        ]
+      ]
     },
     {
       "title": "Přehořov u Soběslavi – Domovní čistírna odpadních vod BC 4 COMFORT DUO s pískovým filtrem 07/ 2026",
@@ -108,7 +127,17 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/a9dbf1303a31-prehorov-u-sobeslavi-domovni-cistirna-odpadni.webp"
+      "thumbnail": "assets/source/a9dbf1303a31-prehorov-u-sobeslavi-domovni-cistirna-odpadni.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 COMFORT DUO s pískovým filtrem"
+        ],
+        [
+          "Rozsah prací",
+          "Dodávka a instalace domovní ČOV s primární usazovací nádrží, revizní šachtou a dočištěním."
+        ]
+      ]
     },
     {
       "title": "Komplexní řešení odvádění splaškových vod – výrobní areál Písek 08/2026",
@@ -116,10 +145,25 @@
       "source": "https://www.cistareseni.cz/reference/39-komplexni-reseni-odvadeni-splaskovych-vod-vyrobni-areal-pisek-082026.html",
       "kind": "reference",
       "categories": [
-        "ostatni",
-        "cerpani"
+        "commercial",
+        "cerpani",
+        "servis"
       ],
-      "thumbnail": "assets/source/354cd320fcb4-komplexni-reseni-odvadeni-splaskovych-vod-vyr.webp"
+      "thumbnail": "assets/source/354cd320fcb4-komplexni-reseni-odvadeni-splaskovych-vod-vyr.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "Čerpací jímka splaškových vod a uklidňovací šachta"
+        ],
+        [
+          "Typ objektu",
+          "Výrobní areál – kovoobrábění"
+        ],
+        [
+          "Rozsah prací",
+          "Kamerové zkoušky, zemní práce a přestavba původní ČOV výrobního areálu na čerpání do kanalizace."
+        ]
+      ]
     },
     {
       "title": "Realizace domovní čistírny odpadních vod v Hrušově Lhotě 06/2026",
@@ -129,7 +173,21 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/ad58a9af18ee-realizace-domovni-cistirny-odpadnich-vod-v-hr.webp"
+      "thumbnail": "assets/source/ad58a9af18ee-realizace-domovni-cistirny-odpadnich-vod-v-hr.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 SBR II. generace"
+        ],
+        [
+          "Akumulace vyčištěné vody",
+          "5 m³"
+        ],
+        [
+          "Rozsah prací",
+          "Dodávka, montáž, obetonování nádrží, zprovoznění a zaškolení včetně využití vyčištěné vody."
+        ]
+      ]
     },
     {
       "title": "Úprava vody z pozdemního zdroje pro rodinný dům 05/ 2026",
@@ -139,7 +197,17 @@
       "categories": [
         "ostatni"
       ],
-      "thumbnail": "assets/source/512dd7c2bf4c-uprava-vody-z-pozdemniho-zdroje-pro-rodinny-d.webp"
+      "thumbnail": "assets/source/512dd7c2bf4c-uprava-vody-z-pozdemniho-zdroje-pro-rodinny-d.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "Mechanická filtrace a potrubní UV lampa"
+        ],
+        [
+          "Rozsah prací",
+          "Návrh úpravy podzemní vody pro snížení železa a odstranění mikrobiologického znečištění."
+        ]
+      ]
     },
     {
       "title": "BC 10 SBR pro mateřskou školku – Týn nad Vltavou 02 / 2026",
@@ -147,9 +215,23 @@
       "source": "https://www.cistareseni.cz/reference/35-bc-10-sbr-pro-materskou-skolku-tyn-nad-vltavou-02-2026.html",
       "kind": "reference",
       "categories": [
-        "cov"
+        "commercial"
       ],
-      "thumbnail": "assets/source/1608aafd8c0e-bc-10-sbr-pro-materskou-skolku-tyn-nad-vltavo.webp"
+      "thumbnail": "assets/source/1608aafd8c0e-bc-10-sbr-pro-materskou-skolku-tyn-nad-vltavo.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 10 SBR a AQUAVISOR"
+        ],
+        [
+          "Typ objektu",
+          "Mateřská školka"
+        ],
+        [
+          "Rozsah prací",
+          "Zprovoznění ČOV mateřské školky se vzdálenou správou a monitoringem."
+        ]
+      ]
     },
     {
       "title": "Servis a údržba",
@@ -165,10 +247,21 @@
       "source": "https://www.cistareseni.cz/reference/34-reseni-odpadnich-destovych-vod-pro-individualni-bydleni-01-2026.html",
       "kind": "reference",
       "categories": [
-        "ostatni",
-        "destovka"
+        "cov",
+        "destovka",
+        "ostatni"
       ],
-      "thumbnail": "assets/source/93cd816d8f42-reseni-odpadnich-destovych-vod-pro-individual.webp"
+      "thumbnail": "assets/source/93cd816d8f42-reseni-odpadnich-destovych-vod-pro-individual.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "AS-ANASEP, AS-ZEON a AS-REWA COMBI"
+        ],
+        [
+          "Rozsah prací",
+          "Čištění odpadních vod při nepravidelném provozu a využití dešťové vody pro toalety a zahradu."
+        ]
+      ]
     },
     {
       "title": "Servis pro DČOV ASIO AS-VARIOcomp 5k: Proč se nevyplácí instalace ČOV svépomocí?",
@@ -176,10 +269,20 @@
       "source": "https://www.cistareseni.cz/reference/28-servis-pro-dcov-asio-as-variocomp-5k-proc-se-nevyplaci-instalace-cov-svepomoci.html",
       "kind": "reference",
       "categories": [
-        "cov",
-        "servis"
+        "servis",
+        "cov"
       ],
-      "thumbnail": "assets/source/e674782dca2c-servis-pro-dcov-asio-as-variocomp-5k-17563579.webp"
+      "thumbnail": "assets/source/e674782dca2c-servis-pro-dcov-asio-as-variocomp-5k-17563579.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "ASIO AS-VARIOcomp 5k"
+        ],
+        [
+          "Rozsah prací",
+          "Kompletní vyčištění včetně primární části, sedimentační zkoušky, technická kontrola a zaškolení."
+        ]
+      ]
     },
     {
       "title": "Servis a znovuzprovoznění DČOV BC 12 po záplavách Bechyně 07/2025",
@@ -187,10 +290,20 @@
       "source": "https://www.cistareseni.cz/reference/27-servis-znovuzprovozneni-dcov-bc-12-po-zaplavach-bechyne-072025.html",
       "kind": "reference",
       "categories": [
-        "cov",
-        "servis"
+        "servis",
+        "cov"
       ],
-      "thumbnail": "assets/source/ec2dbd8a74c4-servis-dcov-bc-12-optima-bechyne-072025-17563.webp"
+      "thumbnail": "assets/source/ec2dbd8a74c4-servis-dcov-bc-12-optima-bechyne-072025-17563.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 12"
+        ],
+        [
+          "Rozsah prací",
+          "Vyčištění, kontrola, oprava a znovuzprovoznění ČOV po poškození záplavami."
+        ]
+      ]
     },
     {
       "title": "Instalace a zprovoznění DČOV BC 4 OPTIMA Pojbuky u Pelhřimova 07/ 2025",
@@ -200,7 +313,17 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/7501829e1fff-instalace-zprovozneni-dcov-bc-4-optima-pojbuk.webp"
+      "thumbnail": "assets/source/7501829e1fff-instalace-zprovozneni-dcov-bc-4-optima-pojbuk.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BioCleaner BC 4 OPTIMA"
+        ],
+        [
+          "Rozsah prací",
+          "Dodávka na klíč, zemní práce, usazení čistírny, kanalizační napojení a zprovoznění."
+        ]
+      ]
     },
     {
       "title": "Instalace a zprovoznění DČOV BC 4 OPTIMA s akumulační nádrží – svépomoc pod odborným dohledem 09 / 2025",
@@ -210,7 +333,17 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/bd46984bdb10-instalace-zprovozneni-dcov-bc-6-optima-votice.webp"
+      "thumbnail": "assets/source/bd46984bdb10-instalace-zprovozneni-dcov-bc-6-optima-votice.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 OPTIMA s akumulační nádrží"
+        ],
+        [
+          "Rozsah prací",
+          "Dodávka ČOV, šéfmontáž, zprovoznění, dokumentace a zaškolení; stavební část zajistil investor."
+        ]
+      ]
     },
     {
       "title": "Instalace a zprovoznění DČOV BC 4 OPTIMA Suchdol nad Lužnicí 08/2025",
@@ -220,7 +353,17 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/ae44d82fe221-instalace-zprovozneni-dcov-bc-4-optima-suchdo.webp"
+      "thumbnail": "assets/source/ae44d82fe221-instalace-zprovozneni-dcov-bc-4-optima-suchdo.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BioCleaner BC 4 OPTIMA"
+        ],
+        [
+          "Rozsah prací",
+          "Dodávka na klíč včetně výkopů, osazení ČOV, potrubí a zprovoznění."
+        ]
+      ]
     },
     {
       "title": "Instalace a zprovoznění DČOV BC 6 OPTIMA Rychnov nad Kněžnou 08/2025",
@@ -230,7 +373,17 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/8df8b8f367e2-instalace-zprovozneni-dcov-bc-6-optima-rychno.webp"
+      "thumbnail": "assets/source/8df8b8f367e2-instalace-zprovozneni-dcov-bc-6-optima-rychno.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BioCleaner BC 6 OPTIMA"
+        ],
+        [
+          "Rozsah prací",
+          "Zemní práce, usazení technologie, potrubní napojení a zprovoznění ČOV."
+        ]
+      ]
     },
     {
       "title": "DČOV Bernartice 04/2025",
@@ -240,7 +393,21 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/67f44b942bff-dcov-bernartice-042025-1750943819.webp"
+      "thumbnail": "assets/source/67f44b942bff-dcov-bernartice-042025-1750943819.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "biocleaner BC 4"
+        ],
+        [
+          "Kapacita",
+          "4 EO"
+        ],
+        [
+          "Rozsah prací",
+          "Instalace na klíč včetně zemních prací, potrubí a kanalizační přípojky."
+        ]
+      ]
     },
     {
       "title": "Rekonstrukce jímky pro splašky s rotomouldingovou nádrží 08/2025",
@@ -248,11 +415,24 @@
       "source": "https://www.cistareseni.cz/reference/22-rekonstrukce-jimky-pro-splasky-s-rotomouldingovou-nadrzi-082025.html",
       "kind": "reference",
       "categories": [
-        "ostatni",
         "servis",
-        "cerpani"
+        "ostatni"
       ],
-      "thumbnail": "assets/source/676d0286dddd-rekonstrukce-jimky-pro-splasky-s-rotomoulding.webp"
+      "thumbnail": "assets/source/676d0286dddd-rekonstrukce-jimky-pro-splasky-s-rotomoulding.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "Rotomouldingová nádrž ROTO"
+        ],
+        [
+          "Objem splaškové jímky",
+          "3,5 m³"
+        ],
+        [
+          "Rozsah prací",
+          "Vyčištění původní jímky, oprava nátoku a osazení nové nádrže na splaškové vody."
+        ]
+      ]
     },
     {
       "title": "DČOV Kámen 11/2024",
@@ -262,7 +442,17 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/c7f2890b2fcc-dcov-kamen-112024-1750943956.webp"
+      "thumbnail": "assets/source/c7f2890b2fcc-dcov-kamen-112024-1750943956.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 OPTIMA"
+        ],
+        [
+          "Rozsah prací",
+          "Konzultace výběru technologie, instalace a zprovoznění domovní ČOV."
+        ]
+      ]
     },
     {
       "title": "Žďár u Písku – kombinace DČOV a hospodaření s dešťovou vodou 12 / 2025",
@@ -271,9 +461,20 @@
       "kind": "reference",
       "categories": [
         "cov",
-        "destovka"
+        "destovka",
+        "cerpani"
       ],
-      "thumbnail": "assets/source/50b1d64bddb9-zdar-u-pisku-kombinace-dcov-hospodareni-s-des.webp"
+      "thumbnail": "assets/source/50b1d64bddb9-zdar-u-pisku-kombinace-dcov-hospodareni-s-des.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "ASIO MONOCOMP 4 PB, ASIO REVO a ASIO KRECHT"
+        ],
+        [
+          "Rozsah prací",
+          "Provázané řešení ČOV, dešťové vody, akumulace a aktivního odčerpávání při vysoké spodní vodě."
+        ]
+      ]
     },
     {
       "title": "Instalace a zprovoznění ASIO AS-MONOcomp 4 Písek 07/2025",
@@ -283,7 +484,17 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/5f3ebfa17f30-instalace-zprovozneni-asio-as-monocomp-4-pise.webp"
+      "thumbnail": "assets/source/5f3ebfa17f30-instalace-zprovozneni-asio-as-monocomp-4-pise.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "ASIO AS-MONOcomp 4"
+        ],
+        [
+          "Rozsah prací",
+          "Montáž, napojení na kanalizaci, uvedení do provozu a zaškolení obsluhy."
+        ]
+      ]
     },
     {
       "title": "BC 20 COMFORT – Penzion Stráž nad Nežárkou 11 / 2025",
@@ -291,9 +502,28 @@
       "source": "https://www.cistareseni.cz/reference/31-bc-20-comfort-penzion-straz-nad-nezarkou-11-2025.html",
       "kind": "reference",
       "categories": [
-        "cov"
+        "commercial",
+        "servis"
       ],
-      "thumbnail": "assets/source/b504be3ebe32-bc-20-comfort-penzion-straz-nad-nezarkou-1766.webp"
+      "thumbnail": "assets/source/b504be3ebe32-bc-20-comfort-penzion-straz-nad-nezarkou-1766.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 20 COMFORT"
+        ],
+        [
+          "Kapacita",
+          "Až 20 osob"
+        ],
+        [
+          "Typ objektu",
+          "Penzion"
+        ],
+        [
+          "Rozsah prací",
+          "Výměna ČOV penzionu po 28 letech, úpravy nátoku a odtoku a doplnění potrubních rozvodů."
+        ]
+      ]
     },
     {
       "title": "Servis, zprovoznění a zaškolení pro DČOV ASIO AS-MONOcomp 4",
@@ -301,10 +531,20 @@
       "source": "https://www.cistareseni.cz/reference/26-servis-zprovozneni-zaskoleni-pro-dcov-asio-as-monocomp-4.html",
       "kind": "reference",
       "categories": [
-        "cov",
-        "servis"
+        "servis",
+        "cov"
       ],
-      "thumbnail": "assets/source/9bdd72b39162-servis-zprovozneni-zaskoleni-pro-dcov-asio-as.webp"
+      "thumbnail": "assets/source/9bdd72b39162-servis-zprovozneni-zaskoleni-pro-dcov-asio-as.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "ASIO AS-MONOcomp 4"
+        ],
+        [
+          "Rozsah prací",
+          "Kontrola a oprava chybného zapojení, doplnění koše na kal a opětovné zprovoznění."
+        ]
+      ]
     },
     {
       "title": "DČOV Smilkov 11/2024",
@@ -314,7 +554,21 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/acf6944efe54-dcov-smilkov-112024-1750943985.webp"
+      "thumbnail": "assets/source/acf6944efe54-dcov-smilkov-112024-1750943985.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 BASIC a akumulační nádrž"
+        ],
+        [
+          "Akumulace vyčištěné vody",
+          "2,0 m³"
+        ],
+        [
+          "Rozsah prací",
+          "Projektová dokumentace a zprovoznění systému; výkopové práce provedl investor."
+        ]
+      ]
     },
     {
       "title": "Druhý život pro starou čistírnu – rekonstrukce technologie po 25 letech provozu",
@@ -322,10 +576,20 @@
       "source": "https://www.cistareseni.cz/reference/2-druhy-zivot-pro-starou-cistirnu-rekonstrukce-technologie-po-25-letech-provozu.html",
       "kind": "reference",
       "categories": [
-        "ostatni",
-        "servis"
+        "servis",
+        "cov"
       ],
-      "thumbnail": "assets/source/e55afec6f080-druhy-zivot-pro-starou-cistirnu-rekonstrukce-.webp"
+      "thumbnail": "assets/source/e55afec6f080-druhy-zivot-pro-starou-cistirnu-rekonstrukce-.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 PP"
+        ],
+        [
+          "Rozsah prací",
+          "Rekonstrukce vnitřní technologie při zachování nádrže, výměna řízení a opětovné zprovoznění."
+        ]
+      ]
     },
     {
       "title": "DČOV Řásná 04/2025",
@@ -335,7 +599,17 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/8bbe938ee3e4-dcov-rasna-042025-1750943771.webp"
+      "thumbnail": "assets/source/8bbe938ee3e4-dcov-rasna-042025-1750943771.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 6 EXCLUSIVE UV"
+        ],
+        [
+          "Rozsah prací",
+          "Dodávka a odborné zprovoznění domovní čistírny s terciárním filtrem a UV lampou."
+        ]
+      ]
     },
     {
       "title": "DČOV Dynín 03/2025",
@@ -343,9 +617,20 @@
       "source": "https://www.cistareseni.cz/reference/5-dcov-dynin-032025.html",
       "kind": "reference",
       "categories": [
+        "servis",
         "cov"
       ],
-      "thumbnail": "assets/source/b5e40f7c8d75-dcov-dynin-032025-1750943844.webp"
+      "thumbnail": "assets/source/b5e40f7c8d75-dcov-dynin-032025-1750943844.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 BASIC"
+        ],
+        [
+          "Rozsah prací",
+          "Oprava deformované nádrže po chybné instalaci a zpětná montáž vnitřní technologie."
+        ]
+      ]
     },
     {
       "title": "DČOV Volary 11/2024",
@@ -355,7 +640,21 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/4a0f45d2b71c-dcov-volary-112024-1750943912.webp"
+      "thumbnail": "assets/source/4a0f45d2b71c-dcov-volary-112024-1750943912.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 OPTIMA a akumulační nádrž na vyčištěnou vodu"
+        ],
+        [
+          "Akumulace vyčištěné vody",
+          "2,0 m³"
+        ],
+        [
+          "Rozsah prací",
+          "Instalace ČOV s akumulací vyčištěné vody pro další využití na pozemku."
+        ]
+      ]
     },
     {
       "title": "Chlum u Třeboně – kanalizace a ČOV pro dva rodinné domy 12 / 2025",
@@ -366,7 +665,17 @@
         "cov",
         "cerpani"
       ],
-      "thumbnail": "assets/source/55f42b2f21de-chlum-u-trebone-kanalizace-cov-pro-dva-rodinn.webp"
+      "thumbnail": "assets/source/55f42b2f21de-chlum-u-trebone-kanalizace-cov-pro-dva-rodinn.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 6 OPTIMA, ASIO REVO a ASIO KRECHT"
+        ],
+        [
+          "Rozsah prací",
+          "Společná kanalizace pro dva rodinné domy, čerpání, čištění a zabezpečené vsakování."
+        ]
+      ]
     },
     {
       "title": "DČOV Vydří 11/2024",
@@ -376,7 +685,17 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/97c8c384e419-dcov-vydri-112024-1750944013.webp"
+      "thumbnail": "assets/source/97c8c384e419-dcov-vydri-112024-1750944013.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 OPTIMA"
+        ],
+        [
+          "Rozsah prací",
+          "Instalace a zprovoznění domovní ČOV v prostoru původní jímky."
+        ]
+      ]
     },
     {
       "title": "DČOV Libenice 10/2024",
@@ -386,7 +705,25 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/fa7d910eeded-dcov-libenice-102024-1750944044.webp"
+      "thumbnail": "assets/source/fa7d910eeded-dcov-libenice-102024-1750944044.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "biocleaner BC 4 BASIC"
+        ],
+        [
+          "Kapacita",
+          "1–4 obyvatelé"
+        ],
+        [
+          "Akumulace vyčištěné vody",
+          "2,0 m³"
+        ],
+        [
+          "Rozsah prací",
+          "Dodávka ČOV a akumulační nádrže na vyčištěnou vodu s návazným vsakováním."
+        ]
+      ]
     },
     {
       "title": "Servisujeme také čistírny ASIO – včetně starších typů",
@@ -394,10 +731,19 @@
       "source": "https://www.cistareseni.cz/reference/1-servisujeme-take-cistirny-asio-vcetne-starsich-typu.html",
       "kind": "reference",
       "categories": [
-        "ostatni",
         "servis"
       ],
-      "thumbnail": "assets/source/ccb25024931b-servisujeme-take-cistirny-asio-vcetne-starsic.webp"
+      "thumbnail": "assets/source/ccb25024931b-servisujeme-take-cistirny-asio-vcetne-starsic.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "Čistírny ASIO včetně starších typů"
+        ],
+        [
+          "Rozsah prací",
+          "Servisní prohlídky, opravy, výměny komponentů, nastavení provozu a zaškolení obsluhy."
+        ]
+      ]
     },
     {
       "title": "Dešťovka Mělník 09/2024",
@@ -405,10 +751,23 @@
       "source": "https://www.cistareseni.cz/reference/12-destovka-melnik-092024.html",
       "kind": "reference",
       "categories": [
-        "ostatni",
         "destovka"
       ],
-      "thumbnail": "assets/source/6ad5bc47818e-destovka-melnik-092024-1750944072.webp"
+      "thumbnail": "assets/source/6ad5bc47818e-destovka-melnik-092024-1750944072.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "Roterra 3500 L a EASY E-DEEP 900 X-RING"
+        ],
+        [
+          "Objem dešťové nádrže",
+          "3,5 m³"
+        ],
+        [
+          "Rozsah prací",
+          "Návrh nádrže, čerpání s plovoucím sáním a příprava využití dešťové vody pro zahradu."
+        ]
+      ]
     },
     {
       "title": "DČOV Myslkovice 02/2025",
@@ -416,9 +775,20 @@
       "source": "https://www.cistareseni.cz/reference/6-dcov-myslkovice-022025.html",
       "kind": "reference",
       "categories": [
-        "cov"
+        "cov",
+        "cerpani"
       ],
-      "thumbnail": "assets/source/881652a320e1-dcov-myslkovice-022025-1750943870.webp"
+      "thumbnail": "assets/source/881652a320e1-dcov-myslkovice-022025-1750943870.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 6 COMFORT a domovní čerpací jímka"
+        ],
+        [
+          "Rozsah prací",
+          "Dodávka a zprovoznění ČOV doplněné čerpáním do veřejné kanalizace."
+        ]
+      ]
     },
     {
       "title": "Čerpací jímka splaškové kanalizace Bechyně 08/2024",
@@ -426,10 +796,20 @@
       "source": "https://www.cistareseni.cz/reference/13-cerpaci-jimka-splaskove-kanalizace-bechyne-082024.html",
       "kind": "reference",
       "categories": [
-        "ostatni",
-        "cerpani"
+        "cerpani",
+        "servis"
       ],
-      "thumbnail": "assets/source/1ddc589b8ecf-cerpaci-jimka-splaskove-kanalizace-bechyne-08.webp"
+      "thumbnail": "assets/source/1ddc589b8ecf-cerpaci-jimka-splaskove-kanalizace-bechyne-08.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "AmaPorter S 545 ND"
+        ],
+        [
+          "Rozsah prací",
+          "Přestavba nádrže původní ČOV na čerpací jímku, montáž čerpadla a elektrického rozvaděče."
+        ]
+      ]
     },
     {
       "title": "Dešťovka Písek 08/2024",
@@ -437,10 +817,19 @@
       "source": "https://www.cistareseni.cz/reference/14-destovka-pisek-082024.html",
       "kind": "reference",
       "categories": [
-        "ostatni",
         "destovka"
       ],
-      "thumbnail": "assets/source/d04c1c25a9de-destovka-pisek-082024-1750944138.webp"
+      "thumbnail": "assets/source/d04c1c25a9de-destovka-pisek-082024-1750944138.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "Elkoplast FLAT 3000 L"
+        ],
+        [
+          "Rozsah prací",
+          "Výběr nádrže, ruční výkopy, usazení a připojení bezpečnostního přelivu."
+        ]
+      ]
     },
     {
       "title": "DČOV Javorník 05/2024",
@@ -448,9 +837,20 @@
       "source": "https://www.cistareseni.cz/reference/15-dcov-javornik-052024.html",
       "kind": "reference",
       "categories": [
-        "cov"
+        "cov",
+        "cerpani"
       ],
-      "thumbnail": "assets/source/7b02a2a41548-dcov-javornik-052024-1750944164.webp"
+      "thumbnail": "assets/source/7b02a2a41548-dcov-javornik-052024-1750944164.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 BASIC a čerpací šachta"
+        ],
+        [
+          "Rozsah prací",
+          "Dodávka a instalace ČOV do komory stávajícího septiku v omezeném prostoru."
+        ]
+      ]
     },
     {
       "title": "DČOV Nové Hrady 04/2024",
@@ -460,7 +860,17 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/02ae35e09c4b-dcov-nove-hrady-042024-1750944225.webp"
+      "thumbnail": "assets/source/02ae35e09c4b-dcov-nove-hrady-042024-1750944225.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 OPTIMA a filtrační šachta"
+        ],
+        [
+          "Rozsah prací",
+          "Instalace a zprovoznění ČOV s filtrační šachtou před vsakovacím objektem."
+        ]
+      ]
     },
     {
       "title": "DČOV Roudná 03/2024",
@@ -470,7 +880,17 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/abc5fb3258bd-dcov-roudna-032024-1750944258.webp"
+      "thumbnail": "assets/source/abc5fb3258bd-dcov-roudna-032024-1750944258.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 PP OPTIMA"
+        ],
+        [
+          "Rozsah prací",
+          "Náhrada původní žumpy domovní ČOV a osazení technologie do stávajícího prostoru."
+        ]
+      ]
     },
     {
       "title": "Dešťovka Vřesina u Opavy 07/2022",
@@ -478,10 +898,23 @@
       "source": "https://www.cistareseni.cz/reference/19-destovka-vresina-u-opavy-072022.html",
       "kind": "reference",
       "categories": [
-        "ostatni",
         "destovka"
       ],
-      "thumbnail": "assets/source/1e3f34a41374-destovka-vresina-u-opavy-072022-1750944288.webp"
+      "thumbnail": "assets/source/1e3f34a41374-destovka-vresina-u-opavy-072022-1750944288.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "Roterra 10 000 litrů"
+        ],
+        [
+          "Objem dešťové nádrže",
+          "10 000 litrů"
+        ],
+        [
+          "Rozsah prací",
+          "Dodávka nádrže a příslušenství a vyřízení dotace; realizaci provedl objednatel."
+        ]
+      ]
     },
     {
       "title": "Dešťovka Tábor 10/2023",
@@ -489,10 +922,19 @@
       "source": "https://www.cistareseni.cz/reference/20-destovka-tabor-102023.html",
       "kind": "reference",
       "categories": [
-        "ostatni",
         "destovka"
       ],
-      "thumbnail": "assets/source/59efe09f9cc5-destovka-tabor-102023-1750944312.webp"
+      "thumbnail": "assets/source/59efe09f9cc5-destovka-tabor-102023-1750944312.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "Robox 5000 L, EASY E-DEEP 1200 X-RING a AP Triplex"
+        ],
+        [
+          "Rozsah prací",
+          "Realizace využití dešťové vody pro zahradu, splachování a praní včetně čerpání a filtrace."
+        ]
+      ]
     },
     {
       "title": "DČOV Sázava 12/2023",
@@ -502,7 +944,21 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/a0edf94ee692-dcov-sazava-122023-1750944196.webp"
+      "thumbnail": "assets/source/a0edf94ee692-dcov-sazava-122023-1750944196.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 PP COMFORT a akumulační nádrž Roterra"
+        ],
+        [
+          "Akumulace vyčištěné vody",
+          "2 200 litrů"
+        ],
+        [
+          "Rozsah prací",
+          "Realizace čištění odpadních vod s akumulací vyčištěné vody a bezpečnostním přelivem do vsaku."
+        ]
+      ]
     },
     {
       "title": "DČOV Bechyně 09/2023",
@@ -512,7 +968,49 @@
       "categories": [
         "cov"
       ],
-      "thumbnail": "assets/source/0fd3107a53ac-dcov-bechyne-092023-1750944334.webp"
+      "thumbnail": "assets/source/0fd3107a53ac-dcov-bechyne-092023-1750944334.webp",
+      "project_facts": [
+        [
+          "Technologie",
+          "BC 4 OPTIMA"
+        ],
+        [
+          "Rozsah prací",
+          "Realizace domovní ČOV v omezeném prostoru s odtokem do obecní kanalizace."
+        ]
+      ]
+    },
+    {
+      "title": "Čistírny odpadních vod pro firmy a obce",
+      "url": "sluzby/cov-pro-firmy-a-obce.html",
+      "kind": "service",
+      "source": "clientbrief2026-11-08",
+      "categories": [],
+      "thumbnail": null
+    },
+    {
+      "title": "Zprovoznění čistíren odpadních vod",
+      "url": "sluzby/zprovozneni-cov.html",
+      "kind": "service",
+      "source": "clientbrief2026-11-08",
+      "categories": [],
+      "thumbnail": null
+    },
+    {
+      "title": "Školení obsluhy a provozovatelů ČOV",
+      "url": "sluzby/skoleni-obsluhy-cov.html",
+      "kind": "service",
+      "source": "clientbrief2026-11-08",
+      "categories": [],
+      "thumbnail": null
+    },
+    {
+      "title": "Rekonstrukce a modernizace ČOV",
+      "url": "sluzby/rekonstrukce-a-modernizace-cov.html",
+      "kind": "service",
+      "source": "clientbrief2026-11-08",
+      "categories": [],
+      "thumbnail": null
     }
   ],
   "navigation": {
@@ -522,5 +1020,15 @@
     "downloads": "dokumenty.html",
     "about": "o-nas.html",
     "contact": "kontakt.html"
+  },
+  "company": {
+    "name": "WHITE ELEPHANT s.r.o.",
+    "street": "Kpt. Jaroše 24",
+    "city": "Klokoty, 390 03 Tábor",
+    "address": "Kpt. Jaroše 24, Klokoty, 390 03 Tábor",
+    "ico": "06245676",
+    "dic": "CZ06245676",
+    "registry": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/06245676",
+    "confirmed": "2026-11-08"
   }
 }

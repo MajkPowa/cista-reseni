@@ -51,7 +51,7 @@ if len(gallery_images)!=278:errors.append({'error':'Expected 278 gallery photos'
 for e in (references.select('.card-picture img') if references else [])+(gallery.select('.media-item img') if gallery else []):
     if '-thumb.webp' not in e.get('src',''):errors.append({'error':'Listing loads full photograph','src':e.get('src')})
     if e.get('loading')!='lazy' or not e.get('width') or not e.get('height'):errors.append({'error':'Missing image sizing or lazy loading','src':e.get('src')})
-result={'checked_html_pages':len(pages),'checked_local_links_and_assets':links,'full_article_texts_preserved':preserved,'expected_article_texts':len(data['pages']),'reference_cards':len(cards),'gallery_images':len(gallery_images),'migrated_source_assets':len(data['assets']),'errors':errors,'browser_validation':'Not run: CUA/browser tooling unavailable in this session.'}
+result={'checked_html_pages':len(pages),'checked_local_links_and_assets':links,'full_article_texts_preserved':preserved,'expected_article_texts':len(data['pages']),'reference_cards':len(cards),'gallery_images':len(gallery_images),'migrated_source_assets':len(data['assets']),'errors':errors,'browser_validation':'Not assessed by this static validator; browser QA is performed separately.'}
 (ROOT/'qa').mkdir(exist_ok=True)
 (ROOT/'qa/content-validation.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps(result,ensure_ascii=False,indent=2));sys.exit(bool(errors))

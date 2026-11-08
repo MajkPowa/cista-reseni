@@ -8,7 +8,7 @@ from pathlib import PurePosixPath
 import re
 from bs4 import BeautifulSoup, Tag
 
-CATEGORIES = {'cov': 'Domovní čistírny', 'destovka': 'Dešťová voda', 'cerpani': 'Čerpací technika', 'servis': 'Servis a obnova', 'ostatni': 'Další vodní řešení'}
+CATEGORIES = {'cov': 'Domovní čistírny', 'commercial': 'Firmy, obce a průmysl', 'destovka': 'Dešťová voda', 'cerpani': 'Čerpací technika', 'servis': 'Servis a rekonstrukce', 'ostatni': 'Další vodní řešení'}
 SERVICE_FACTS = {
     'konzultace-a-poradenstvi': [('Podle vašeho místa', 'Doporučení vychází z místních podmínek a plánovaného záměru.'), ('S ohledem na rozpočet', 'Při výběru řešení bereme v úvahu také finanční možnosti.'), ('První společný krok', 'Úvodní konzultaci běžně poskytujeme zdarma.')],
     'cisteni-odpadnich-vod': [('ENVI-PUR a ASIO', 'Domovní technologie pro rodinné i rekreační domy.'), ('Celá cesta k řešení', 'Od konzultace a dokumentace po montáž a servis.'), ('Podle konkrétního zadání', 'Výběr čistírny i způsob odtoku se řeší při přípravě projektu.')],
@@ -86,7 +86,7 @@ def _chunks(original_html):
 
 def _categories(p):
     if p['kind'] == 'reference':
-        return p.get('categories', [])
+        return p.get('display_categories', p.get('categories', []))
     slug = PurePosixPath(p['local']).stem
     if slug == 'hospodareni-s-destovou-vodou': return ['destovka']
     if slug == 'cisteni-odpadnich-vod': return ['cov']
@@ -117,6 +117,8 @@ def render_detail(p, ctx):
     lead = _excerpt(first_p)
     cats = _categories(p)
     mode = next((v for v in ('servis','destovka','cerpani','cov') if v in cats), 'poradit')
+    if 'commercial' in cats and 'servis' not in cats:
+        mode = 'cov_firmy'
     if PurePosixPath(current).stem == 'prodej-cov-a-destovych-nadrzi':
         mode = 'poradit'
     inquiry = rel('index.html', current) + '?reseni=' + mode + '#poptavka'
@@ -141,7 +143,7 @@ def render_detail(p, ctx):
         visual_link = f'<img src="{rel("assets/water-systems.svg",current)}" width="900" height="650" alt="Ilustrační izometrické schéma domu a systémů hospodaření s vodou" fetchpriority="high">'
         label = 'Ilustrační schéma hospodaření s vodou'
     body = f'''<div class="detail-page detail-page--{'project' if is_ref else 'service'}"><section class="detail-hero"><div class="container"><div class="detail-breadcrumbs" aria-label="Drobečková navigace">{crumbs}</div><div class="detail-hero-grid"><div class="detail-hero-copy" data-reveal><a class="detail-back" href="{rel(parent,current)}">{_icon('back')} {parent_title}</a><p class="eyebrow">{'ZA KAŽDOU REALIZACÍ JE PŘÍBĚH' if is_ref else 'VODA PODLE VAŠICH POTŘEB'}</p><h1>{esc(title)}</h1><p class="detail-lead">{esc(lead)}</p><div class="detail-tags">{tags}</div><div class="detail-hero-actions"><a class="button" href="{inquiry}">{'Probrat podobné řešení' if is_ref else 'Probrat můj projekt'} {_icon()}</a><a class="detail-text-link" href="#detail-story">{'Příběh projektu' if is_ref else 'Co služba zahrnuje'} <span>↓</span></a></div></div><figure class="{figure_class}" data-reveal>{visual_link}<figcaption>{esc(label)}</figcaption></figure></div></div></section>'''
-    related = [r for r in ctx['refs'] if r['local'] != current and (not cats or set(cats) & set(r.get('categories', [])))][:3]
+    related = [r for r in ctx['refs'] if r['local'] != current and (not cats or set(cats) & set(r.get('display_categories', r.get('categories', []))))][:3]
     nav = [('detail-overview','V přehledu'),('detail-story','Příběh projektu' if is_ref else 'Podrobnosti služby')]
     if images: nav.append(('detail-gallery',f'Galerie ({len(images)})'))
     if related: nav.append(('detail-related','Další realizace'))
@@ -150,8 +152,8 @@ def render_detail(p, ctx):
     if is_ref:
         body += '<div class="detail-overview-heading"><p class="eyebrow">PROJEKT V KOSTCE</p><h2>Konkrétní místo.<br>Konkrétní řešení.</h2></div><dl class="detail-facts">'
         facts = [('Oblast řešení', ' / '.join(CATEGORIES.get(c,c) for c in cats)), ('Období realizace', date)] if date != 'Realizace' else [('Oblast řešení', ' / '.join(CATEGORIES.get(c,c) for c in cats))]
-        facts += [('Obrazová dokumentace', f'{len(images)} snímků'), ('Podrobnosti', 'Popis a průběh realizace')]
-        for label,value in facts[:4]: body += f'<div><dt>{esc(label)}</dt><dd>{esc(value)}</dd></div>'
+        facts += p.get('project_facts', [])
+        for label,value in facts: body += f'<div><dt>{esc(label)}</dt><dd>{esc(value)}</dd></div>'
         body += '</dl>'
     else:
         body += '<div class="detail-overview-heading"><p class="eyebrow">TO PODSTATNÉ</p><h2>Jasný rozsah.<br>Srozumitelný postup.</h2></div><div class="detail-benefits">'
@@ -159,6 +161,8 @@ def render_detail(p, ctx):
         for i,(heading,text) in enumerate(facts): body += f'<article><span class="detail-benefit-number">0{i+1}</span><h3>{esc(heading)}</h3><p>{esc(text)}</p></article>'
         body += '</div>'
     body += '</section>'
+    if not is_ref and PurePosixPath(current).stem == 'cisteni-odpadnich-vod':
+        body += f'<section class="container service-bridge" data-reveal><div><p class="eyebrow">VĚTŠÍ OBJEKT, JINÉ POŽADAVKY</p><h2>Čistírna pro firmu nebo obec?</h2><p>Řešíme také penziony, hotely, komunální a průmyslové provozy. Vlastními kapacitami nebo s odbornými partnery.</p></div><a class="button" href="{rel("sluzby/cov-pro-firmy-a-obce.html",current)}">ČOV pro firmy a obce {_icon()}</a></section>'
     chunks = _chunks(source_html)
     body += f'''<section class="detail-story-section" id="detail-story"><div class="container detail-story-grid"><div class="detail-story-intro" data-reveal><p class="eyebrow">{'JAK TO PROBÍHALO' if is_ref else 'VŠE DŮLEŽITÉ NA JEDNOM MÍSTĚ'}</p><h2>{'Od zadání<br>k hotovému řešení.' if is_ref else 'Pojďme<br>do detailu.'}</h2><p>{'Projděte si celý příběh realizace, použitou technologii a jednotlivé kroky.' if is_ref else 'Rozsah služby a technické souvislosti jsou rozdělené do přehledných částí.'}</p><a class="detail-source-link" href="{esc(p['url'])}" target="_blank" rel="noopener">Původní {'reference' if is_ref else 'podklady'} ↗</a><div class="detail-contact-note">{_icon('phone')}<div><small>Raději vše proberete osobně?</small><a href="tel:+420736403795">736 403 795</a></div></div></div><div class="detail-accordion">'''
     for i,chunk in enumerate(chunks):

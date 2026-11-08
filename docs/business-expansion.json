@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "provenance": {
+    "client_brief_id": "clientbrief2026-11-08",
+    "received_on": "2026-11-08",
+    "source_document": "Vložený text.txt",
+    "reference_audit_source": "docs/source-inventory/content.json",
+    "reference_audit_date": "2026-11-08",
+    "notes": "Klientské doplnění je oddělené od původních 41 referencí; zdrojový inventář se nepřepisuje."
+  },
+  "positioning": {
+    "headline": "Čistá řešení pro domácnosti, firmy i obce.",
+    "preserve_existing_visual_design": true,
+    "delivery_model": "Vlastními kapacitami nebo ve spolupráci s odbornými partnery."
+  },
+  "company": {
+    "brand": "Čistá řešení",
+    "legal_name": "WHITE ELEPHANT s.r.o.",
+    "ico": "06245676",
+    "client_requested": {
+      "name_as_received": "Whiteelephant, s.r.o. – Čistá řešení",
+      "address_as_received": "Kapitána Jaroše 2, Tábor",
+      "provenance": "clientbrief2026-11-08"
+    },
+    "registered_office": {
+      "display": "Kpt. Jaroše 24, 390 03 Tábor",
+      "district": "Klokoty",
+      "registry_source": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/06245676",
+      "registry_record_updated_on": "2026-07-18",
+      "verified_on": "2026-11-08",
+      "user_confirmed_on": "2026-11-08",
+      "resolution": "Uživatel potvrdil adresu Kpt. Jaroše 24 podle ARES; tato potvrzená adresa nahrazuje číslo 2 z původního zadání."
+    }
+  },
+  "requested_sections": [
+    {
+      "key": "commercial",
+      "title": "Čistírny odpadních vod pro firmy a obce",
+      "audiences": ["Penziony, hotely a rekreační areály", "Obce a menší sídla", "Komerční objekty a výrobní areály", "Průmyslové provozy"],
+      "scope": ["Komunální a průmyslové ČOV", "Rekonstrukce, modernizace a intenzifikace stávajících ČOV", "Úprava vod", "Dodávky technologických celků a souvisejících zařízení", "Projektová příprava a odborné technické poradenství"]
+    },
+    {
+      "key": "servis",
+      "title": "Servis a údržba ČOV",
+      "scope": ["Pravidelný a jednorázový servis", "Servis různých výrobců včetně zařízení, která firma nedodala", "Diagnostika poruch a opravy", "Kontroly biologických procesů", "Výměny dmychadel, čerpadel, aeračních elementů a dalších komponentů", "Optimalizace provozních parametrů", "Pravidelné servisní programy a dlouhodobé servisní smlouvy", "Servis větších komerčních a průmyslových ČOV"]
+    },
+    {
+      "key": "commissioning",
+      "title": "Uvedení ČOV do provozu",
+      "scope": ["Kontrola instalace a technologického zapojení", "Kontrola funkčnosti komponentů", "Nastavení řídicích jednotek a provozních parametrů", "Kontrola a nastavení biologického procesu", "Uvedení zařízení do provozu", "Protokol o zprovoznění a předání zákazníkovi"],
+      "other_manufacturers": "Také u zařízení jiných výrobců podle konkrétní technologie."
+    },
+    {
+      "key": "training",
+      "title": "Školení obsluhy a provozovatelů ČOV",
+      "audiences": ["Soukromí zákazníci", "Firmy", "Obce"],
+      "scope": ["Praktické zaškolení na místě instalace", "Princip fungování technologie", "Pravidelné kontroly a údržba", "Základní diagnostika poruch a provozních problémů", "Správné a hospodárné provozování", "Odborné konzultace a technická podpora"]
+    },
+    {
+      "key": "reconstruction",
+      "title": "Rekonstrukce a modernizace ČOV",
+      "scope": ["Technologické posouzení", "Návrh modernizace", "Úprava a doplnění stávající technologie", "Výměny zařízení", "Optimalizace provozu a intenzifikace"]
+    }
+  ],
+  "navigation_request": ["Domovní čistírny odpadních vod", "ČOV pro firmy a obce", "Dešťová voda", "Servis a údržba ČOV", "Zprovoznění a školení obsluhy", "Reference", "O nás", "Kontakt"],
+  "inquiry_request": {
+    "choices": ["Poptávka nové ČOV", "Servis nebo oprava stávající ČOV", "Zprovoznění čistírny", "Školení obsluhy", "Rekonstrukce nebo modernizace", "Odborná konzultace"],
+    "service_fields": ["Výrobce", "Typ zařízení", "Lokalita", "Stručný popis problému"]
+  },
+  "reference_categories": {
+    "cov": "Domovní čistírny odpadních vod",
+    "commercial": "Komerční a průmyslové ČOV",
+    "servis": "Servisní zásahy a rekonstrukce",
+    "destovka": "Hospodaření s dešťovou vodou",
+    "cerpani": "Čerpací technika",
+    "ostatni": "Další vodohospodářská řešení"
+  },
+  "reference_policy": {
+    "preserve_existing_reference_count": 41,
+    "new_client_examples_are_service_proof_only": true,
+    "capacities": "Kapacitu EO nikdy neodvozovat z čísla v modelu. Výslovně uvedené osoby nepřevádět na EO.",
+    "dates_and_photos": "K novým klientským příkladům zatím nebylo dodáno datum ani fotografie.",
+    "completed_scope": "Oddělovat skutečně provedené práce firmy od svépomoci investora a od budoucích plánů."
+  },
+  "service_proof": [
+    {
+      "id": "penzion-hamr-divci-kamen",
+      "client": "Penzion Hamr",
+      "location": "Dívčí Kámen",
+      "service": "Servis ČOV",
+      "capacity": {"value": 30, "unit": "EO"},
+      "technology": null,
+      "date": null,
+      "images": [],
+      "provenance": "clientbrief2026-11-08"
+    },
+    {
+      "id": "pont-aurel-automotive-chotoviny",
+      "client": "Pont Aurel Automotive",
+      "location": "Chotoviny",
+      "service": "Servis ČOV",
+      "capacity": {"value": 15, "unit": "EO"},
+      "technology": null,
+      "date": null,
+      "images": [],
+      "provenance": "clientbrief2026-11-08"
+    }
+  ],
+  "testimonial": {
+    "author": "Max Knauer",
+    "title": "Vynikající servis – doporučuji na 100 %!",
+    "text": "Měli jsme problémy se zápachem z naší septiky, a proto jsme se obrátili na servis. Díky rychlému, profesionálnímu a bezproblémovému přístupu nyní vše opět funguje perfektně.\nNáš servisní technik je vždy ochotný, kdykoliv nám poradí a pomůže. Navíc mluví plynně anglicky, což je pro mě velké plus!\n\nMoc děkujeme za skvělou péči. Rozhodně doporučuji!",
+    "source_context": "Ještě posílám jednu referenci na firmu z Písku k domovní čistírně odpadních vod od společnosti ASIO:",
+    "matched_reference_id": null,
+    "rating": null,
+    "date": null,
+    "provenance": "clientbrief2026-11-08"
+  },
+  "partner_testimonial": {
+    "text": "Se společností Čistá řešení dlouhodobě spolupracujeme, realizují námi vyprojektované záměry v oblasti vodohospodářských staveb, především s důrazem na čištění odpadních vod. Naši zákazníci si chválí především jejich časovou flexibilitu, seriózní a profesionální přístup a poctivou poprodejní péči – která je dle mého názoru v našem oboru jednou z nejdůležitějších hodnot. Určitě doporučuji všem zájemcům o kvalitní služby.",
+    "author": "Vodohospodář s.r.o. – Ing. Milan Rada",
+    "url": "https://vodohospodar.cz/",
+    "logo_source": "https://www.cistareseni.cz/assets/img/logo-vodohospodar.png",
+    "provenance": {
+      "source": "user_message",
+      "received_on": "2026-11-08"
+    }
+  },
+  "audited_matches": [
+    {"reference_id": 31, "display_categories": ["commercial", "servis"], "technology": "BC 20 COMFORT", "capacity_as_stated": "až 20 osob", "evidence": "V penzionu ve Stráži nad Nežárkou jsme realizovali výměnu stávající čistírny odpadních vod po 28 letech provozu.", "note": "Kapacita je doložená v osobách, nikoli v EO."},
+    {"reference_id": 35, "display_categories": ["commercial"], "technology": "BC 10 SBR a AQUAVISOR", "capacity_as_stated": null, "evidence": "určenou pro provoz mateřské školky", "note": "Zprovoznění technologie pro institucionální objekt; model BC 10 není doklad 10 EO."},
+    {"reference_id": 39, "display_categories": ["commercial", "cerpani", "servis"], "technology": "Čerpací jímka a uklidňovací šachta", "capacity_as_stated": null, "evidence": "Pro výrobní společnost zabývající se kovoobráběním jsme v jejím areálu v Písku realizovali komplexní úpravu systému odvádění splaškových odpadních vod.", "note": "Přestavba původní ČOV na čerpání do kanalizace; neprezentovat jako dodávku nové průmyslové čistírny."},
+    {"reference_id": 41, "display_categories": ["servis"], "technology": "BC 50", "capacity_as_stated": null, "evidence": "čistírna odpadních vod BC 50 stará přibližně 25 let", "note": "Typ zákazníka ani kapacita v EO nejsou doloženy; nezahrnovat automaticky do commercial ani domovní kategorie. Kyslíková sonda je teprve plánovaná."},
+    {"reference_id": 4, "capacity_as_stated": "4 EO", "evidence": "Pro rodinný dům s kapacitou 4 EO"},
+    {"reference_id": 11, "capacity_as_stated": "1–4 obyvatelé", "evidence": "vhodná pro 1-4 obyvatele v domácnosti"},
+    {"reference_id": 5, "display_categories": ["servis", "cov"], "note": "Oprava deformace po chybné instalaci; zdroj říká, že oficiální spuštění teprve čeká."},
+    {"reference_id": 19, "display_categories": ["destovka"], "note": "Firma dodala nádrž a příslušenství a vyřídila dotaci; realizaci prováděl objednatel."},
+    {"reference_id": 20, "display_categories": ["destovka"], "note": "Jediný snímek je ilustrace nádrže, nikoli dokumentační fotografie."}
+  ]
+}
