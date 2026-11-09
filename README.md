@@ -56,6 +56,7 @@ node --check dist/content.js
 node --check dist/services.js
 node --check dist/experience.js
 node --check dist/navigation.js
+node --check dist/motion.js
 python scripts/check_site.py
 python scripts/validate_content.py
 ```
@@ -67,3 +68,5 @@ Reference projektového partnera Vodohospodář s.r.o. – Ing. Milan Rada je p�
 Obsahové stránky obnoví `python scripts/build_content.py` (vyžaduje také beautifulsoup4). Jejich kompozice jsou v `scripts/detail_design.py`, `scripts/overview_design.py` a `scripts/service_extensions.py`. Generátor synchronizuje také hlavičku a patičku úvodu. Náhledy PDF jsou součástí repozitáře; při změně dokumentů je lze obnovit skriptem `scripts/render_document_covers.py` s PyMuPDF. CSS, JavaScript a značkové SVG mají v URL otisk obsahu, aby se po nasazení nevracely staré styly z cache.
 
 Vektorové schéma služeb je ilustrační, nikoli projekt konkrétní stavby. Animace má konečný průběh, lze ji přehrát znovu a respektuje omezený pohyb. Rozcestník se opakovaně sestavuje z `scripts/templates/services.html` a `water-systems.inline.svg`; návrhové poznámky jsou v `docs/services-redesign.txt`.
+
+Navigace od 9. 11. 2026 používá větší písmo a klikací plochy, animované nabídky a klávesové ovládání. Sdílené `motion.js` a `motion.css` přidávají na všech stránkách postupný nástup a jednorázové odhalování sekcí. Obsah je dostupný bez JavaScriptu; omezený pohyb používá krátké prolnutí bez posunu. Animace nezdržují fokus ani kliknutí a nečekají na stažení fotografií.

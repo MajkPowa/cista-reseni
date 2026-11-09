@@ -1,0 +1,16 @@
+/* One finite entrance language across all pages. Static content is the fallback. */
+:root{--entrance-ease:cubic-bezier(.16,1,.3,1)}
+.motion-enter{animation:site-enter var(--entrance-duration,620ms) var(--entrance-ease) var(--entrance-delay,0ms) backwards}
+.motion-enter.motion-large{animation-name:site-fade}
+@keyframes site-enter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes site-fade{from{opacity:.25}to{opacity:1}}
+/* A focus target is immediately solid, even if CSS is loaded before JavaScript. */
+.motion-enter:focus-visible,.motion-enter:focus-within{animation:none!important}
+html[data-motion-preference=reduced] .motion-enter{animation:site-fade 140ms ease-out backwards!important}
+@media(prefers-reduced-motion:reduce){
+  .motion-enter{animation:site-fade 140ms ease-out backwards!important}
+  html{scroll-behavior:auto!important}
+  .button,.text-link,a:focus-visible,button:focus-visible{transition:color 120ms,background-color 120ms,outline-color 120ms!important}
+  .button:hover,.text-link:hover svg{transform:none!important}
+}
+@media print{.motion-enter{animation:none!important;opacity:1!important;transform:none!important}}

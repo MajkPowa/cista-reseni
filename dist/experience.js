@@ -1,26 +1,5 @@
 'use strict';
 (() => {
-  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const revealTargets = [...document.querySelectorAll('[data-reveal]')];
-  let revealObserver;
-  if ('IntersectionObserver' in window && !motion.matches) {
-    revealObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-revealed');
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.08 });
-    revealTargets.forEach(element => revealObserver.observe(element));
-  }
-  motion.addEventListener('change', () => {
-    if (motion.matches) {
-      revealObserver?.disconnect();
-      revealTargets.forEach(element => element.classList.remove('is-revealed'));
-    }
-  });
-
   // Native disclosures keep the complete original article available without JS.
   document.querySelectorAll('[data-gallery-expand]').forEach(button => {
     const target = document.getElementById(button.getAttribute('aria-controls'));
