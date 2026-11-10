@@ -1,0 +1,19 @@
+ČISTÁ ŘEŠENÍ — LOGO PRO WEB
+Datum: 10. 11. 2026
+
+Předloha: logo dodané uživatelem, PNG 1600 × 630 px.
+SHA256 předlohy: 52089b4c4beab35937fd459503c93899584b6c4389dbae47a63a05b840af632f
+
+Podkladem vektorových cest je barevná vektorizace přímo ve VectorCraft 0.22.0.
+Nastavení: Color, Limited palette, 3 barvy, Paths 90 %, Corners 75 %, Noise 1 px.
+Výsledek byl rozložen na jednotlivé cesty a vyexportován jako SVG.
+Písmo je součástí obrysů předlohy; nebylo nahrazeno jiným fontem.
+Pro web jsou odstraněny bílé pozadí, nadbytečné okraje a drobné artefakty.
+
+dist/assets/brand-logo.svg: celé logo včetně názvu, společnosti a sloganu.
+dist/assets/brand-symbol.svg: slon ze stejného loga pro favicon a malý znak.
+Oba soubory jsou vektorové, s průhledným pozadím a bez vloženého bitmapového obrázku.
+
+Celé logo používá společná hlavička a patička všech stránek. CSS zachovává
+poměr stran a přizpůsobuje velikost mobilům. URL assetů obsahují hash obsahu,
+aby prohlížeče po publikaci načetly aktuální verzi.

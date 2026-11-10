@@ -58,7 +58,7 @@ def stamp_assets(document,current):
         if parsed.scheme or parsed.netloc:return match.group(0)
         candidate=(DIST/posixpath.dirname(current)/parsed.path).resolve()
         if not candidate.is_file() or not candidate.is_relative_to(DIST.resolve()):return match.group(0)
-        if candidate.suffix not in ('.css','.js') and candidate.name not in ('brand-symbol.svg','water-systems.svg'):return match.group(0)
+        if candidate.suffix not in ('.css','.js') and candidate.name not in ('brand-symbol.svg','brand-logo.svg','water-systems.svg'):return match.group(0)
         fingerprint=hashlib.sha256(candidate.read_bytes()).hexdigest()[:12]
         return f'{attr}="{parsed.path}?v={fingerprint}"'
     return re.sub(r'(href|src)="([^"]+)"',stamped,document)
@@ -70,6 +70,7 @@ def page(current,title,body,description='',has_gallery=False):
     detail_assets='<link rel="stylesheet" href="'+rel('details.css',current)+'">' if is_detail else ''
     experience_assets=f'<link rel="stylesheet" href="{rel("experience.css",current)}"><script src="{rel("experience.js",current)}" defer></script>'
     shell_assets=f'<link rel="stylesheet" href="{rel("business.css",current)}"><link rel="stylesheet" href="{rel("navigation.css",current)}"><script src="{rel("navigation.js",current)}" defer></script>'
+    shell_assets+=f'<link rel="stylesheet" href="{rel("branding.css",current)}">'
     shell_assets+=f'<link rel="stylesheet" href="{rel("motion.css",current)}"><script src="{rel("motion.js",current)}" defer></script>'
     extension_assets=f'<link rel="stylesheet" href="{rel("service-extensions.css",current)}">' if current in EXTENSION_PAGES else ''
     if current=='o-nas.html':
@@ -222,9 +223,14 @@ if '--skip-home' not in sys.argv:
     home_soup.body.append(BeautifulSoup(footer('index.html'),'html.parser'))
     for old in home_soup.select('#partner-testimonial'): old.decompose()
     home_soup.select_one('section.about').insert_after(BeautifulSoup(render_partner_testimonial('index.html',CTX),'html.parser'))
-    for name in ('business.css','navigation.css','partner-testimonial.css','motion.css'):
+    for name in ('business.css','navigation.css','partner-testimonial.css'):
         if not home_soup.select_one(f'link[href^="{name}"]'):
             tag=home_soup.new_tag('link',rel='stylesheet',href=name);home_soup.head.append(tag)
+    # Keep the existing stylesheet order, then apply the complete logo and motion.
+    # Reposition these two links so repeated builds never put branding after motion.
+    for name in ('branding.css','motion.css'):
+        for old in home_soup.select(f'link[href^="{name}"]'): old.decompose()
+        tag=home_soup.new_tag('link',rel='stylesheet',href=name);home_soup.head.append(tag)
     if not home_soup.select_one('script[src^="navigation.js"]'):
         tag=home_soup.new_tag('script',src='navigation.js',defer='');home_soup.head.append(tag)
     if not home_soup.select_one('script[src^="motion.js"]'):
