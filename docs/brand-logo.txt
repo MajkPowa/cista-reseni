@@ -14,6 +14,14 @@ dist/assets/brand-logo.svg: celé logo včetně názvu, společnosti a sloganu.
 dist/assets/brand-symbol.svg: slon ze stejného loga pro favicon a malý znak.
 Oba soubory jsou vektorové, s průhledným pozadím a bez vloženého bitmapového obrázku.
 
+KONTROLA VĚRNOSTI
+Všechny nápisy a otvory v písmenech a znaku jsou zachovány. Barevnost listu,
+názvu a sloganu je upravena samostatně podle stabilních vnitřních ploch PNG.
+Medián obousměrné odchylky hran: 0 px; 95. percentil: 1 px v rozlišení předlohy.
+Jde o rekonstrukci z PNG, nikoli původní vektorový originál; některé velmi
+tenké špičky mají větší odchylku. Měření neznamená matematickou shodu 1:1.
+Finální SVG: 1367 × 557; samostatný znak: 636 × 547.
+
 Celé logo používá společná hlavička a patička všech stránek. CSS zachovává
 poměr stran a přizpůsobuje velikost mobilům. URL assetů obsahují hash obsahu,
 aby prohlížeče po publikaci načetly aktuální verzi.
