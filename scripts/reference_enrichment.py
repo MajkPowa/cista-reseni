@@ -19,18 +19,33 @@ import re
 
 DISPLAY_CATEGORY_LABELS = {
     'cov': 'Domovní čistírny odpadních vod',
-    'commercial': 'Komerční a průmyslové ČOV',
-    'servis': 'Servisní zásahy a rekonstrukce',
+    'commercial': 'Firemní a průmyslové ČOV',
+    'servis': 'Servisní zásahy',
+    'rekonstrukce': 'Rekonstrukce a modernizace',
     'destovka': 'Hospodaření s dešťovou vodou',
+    'upravny': 'Úpravny vody',
     'cerpani': 'Čerpací technika',
     'ostatni': 'Další vodohospodářská řešení',
+}
+
+# Short labels for filters, cards and the administration (client brief 2026-11-12).
+# Keep in sync with the default list in dist/cms-config.js.
+CATEGORY_LABELS = {
+    'cov': 'Domovní ČOV',
+    'commercial': 'Firemní a průmyslové ČOV',
+    'servis': 'Servis',
+    'rekonstrukce': 'Rekonstrukce',
+    'destovka': 'Dešťová voda',
+    'upravny': 'Úpravny vody',
+    'cerpani': 'Čerpací technika',
+    'ostatni': 'Další řešení',
 }
 
 # ID: (display categories, explicitly named technology, verified completed scope)
 _AUDIT = {
     1: (('servis',), 'Čistírny ASIO včetně starších typů',
         'Servisní prohlídky, opravy, výměny komponentů, nastavení provozu a zaškolení obsluhy.'),
-    2: (('servis', 'cov'), 'BC 4 PP',
+    2: (('rekonstrukce', 'cov'), 'BC 4 PP',
         'Rekonstrukce vnitřní technologie při zachování nádrže, výměna řízení a opětovné zprovoznění.'),
     3: (('cov',), 'BC 6 EXCLUSIVE UV',
         'Dodávka a odborné zprovoznění domovní čistírny s terciárním filtrem a UV lampou.'),
@@ -52,7 +67,7 @@ _AUDIT = {
          'Dodávka ČOV a akumulační nádrže na vyčištěnou vodu s návazným vsakováním.'),
     12: (('destovka',), 'Roterra 3500 L a EASY E-DEEP 900 X-RING',
          'Návrh nádrže, čerpání s plovoucím sáním a příprava využití dešťové vody pro zahradu.'),
-    13: (('cerpani', 'servis'), 'AmaPorter S 545 ND',
+    13: (('cerpani', 'rekonstrukce'), 'AmaPorter S 545 ND',
          'Přestavba nádrže původní ČOV na čerpací jímku, montáž čerpadla a elektrického rozvaděče.'),
     14: (('destovka',), 'Elkoplast FLAT 3000 L',
          'Výběr nádrže, ruční výkopy, usazení a připojení bezpečnostního přelivu.'),
@@ -70,7 +85,7 @@ _AUDIT = {
          'Realizace využití dešťové vody pro zahradu, splachování a praní včetně čerpání a filtrace.'),
     21: (('cov',), 'BC 4 OPTIMA',
          'Realizace domovní ČOV v omezeném prostoru s odtokem do obecní kanalizace.'),
-    22: (('servis', 'ostatni'), 'Rotomouldingová nádrž ROTO',
+    22: (('rekonstrukce', 'ostatni'), 'Rotomouldingová nádrž ROTO',
          'Vyčištění původní jímky, oprava nátoku a osazení nové nádrže na splaškové vody.'),
     23: (('cov',), 'BioCleaner BC 6 OPTIMA',
          'Zemní práce, usazení technologie, potrubní napojení a zprovoznění ČOV.'),
@@ -88,7 +103,7 @@ _AUDIT = {
          'Montáž, napojení na kanalizaci, uvedení do provozu a zaškolení obsluhy.'),
     30: (('cov',), 'BC 4 OPTIMA s akumulační nádrží',
          'Dodávka ČOV, šéfmontáž, zprovoznění, dokumentace a zaškolení; stavební část zajistil investor.'),
-    31: (('commercial', 'servis'), 'BC 20 COMFORT',
+    31: (('commercial', 'rekonstrukce'), 'BC 20 COMFORT',
          'Výměna ČOV penzionu po 28 letech, úpravy nátoku a odtoku a doplnění potrubních rozvodů.'),
     32: (('cov', 'cerpani'), 'BC 6 OPTIMA, ASIO REVO a ASIO KRECHT',
          'Společná kanalizace pro dva rodinné domy, čerpání, čištění a zabezpečené vsakování.'),
@@ -98,17 +113,17 @@ _AUDIT = {
          'Čištění odpadních vod při nepravidelném provozu a využití dešťové vody pro toalety a zahradu.'),
     35: (('commercial',), 'BC 10 SBR a AQUAVISOR',
          'Zprovoznění ČOV mateřské školky se vzdálenou správou a monitoringem.'),
-    36: (('ostatni',), 'Mechanická filtrace a potrubní UV lampa',
+    36: (('upravny',), 'Mechanická filtrace a potrubní UV lampa',
          'Návrh úpravy podzemní vody pro snížení železa a odstranění mikrobiologického znečištění.'),
     37: (('cov',), 'BC 4 SBR II. generace',
          'Dodávka, montáž, obetonování nádrží, zprovoznění a zaškolení včetně využití vyčištěné vody.'),
     38: (('cov',), 'BC 4 COMFORT DUO s pískovým filtrem',
          'Dodávka a instalace domovní ČOV s primární usazovací nádrží, revizní šachtou a dočištěním.'),
-    39: (('commercial', 'cerpani', 'servis'), 'Čerpací jímka splaškových vod a uklidňovací šachta',
+    39: (('commercial', 'cerpani', 'rekonstrukce'), 'Čerpací jímka splaškových vod a uklidňovací šachta',
          'Kamerové zkoušky, zemní práce a přestavba původní ČOV výrobního areálu na čerpání do kanalizace.'),
     40: (('servis', 'cov'), 'ASIO VARIOcomp 5K',
          'Diagnostika, oprava technologického zapojení, stabilizace biologie a sedimentační zkoušky.'),
-    41: (('servis',), 'BC 50, řídicí jednotka COMFORT a dmychadlo FPZ 20',
+    41: (('rekonstrukce',), 'BC 50, řídicí jednotka COMFORT a dmychadlo FPZ 20',
          'Obnova technologického a elektrického vybavení, funkční zkoušky, zprovoznění a zaškolení obsluhy.'),
 }
 

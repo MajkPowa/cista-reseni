@@ -4,3 +4,7 @@ qa/
 dist/assets/hero-garden.png
 __pycache__/
 dist/assets/source/
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log

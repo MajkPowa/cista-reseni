@@ -2,6 +2,7 @@
 from pathlib import Path
 from urllib.parse import quote
 from partner_testimonial import render_partner_testimonial
+from partners import render_partners
 
 
 def render_overview(current, ctx):
@@ -44,7 +45,7 @@ def render_overview(current, ctx):
         body += f'<section class="container featured-project" data-reveal><a class="featured-image" href="{featured["local"]}"><img src="assets/ref-prehorov.webp" alt="Realizace domovní čistírny v Přehořově u Soběslavi" width="1200" height="900" fetchpriority="high"><span class="feature-badge">Z našich projektů</span><span class="feature-open" aria-hidden="true">↗</span></a><div class="featured-copy"><p class="ed-kicker">Přehořov u Soběslavi / 07. 2026</p><h2>Čistírna jako<br><span>součást domova.</span></h2><p>Domovní čistírna BC 4 COMFORT DUO s pískovým filtrem. Podívejte se, jak probíhala realizace na konkrétním pozemku.</p><a class="button" href="{featured["local"]}">Prohlédnout realizaci <span aria-hidden="true">↗</span></a></div></section>'
         body += '<section class="container project-library" id="projekty"><div class="section-caption"><div><p class="ed-kicker">Najděte podobný záměr</p><h2>Projekty v detailu</h2></div><a class="text-link" href="galerie.html">Procházet fotografie ↗</a></div><div class="listing-toolbar"><div class="listing-search"><label for="reference-search">Co vás zajímá?</label><input id="reference-search" type="search" placeholder="Místo, technologie nebo typ řešení…" autocomplete="off"></div><p class="result-count" id="result-count" role="status"></p></div><div class="content-filters" role="group" aria-label="Typ realizace"><button data-content-filter="all" aria-pressed="true">Všechny projekty</button>'
         body += ''.join(f'<button data-content-filter="{k}" aria-pressed="false">{v}</button>' for k,v in labels.items())
-        body += '</div><div class="content-card-grid project-library-grid">'+''.join(project_card(p) for p in refs)+'</div><div id="empty-state" class="empty-state" hidden><h2>Takový projekt jsme nenašli.</h2><p>Zkuste jiné slovo nebo vyberte všechny typy řešení.</p></div><div class="load-more-row"><button class="button button-outline" data-load-references hidden>Zobrazit další projekty <span aria-hidden="true">+</span></button></div></section>'
+        body += '</div><div class="content-card-grid project-library-grid" data-cms="reference-grid">'+''.join(project_card(p) for p in refs)+'</div><div id="empty-state" class="empty-state" hidden><h2>Takový projekt jsme nenašli.</h2><p>Zkuste jiné slovo nebo vyberte všechny typy řešení.</p></div><div class="load-more-row"><button class="button button-outline" data-load-references hidden>Zobrazit další projekty <span aria-hidden="true">+</span></button></div></section>'
         return body + service_proof() + ctx['cta'](current,'Co potřebuje váš dům nebo provoz?','Probereme novou technologii, servis i obnovu stávajícího zařízení.')
 
     if current == 'galerie.html':
@@ -53,7 +54,7 @@ def render_overview(current, ctx):
         body += '<div class="container gallery-mosaic" data-reveal><img src="assets/ref-prehorov.webp" alt="Čistírna v Přehořově" width="1200" height="900"><img src="assets/ref-tabor.webp" alt="Instalace nádrže na dešťovku v Mělníku" width="1200" height="900"><div><span>Od detailu<br>k celému řešení.</span><a href="#fotografie">Prozkoumat galerii <span aria-hidden="true">↓</span></a></div></div>'
         body += '<section class="container gallery-library" id="fotografie"><div class="gallery-controls"><div class="gallery-control"><label for="gallery-project">Který projekt chcete prozkoumat?</label><select id="gallery-project"><option value="all">Všechny realizace</option>'
         body += ''.join(f'<option value="{esc(p["local"])}">{esc(p["title"])}</option>' for p in refs)
-        body += f'</select></div><p id="gallery-count" role="status">{count} snímků</p></div><div class="media-grid global-gallery">'
+        body += f'</select></div><p id="gallery-count" role="status">{count} snímků</p></div><div class="media-grid global-gallery" data-cms="gallery-grid">'
         for p in refs:
             title, _ = date_title(p)
             body += ''.join(ctx['gallery_item'](u,ctx['gallery_caption'](u,title,i),current,p['local']) for i,u in enumerate(p['images']))
@@ -79,12 +80,8 @@ def render_overview(current, ctx):
         body += '<section class="container about-details"><div><p class="ed-kicker">Blíž k nám</p><h2>Co je pro nás<br><span>důležité.</span></h2></div><div class="source-accordions">'
         for i,p in enumerate(x for x in data['about'] if x.strip()):
             body += f'<details {"open" if i==0 else ""}><summary>{esc(headings[i])}<span aria-hidden="true">+</span></summary><div class="about-source"><p>{esc(p)}</p></div></details>'
-        body += '</div></section>' + render_partner_testimonial(current, ctx)
-        body += '<section class="container partner-section"><div class="section-caption"><div><p class="ed-kicker">Technologie a spolupráce</p><h2>Na čem stavíme</h2></div></div><div class="partner-deck">'
-        for name,href,filename in [('ENVI-PUR','https://www.envi-pur.cz/kontakty-nasi-partneri/','logo-envi-pur.svg'),('ASIO','https://www.asio.cz/','logo-asio.svg'),('Vodohospodář','https://vodohospodar.cz/','logo-vodohospodar.png'),('ROTO','https://roto-group.eu/','logo-roto.png')]:
-            source=data['source']+'assets/img/'+filename
-            body += f'<a href="{href}" target="_blank" rel="noopener" aria-label="{name} — web partnera"><img src="{asset_url(source,current)}" alt="{name}" loading="lazy"><span aria-hidden="true">↗</span></a>'
-        return body + '</div></section>' + ctx['cta'](current,'Začněme vaším záměrem.','Řekněte nám, co potřebuje váš dům, pozemek nebo provoz.')
+        body += '</div></section>' + render_partner_testimonial(current, ctx) + render_partners(current, ctx)
+        return body + ctx['cta'](current,'Začněme vaším záměrem.','Řekněte nám, co potřebuje váš dům, pozemek nebo provoz.')
 
     if current == 'kontakt.html':
         body = heading('Kontakt','Každé řešení<br><span>začíná rozhovorem.</span>','Nemusíte mít vybranou technologii. Zavolejte nám, napište nebo začněte tím, co právě potřebujete vyřešit.')

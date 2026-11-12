@@ -8,7 +8,7 @@ from pathlib import PurePosixPath
 import re
 from bs4 import BeautifulSoup, Tag
 
-CATEGORIES = {'cov': 'Domovní čistírny', 'commercial': 'Firmy, obce a průmysl', 'destovka': 'Dešťová voda', 'cerpani': 'Čerpací technika', 'servis': 'Servis a rekonstrukce', 'ostatni': 'Další vodní řešení'}
+CATEGORIES = {'cov': 'Domovní čistírny', 'commercial': 'Firemní a průmyslové ČOV', 'destovka': 'Dešťová voda', 'cerpani': 'Čerpací technika', 'servis': 'Servis', 'rekonstrukce': 'Rekonstrukce', 'upravny': 'Úpravny vody', 'ostatni': 'Další vodní řešení'}
 SERVICE_FACTS = {
     'konzultace-a-poradenstvi': [('Podle vašeho místa', 'Doporučení vychází z místních podmínek a plánovaného záměru.'), ('S ohledem na rozpočet', 'Při výběru řešení bereme v úvahu také finanční možnosti.'), ('První společný krok', 'Úvodní konzultaci běžně poskytujeme zdarma.')],
     'cisteni-odpadnich-vod': [('ENVI-PUR a ASIO', 'Domovní technologie pro rodinné i rekreační domy.'), ('Celá cesta k řešení', 'Od konzultace a dokumentace po montáž a servis.'), ('Podle konkrétního zadání', 'Výběr čistírny i způsob odtoku se řeší při přípravě projektu.')],
@@ -116,8 +116,8 @@ def render_detail(p, ctx):
     first_p = next((a.get_text(' ', strip=True) for a in soup.find_all('p', recursive=False) if a.get_text(' ', strip=True) and not _heading(a)), p['body_text'])
     lead = _excerpt(first_p)
     cats = _categories(p)
-    mode = next((v for v in ('servis','destovka','cerpani','cov') if v in cats), 'poradit')
-    if 'commercial' in cats and 'servis' not in cats:
+    mode = next((v for v in ('servis','rekonstrukce','destovka','cerpani','cov') if v in cats), 'poradit')
+    if 'commercial' in cats and mode not in ('servis', 'rekonstrukce'):
         mode = 'cov_firmy'
     if PurePosixPath(current).stem == 'prodej-cov-a-destovych-nadrzi':
         mode = 'poradit'

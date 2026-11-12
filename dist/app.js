@@ -65,7 +65,11 @@ $('#service-inquiry').addEventListener('click', () => {
   closeDialog(); showForm(); setStep(1); chooseInquiryService(activeService);
 });
 
-$$('[data-filter]').forEach(button => button.addEventListener('click', () => {
+// Filtr vybraných realizací. Karty i tlačítka může doplnit administrace (site-data.js),
+// proto se kliknutí zpracovává delegovaně.
+document.addEventListener('click', event => {
+  const button = event.target.closest('[data-filter]');
+  if (!button) return;
   $$('[data-filter]').forEach(item => {
     const active = item === button; item.classList.toggle('active', active); item.setAttribute('aria-pressed', String(active));
   });
@@ -75,7 +79,7 @@ $$('[data-filter]').forEach(button => button.addEventListener('click', () => {
     item.hidden = !show; if (show) count++;
   });
   $('#filter-status').textContent = 'Počet zobrazených realizací: ' + count + '.';
-}));
+});
 
 const form = $('#inquiry-form');
 const stepOne = $('#form-step-1');
@@ -115,14 +119,12 @@ $('#next-step').addEventListener('click', () => {
 $('#previous-step').addEventListener('click', () => {
   setStep(1); serviceChoices.find(input => input.checked)?.focus({ preventScroll: true });
 });
-form.addEventListener('submit', event => {
-  event.preventDefault();
-  if (stepTwo.disabled) { $('#next-step').click(); return; }
-  if (!form.reportValidity()) return;
-  const key = selectedServiceKey();
-  if (!Object.hasOwn(services, key)) { setStep(1); return; }
-  const service = services[key].title;
-  const fields = [['Řešení', service], ['Obec', $('#location').value.trim()]];
+const submitButton = $('#submit-inquiry');
+const formError = $('#form-error');
+const formShownAt = Date.now();
+let sending = false;
+function inquiryFields(key) {
+  const fields = [['Řešení', services[key].title], ['Obec', $('#location').value.trim()]];
   // Do not include previously filled device fields when the topic no longer needs them.
   if (equipmentTopics.has(key)) {
     if ($('#manufacturer').value.trim()) fields.push(['Výrobce', $('#manufacturer').value.trim()]);
@@ -131,19 +133,66 @@ form.addEventListener('submit', event => {
   fields.push(['Jméno', $('#name').value.trim()], ['E-mail', $('#email').value.trim()]);
   if ($('#phone').value.trim()) fields.push(['Telefon', $('#phone').value.trim()]);
   if ($('#message').value.trim()) fields.push([messagePrompts[key][2], $('#message').value.trim()]);
+  return fields;
+}
+function mailtoLink(key, fields) {
+  const body = 'Dobrý den,\n\nmám zájem o následující řešení:\n\n' + fields.map(([title, value]) => title + ': ' + value).join('\n') + '\n\nDěkuji.';
+  return 'mailto:info@cistareseni.cz?subject=' + encodeURIComponent('Poptávka: ' + services[key].title) + '&body=' + encodeURIComponent(body);
+}
+function setSending(state) {
+  sending = state;
+  submitButton.disabled = state;
+  submitButton.setAttribute('aria-busy', String(state));
+  $('span', submitButton).textContent = state ? 'Odesílám…' : 'Odeslat poptávku';
+}
+form.addEventListener('submit', async event => {
+  event.preventDefault();
+  if (sending) return;
+  if (stepTwo.disabled) { $('#next-step').click(); return; }
+  if (!form.reportValidity()) return;
+  const key = selectedServiceKey();
+  if (!Object.hasOwn(services, key)) { setStep(1); return; }
+  const fields = inquiryFields(key);
+  formError.hidden = true;
+  setSending(true);
+  try {
+    // Vyplněné skryté pole nebo odeslání během prvních vteřin prozrazuje robota:
+    // poptávku neukládáme, ale navenek se formulář chová stejně.
+    const robot = $('#company-website').value.trim() !== '' || Date.now() - formShownAt < 2500;
+    if (!robot) {
+      if (!window.CRData) throw new Error('Datové připojení není k dispozici.');
+      const equipment = equipmentTopics.has(key);
+      await window.CRData.createInquiry({
+        service: key, serviceLabel: services[key].title, location: $('#location').value,
+        manufacturer: equipment ? $('#manufacturer').value : '', deviceType: equipment ? $('#device-type').value : '',
+        name: $('#name').value, email: $('#email').value, phone: $('#phone').value, message: $('#message').value,
+        page: location.pathname.slice(0, 200)
+      });
+    }
+  } catch (error) {
+    console.warn('Poptávku se nepodařilo odeslat.', error);
+    setSending(false);
+    $('#email-inquiry').href = mailtoLink(key, fields);
+    formError.hidden = false;
+    formError.focus({ preventScroll: true });
+    return;
+  }
+  setSending(false);
   $('#inquiry-summary').replaceChildren(...fields.flatMap(([title, text]) => {
     const dt = document.createElement('dt'); dt.textContent = title;
     const dd = document.createElement('dd'); dd.textContent = text;
     return [dt, dd];
   }));
-  const body = 'Dobrý den,\n\nmám zájem o následující řešení:\n\n' + fields.map(([title, value]) => title + ': ' + value).join('\n') + '\n\nDěkuji.';
-  $('#email-inquiry').href = 'mailto:info@cistareseni.cz?subject=' + encodeURIComponent('Poptávka: ' + service) + '&body=' + encodeURIComponent(body);
-  form.hidden = true; $('#form-result').hidden = false; $('#step-indicator').textContent = 'SOUHRN';
+  $('#form-result-note').textContent = window.CR_CMS?.confirmationEmail
+    ? 'Potvrzení jsme vám poslali na e-mail ' + $('#email').value.trim() + '. Ozveme se co nejdříve.'
+    : 'Ozveme se vám co nejdříve na uvedený e-mail nebo telefon.';
+  form.hidden = true; $('#form-result').hidden = false; $('#step-indicator').textContent = 'ODESLÁNO';
   $('#form-result h3').setAttribute('tabindex', '-1');
   $('#form-result h3').focus({ preventScroll: true });
 });
-$('#edit-inquiry').addEventListener('click', () => {
-  showForm(); setStep(2); $('#name').focus({ preventScroll: true });
+$('#new-inquiry').addEventListener('click', () => {
+  form.reset(); updateInquiryFields(); showForm(); setStep(1);
+  serviceChoices[0]?.focus({ preventScroll: true });
 });
 $('#year').textContent = new Date().getFullYear();
 const requestedSolution = new URLSearchParams(window.location.search).get('reseni');

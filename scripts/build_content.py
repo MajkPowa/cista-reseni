@@ -6,8 +6,10 @@ from detail_design import render_detail
 from overview_design import render_overview
 from site_shell import COMPANY, render_header, render_footer
 from service_extensions import EXTENSION_PAGES, render_extension
-from reference_enrichment import enrich_references
+from reference_enrichment import enrich_references, CATEGORY_LABELS
 from partner_testimonial import render_partner_testimonial
+from partners import render_partners
+from cms_pages import render_dynamic_detail, render_privacy
 from bs4 import BeautifulSoup
 from PIL import Image
 
@@ -26,7 +28,7 @@ for source,asset in ASSETS.items():
         image.save(target,'WEBP',quality=81,method=6)
     with Image.open(target) as image:width,height=image.size
     THUMBS[source]={'local':target.relative_to(DIST).as_posix(),'width':width,'height':height,'bytes':target.stat().st_size}
-LABELS={'cov':'Domovní ČOV','commercial':'Firmy, obce a průmysl','servis':'Servis a rekonstrukce','destovka':'Dešťová voda','cerpani':'Čerpací technika','ostatni':'Další řešení'}
+LABELS=dict(CATEGORY_LABELS)
 ILLUSTRATIONS={'https://www.cistareseni.cz/assets/img/references/destovka-tabor-102023_1750944312.jpg'}
 def esc(s): return html.escape(str(s),quote=True)
 def rel(target,current):
@@ -63,7 +65,8 @@ def stamp_assets(document,current):
         return f'{attr}="{parsed.path}?v={fingerprint}"'
     return re.sub(r'(href|src)="([^"]+)"',stamped,document)
 
-def page(current,title,body,description='',has_gallery=False):
+CMS_PAGES={'reference.html','galerie.html'}
+def page(current,title,body,description='',has_gallery=False,reference_id=None):
     meta=esc(short(description or title,155))
     service_assets='<link rel="stylesheet" href="services.css"><script src="services.js" defer></script>' if current=='sluzby.html' else ''
     is_detail=current.startswith(('sluzby/','realizace/'))
@@ -75,12 +78,16 @@ def page(current,title,body,description='',has_gallery=False):
     extension_assets=f'<link rel="stylesheet" href="{rel("service-extensions.css",current)}">' if current in EXTENSION_PAGES else ''
     if current=='o-nas.html':
         extension_assets+=f'<link rel="stylesheet" href="{rel("partner-testimonial.css",current)}">'
+    cms_assets=f'<link rel="stylesheet" href="{rel("cms.css",current)}">'
+    if current in CMS_PAGES or current.startswith('realizace/'):
+        cms_assets+=f'<script src="{rel("cms-config.js",current)}" defer></script><script src="{rel("site-data.js",current)}" defer></script>'
+    reference_attr=f' data-reference-id="{esc(reference_id)}"' if reference_id else ''
     body_class='content-page experience-page'+(' solutions-page' if current=='sluzby.html' else '')+(' service-detail' if current.startswith('sluzby/') else ' reference-detail' if current.startswith('realizace/') else '')
     progress='<div class="reading-progress" aria-hidden="true"></div>' if is_detail else ''
-    document=f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#12375b"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="https://majkpowa.github.io/cista-reseni/assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.ttf',current)}" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script>{service_assets}{detail_assets}{experience_assets}{extension_assets}{shell_assets}</head><body class="{body_class}">{progress}{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
+    document=f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#12375b"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="https://majkpowa.github.io/cista-reseni/assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.ttf',current)}" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script>{service_assets}{detail_assets}{experience_assets}{extension_assets}{shell_assets}{cms_assets}</head><body class="{body_class}"{reference_attr}>{progress}{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
     return stamp_assets(document,current)
-def save(current,title,body,description='',has_gallery=False):
-    document=page(current,title,body,description,has_gallery)
+def save(current,title,body,description='',has_gallery=False,reference_id=None):
+    document=page(current,title,body,description,has_gallery,reference_id)
     document='\n'.join(line.rstrip() for line in document.splitlines())+'\n'
     f=DIST/current;f.parent.mkdir(parents=True,exist_ok=True);f.write_text(document,encoding='utf-8',newline='\n')
 def hero(current,title,eyebrow,intro='',parent=None,meta=''):
@@ -134,11 +141,16 @@ for p in PAGES:
         meta=EXTENSION_PAGES[current]
         save(current,meta['title'],render_extension(current,CTX),meta['description'])
     else:
-        save(current,title,render_detail(p,CTX),p['body_text'],bool(p['images']))
+        legacy=re.match(r'realizace/(\d+)-',current)
+        save(current,title,render_detail(p,CTX),p['body_text'],bool(p['images']),reference_id=f'legacy-{legacy.group(1)}' if legacy else None)
 
 for current,meta in EXTENSION_PAGES.items():
     if current not in {p['local'] for p in PAGES}:
         save(current,meta['title'],render_extension(current,CTX),meta['description'])
+
+# Pages of the content management system: detail filled from the database and privacy information.
+save('realizace/detail.html','Detail realizace',render_dynamic_detail('realizace/detail.html',CTX),'Realizace z naší práce: popis, parametry a fotografie.',has_gallery=True)
+save('zpracovani-udaju.html','Zpracování osobních údajů',render_privacy('zpracovani-udaju.html',CTX),'Jak Čistá řešení zpracovávají osobní údaje z poptávkového formuláře.')
 
 current='reference.html'
 save(current,'Naše realizace',render_overview(current,CTX),'Skutečné realizace čistíren, dešťových nádrží, čerpání a servisu. Prohlédněte si projekty, fotografie a technické podrobnosti.')
@@ -223,7 +235,12 @@ if '--skip-home' not in sys.argv:
     home_soup.body.append(BeautifulSoup(footer('index.html'),'html.parser'))
     for old in home_soup.select('#partner-testimonial'): old.decompose()
     home_soup.select_one('section.about').insert_after(BeautifulSoup(render_partner_testimonial('index.html',CTX),'html.parser'))
-    for name in ('business.css','navigation.css','partner-testimonial.css'):
+    for old in home_soup.select('#partneri,.about .partners'): old.decompose()
+    home_soup.select_one('#partner-testimonial').insert_after(BeautifulSoup(render_partners('index.html',CTX,'home'),'html.parser'))
+    for name in ('cms-config.js','site-data.js'):
+        if not home_soup.select_one(f'script[src^="{name}"]'):
+            tag=home_soup.new_tag('script',src=name,defer='');home_soup.head.append(tag)
+    for name in ('business.css','navigation.css','partner-testimonial.css','cms.css'):
         if not home_soup.select_one(f'link[href^="{name}"]'):
             tag=home_soup.new_tag('link',rel='stylesheet',href=name);home_soup.head.append(tag)
     # Keep the existing stylesheet order, then apply the complete logo and motion.

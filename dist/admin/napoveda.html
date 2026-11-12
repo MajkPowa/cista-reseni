@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#12375b">
+<title>Manuál administrace | Čistá řešení</title>
+<link rel="icon" href="../assets/brand-symbol.svg" type="image/svg+xml">
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="napoveda.css">
+</head>
+<body class="help">
+<header class="help-top">
+  <a class="topbar-brand" href="index.html"><img src="../assets/brand-symbol.svg" width="55" height="59" alt=""><span>Čistá řešení<small>manuál administrace</small></span></a>
+  <div class="help-top-actions"><a class="btn btn-small" href="index.html">← Zpět do administrace</a><button class="btn btn-small" type="button" onclick="window.print()">Vytisknout / uložit jako PDF</button></div>
+</header>
+
+<div class="help-layout">
+<nav class="help-nav" aria-label="Obsah manuálu">
+  <strong>Obsah</strong>
+  <a href="#uvod">1. K čemu administrace slouží</a>
+  <a href="#prihlaseni">2. Přihlášení</a>
+  <a href="#poptavky">3. Poptávky</a>
+  <a href="#reference">4. Reference</a>
+  <a href="#fotografie">5. Fotografie</a>
+  <a href="#uvodni-stranka">6. Úvodní stránka</a>
+  <a href="#kategorie">7. Kategorie</a>
+  <a href="#spravci">8. Správci</a>
+  <a href="#telefon">9. Práce z telefonu</a>
+  <a href="#potize">10. Když něco nejde</a>
+</nav>
+
+<main class="help-main">
+<h1>Manuál administrace webu</h1>
+<p class="help-lead">Administrace slouží k tomu, abyste si web Čistá řešení spravovali sami: přidávali realizace a servisní zakázky s fotografiemi a měli přehled o poptávkách z webu. Nic se nedá „rozbít“ – vše, co uložíte, můžete znovu upravit.</p>
+
+<section id="uvod">
+<h2>1. K čemu administrace slouží</h2>
+<table class="help-table">
+<thead><tr><th>Část</th><th>Co v ní uděláte</th></tr></thead>
+<tbody>
+<tr><td><strong>Poptávky</strong></td><td>Vidíte každou poptávku odeslanou formulářem na webu, měníte její stav a píšete si k ní interní poznámky.</td></tr>
+<tr><td><strong>Reference</strong></td><td>Přidáváte, upravujete, skrýváte a mažete realizace a servisní zakázky včetně fotografií. Vybíráte, které se ukážou na úvodní stránce.</td></tr>
+<tr><td><strong>Kategorie</strong></td><td>Spravujete seznam kategorií, podle kterých si návštěvníci reference filtrují.</td></tr>
+<tr><td><strong>Správci</strong></td><td>Určujete, kdo se do administrace smí přihlásit.</td></tr>
+</tbody>
+</table>
+<p>Adresa administrace: <strong>adresa webu + <code>/admin/</code></strong>. Odkaz „Administrace“ najdete také úplně dole v patičce webu.</p>
+</section>
+
+<section id="prihlaseni">
+<h2>2. Přihlášení</h2>
+<h3>První přihlášení</h3>
+<ol>
+<li>Otevřete administraci a klikněte na <strong>První přihlášení – nastavit heslo</strong>.</li>
+<li>Zadejte e-mail, kterému byl přístup přidělen, a dvakrát nové heslo (alespoň 10 znaků). Heslo si volíte sami, nikdo jiný ho nezná.</li>
+<li>Na e-mail vám přijde zpráva s potvrzovacím odkazem. Klikněte na něj. Pokud zprávu nevidíte, podívejte se do nevyžádané pošty.</li>
+<li>Vraťte se do administrace a klikněte na <strong>Mám potvrzeno, pokračovat</strong>.</li>
+</ol>
+<h3>Další přihlášení</h3>
+<p>Zadáte e-mail a heslo. Na vlastním počítači nebo telefonu zůstanete přihlášeni, dokud se sami neodhlásíte tlačítkem <strong>Odhlásit</strong>. Na cizím zařízení se vždy odhlaste.</p>
+<h3>Zapomenuté heslo</h3>
+<p>Na přihlašovací obrazovce klikněte na <strong>Zapomenuté heslo</strong>, zadejte e-mail a v doručené zprávě si nastavte heslo nové.</p>
+<p class="help-note"><strong>Hlášení „Tento účet nemá přístup“</strong> znamená, že váš e-mail není na seznamu správců. O přidání požádejte kolegu, který přístup má (viz <a href="#spravci">Správci</a>).</p>
+</section>
+
+<section id="poptavky">
+<h2>3. Poptávky</h2>
+<p>Každá poptávka odeslaná z webu se tu objeví během několika vteřin, stránku není potřeba obnovovat. U záložky <strong>Poptávky</strong> svítí počet nových.</p>
+<figure><img src="napoveda/poptavky.jpg" width="800" height="537" alt="Seznam poptávek se stavy a filtrem" loading="lazy"><figcaption>Seznam poptávek. Nové poptávky mají modrý proužek.</figcaption></figure>
+<h3>Stavy poptávky</h3>
+<table class="help-table">
+<thead><tr><th>Stav</th><th>Kdy ho použít</th></tr></thead>
+<tbody>
+<tr><td><strong>Nová</strong></td><td>Právě přišla, nikdo se jí zatím nevěnoval.</td></tr>
+<tr><td><strong>Řeší se</strong></td><td>Se zákazníkem jste v kontaktu, domlouváte prohlídku nebo zjišťujete podrobnosti.</td></tr>
+<tr><td><strong>Nabídka odeslána</strong></td><td>Zákazník dostal nabídku a čekáte na odpověď.</td></tr>
+<tr><td><strong>Zakázka</strong></td><td>Z poptávky vznikla zakázka.</td></tr>
+<tr><td><strong>Uzavřeno</strong></td><td>Poptávka skončila bez zakázky (zákazník si to rozmyslel, nešlo vyhovět apod.).</td></tr>
+</tbody>
+</table>
+<p>Filtr <strong>Otevřené</strong> ukazuje vše, co ještě není dořešené (Nová, Řeší se, Nabídka odeslána). To je výchozí pohled.</p>
+<h3>Práce s poptávkou</h3>
+<ol>
+<li>Klikněte na řádek poptávky. Otevře se detail se vším, co zákazník vyplnil.</li>
+<li>Tlačítkem <strong>Odpovědět e-mailem</strong> otevřete novou zprávu ve svém poštovním programu, tlačítkem <strong>Zavolat</strong> vytočíte číslo (na telefonu).</li>
+<li>Změňte <strong>Stav</strong> a do <strong>Interní poznámky</strong> si napište, co jste domluvili. Poznámku vidí jen správci, zákazník nikdy.</li>
+<li>Klikněte na <strong>Uložit</strong>.</li>
+</ol>
+<figure><img src="napoveda/poptavka-detail.jpg" width="800" height="537" alt="Detail poptávky se stavem a interní poznámkou" loading="lazy"><figcaption>Detail poptávky.</figcaption></figure>
+<h3>Hledání, filtr podle služby a export</h3>
+<ul>
+<li><strong>Hledat</strong> prohledává jméno, obec, e-mail, telefon, text zprávy i vaše poznámky.</li>
+<li><strong>Typ služby</strong> zobrazí jen poptávky na vybranou službu (servis, domovní ČOV, dešťová voda…).</li>
+<li><strong>Stáhnout jako tabulku (CSV)</strong> uloží všechny poptávky do souboru, který otevřete v Excelu.</li>
+</ul>
+<p class="help-note"><strong>Mazání poptávek.</strong> Poptávku lze smazat tlačítkem <strong>Smazat poptávku</strong> v detailu. Smazání je nevratné. Vyřízené poptávky obvykle stačí přepnout do stavu Zakázka nebo Uzavřeno.</p>
+</section>
+
+<section id="reference">
+<h2>4. Reference</h2>
+<p>Reference jsou realizace a servisní zakázky, které se zobrazují na stránce <strong>Realizace</strong>, v galerii a (vybrané) na úvodní stránce. Každá změna se na webu projeví hned po uložení.</p>
+<figure><img src="napoveda/reference.jpg" width="800" height="537" alt="Seznam referencí s tlačítky Upravit a Smazat" loading="lazy"><figcaption>Seznam referencí. Štítky ukazují, co je zveřejněné a co je na úvodní stránce.</figcaption></figure>
+<h3>Přidání nové reference</h3>
+<ol>
+<li>Klikněte na <strong>+ Přidat referenci</strong>.</li>
+<li>Vyplňte <strong>Název zakázky</strong> (povinné), <strong>Lokalitu</strong> a <strong>Měsíc a rok</strong> realizace.</li>
+<li>Zaškrtněte jednu nebo více <strong>Kategorií</strong>.</li>
+<li>Napište <strong>Krátké shrnutí</strong> (jedna až dvě věty, zobrazí se na kartě ve výpisu) a <strong>Popis realizace</strong>.</li>
+<li>Podle potřeby přidejte <strong>Parametry</strong> – například Technologie: BC 4 OPTIMA, Kapacita: 4 EO.</li>
+<li>Nahrajte <strong>Fotografie</strong> (viz další kapitola).</li>
+<li>Klikněte na <strong>Uložit</strong>. Reference je okamžitě na webu.</li>
+</ol>
+<figure><img src="napoveda/reference-editor.jpg" width="800" height="537" alt="Formulář reference: název, lokalita, datum, kategorie, shrnutí a popis" loading="lazy"><figcaption>Formulář reference.</figcaption></figure>
+<h3>Jak psát popis</h3>
+<ul>
+<li>Odstavce oddělte <strong>prázdným řádkem</strong>.</li>
+<li>Řádky začínající <strong>pomlčkou a mezerou</strong> („- výměna dmychadla“) se na webu zobrazí jako odrážky.</li>
+<li>Pokud shrnutí nevyplníte, použije se začátek popisu.</li>
+</ul>
+<h3>Úprava, skrytí a smazání</h3>
+<ul>
+<li><strong>Upravit</strong> otevře stejný formulář s vyplněnými údaji.</li>
+<li><strong>Skrytí:</strong> ve formuláři vypněte přepínač <strong>Zveřejnit na webu</strong>. Reference zmizí z webu, ale v administraci zůstane a můžete ji kdykoli vrátit. Tohle je bezpečnější než mazání.</li>
+<li><strong>Smazat</strong> odstraní referenci i s fotografiemi natrvalo. Administrace se vždy nejdřív zeptá.</li>
+</ul>
+<p class="help-note"><strong>Reference převzaté z původního webu.</strong> Původních 41 realizací má na webu vlastní, ručně připravené stránky. Jakmile u takové reference změníte název, text, kategorie nebo fotografie, začne se zobrazovat v jednotném detailu stejném jako nové reference. Formulář na to upozorní žlutým pruhem.</p>
+</section>
+
+<section id="fotografie">
+<h2>5. Fotografie</h2>
+<ol>
+<li>Ve formuláři reference klikněte na <strong>Vybrat fotografie</strong>. Na telefonu se nabídne galerie nebo fotoaparát, na počítači složka se soubory. Fotografie můžete na počítači také přetáhnout myší do modrého pole.</li>
+<li>Vybrat lze více fotografií najednou (nejvýše 60 na jednu referenci).</li>
+<li>Fotografie se <strong>samy zmenší</strong> na vhodnou velikost – není potřeba je předem upravovat.</li>
+<li>Nahrají se až po kliknutí na <strong>Uložit</strong>. Podle počtu a rychlosti připojení to může chvíli trvat; průběh vidíte vedle tlačítka.</li>
+</ol>
+<figure><img src="napoveda/reference-fotografie.jpg" width="800" height="537" alt="Fotografie v editoru reference s tlačítky pro pořadí, úvodní fotografii a odebrání" loading="lazy"><figcaption>Fotografie v editoru. Modře orámovaná je úvodní.</figcaption></figure>
+<table class="help-table">
+<thead><tr><th>Tlačítko</th><th>Co dělá</th></tr></thead>
+<tbody>
+<tr><td><strong>Nastavit jako úvodní</strong></td><td>Tato fotografie se ukáže na kartě ve výpisu a nahoře v detailu reference.</td></tr>
+<tr><td><strong>← →</strong></td><td>Změní pořadí fotografií v galerii.</td></tr>
+<tr><td><strong>×</strong></td><td>Odebere fotografii. Z webu zmizí po uložení.</td></tr>
+</tbody>
+</table>
+<p class="help-note"><strong>Tip.</strong> Na úvodní fotografii se nejlépe hodí snímek na šířku, kde je hotové dílo dobře vidět. Fotografujte bez osob a registračních značek, případně se souhlasem zákazníka.</p>
+</section>
+
+<section id="uvodni-stranka">
+<h2>6. Úvodní stránka</h2>
+<p>V části „Řešení, která už fungují“ na úvodní stránce se zobrazují vybrané reference.</p>
+<ol>
+<li>Otevřete referenci a zapněte přepínač <strong>Zobrazit na úvodní stránce</strong>.</li>
+<li>Volitelně vyplňte <strong>Titulek na úvodní stránce</strong> – krátkou, výstižnou větu. Když ho nevyplníte, použije se název zakázky.</li>
+<li>Uložte.</li>
+</ol>
+<p>Na úvodní stránce se ukáže <strong>nejvýše 8</strong> vybraných referencí, seřazených od nejnovější podle data realizace. Doporučujeme mít vybrané 4 až 6 a čas od času je obměnit. V seznamu referencí je poznáte podle štítku <strong>★ Na úvodu</strong>; filtr <strong>Zobrazení → Na úvodní stránce</strong> ukáže jen je.</p>
+</section>
+
+<section id="kategorie">
+<h2>7. Kategorie</h2>
+<figure><img src="napoveda/kategorie.jpg" width="800" height="537" alt="Seznam kategorií s počtem referencí a šipkami pro pořadí" loading="lazy"><figcaption>Kategorie referencí.</figcaption></figure>
+<ul>
+<li><strong>Přejmenování:</strong> přepište název v políčku.</li>
+<li><strong>Nová kategorie:</strong> napište název do pole <strong>Nová kategorie</strong> a klikněte na <strong>Přidat</strong>.</li>
+<li><strong>Pořadí:</strong> šipky ↑ ↓ určují pořadí tlačítek filtru na webu. Pokud má reference více kategorií, jako hlavní (na štítku fotografie) se ukáže ta, která je v seznamu výš.</li>
+<li><strong>Smazání:</strong> křížek je dostupný jen u kategorie, kterou žádná reference nepoužívá.</li>
+</ul>
+<p>Změny se projeví až po kliknutí na <strong>Uložit změny</strong>. Na webu se ve filtru zobrazují jen kategorie, ve kterých je aspoň jedna zveřejněná reference.</p>
+</section>
+
+<section id="spravci">
+<h2>8. Správci</h2>
+<figure><img src="napoveda/spravci.jpg" width="800" height="537" alt="Seznam správců s polem pro přidání e-mailu" loading="lazy"><figcaption>Seznam správců.</figcaption></figure>
+<ul>
+<li><strong>Přidání:</strong> zadejte e-mail kolegy a klikněte na <strong>Přidat</strong>. Kolega si pak sám nastaví heslo postupem <a href="#prihlaseni">První přihlášení</a>. Žádné heslo mu neposíláte.</li>
+<li><strong>Odebrání:</strong> tlačítkem <strong>Odebrat přístup</strong>. Dotyčný se od té chvíle do administrace nedostane.</li>
+<li>Sami sebe odebrat nelze, aby administrace nezůstala bez správce.</li>
+</ul>
+<p class="help-note"><strong>Bezpečnost.</strong> Každý správce má vlastní e-mail a vlastní heslo. Hesla nesdílejte. Když někdo z firmy odejde, odeberte mu přístup.</p>
+</section>
+
+<section id="telefon">
+<h2>9. Práce z telefonu</h2>
+<div class="help-split">
+<div>
+<p>Administrace funguje v prohlížeči telefonu stejně jako na počítači. Hodí se hlavně pro dvě věci:</p>
+<ul>
+<li><strong>Fotografie přímo ze stavby:</strong> otevřete referenci, klepněte na <strong>Vybrat fotografie</strong> a vyberte snímky z galerie nebo je rovnou vyfoťte.</li>
+<li><strong>Rychlá reakce na poptávku:</strong> v detailu poptávky klepněte na <strong>Zavolat</strong>.</li>
+</ul>
+<p>Pro pohodlný přístup si stránku administrace přidejte na plochu telefonu (v nabídce prohlížeče „Přidat na plochu“).</p>
+</div>
+<figure><img src="napoveda/mobil.jpg" width="375" height="812" alt="Administrace na telefonu" loading="lazy"><figcaption>Administrace na telefonu.</figcaption></figure>
+</div>
+</section>
+
+<section id="potize">
+<h2>10. Když něco nejde</h2>
+<table class="help-table">
+<thead><tr><th>Co se děje</th><th>Co zkusit</th></tr></thead>
+<tbody>
+<tr><td>Nejde se přihlásit, „E-mail nebo heslo nesouhlasí“</td><td>Zkontrolujte překlepy a velká písmena v hesle. Případně použijte <strong>Zapomenuté heslo</strong>.</td></tr>
+<tr><td>Nepřišel potvrzovací e-mail</td><td>Podívejte se do nevyžádané pošty. Na obrazovce potvrzení klikněte na <strong>Poslat zprávu znovu</strong>.</td></tr>
+<tr><td>„Tento účet nemá přístup“</td><td>Váš e-mail není na seznamu správců. Požádejte kolegu s přístupem, ať vás přidá.</td></tr>
+<tr><td>Fotografii se nepodařilo načíst</td><td>Některé formáty (například HEIC z iPhonu otevřený na počítači) prohlížeč nepřečte. Uložte snímek jako JPEG, nebo ho nahrajte přímo z telefonu.</td></tr>
+<tr><td>Ukládání reference trvá dlouho</td><td>Nahrává se hodně fotografií nebo je pomalé připojení. Nechte okno otevřené, průběh je vidět vedle tlačítka Uložit.</td></tr>
+<tr><td>Změna není na webu vidět</td><td>Obnovte stránku webu (klávesa F5). Zkontrolujte, že je u reference zapnuté <strong>Zveřejnit na webu</strong>.</td></tr>
+<tr><td>„Něco se nepovedlo“ nebo „Služba je dočasně nedostupná“</td><td>Zkontrolujte připojení k internetu a akci zopakujte. Pokud potíže trvají, kontaktujte správce webu.</td></tr>
+</tbody>
+</table>
+<p>S čímkoli dalším – úpravy textů a vzhledu webu, nové funkce, technické potíže – se obraťte na dodavatele webu.</p>
+</section>
+</main>
+</div>
+</body>
+</html>

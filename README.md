@@ -19,10 +19,20 @@ https://majkpowa.github.io/cista-reseni/
 - 5 původních PDF dokumentů se skutečnými náhledy první strany, vyhledáváním a filtrem.
 - Obrazová stránka o firmě, kontaktní karty s kopírováním údajů a volbou tématu poptávky.
 - Rozbalovací odpovědi na otázky.
-- Dvoukrokový ukázkový formulář s devíti tématy, údaji o stávajícím zařízení, validací, souhrnem a volitelným otevřením e-mailové aplikace.
+- Dvoukrokový poptávkový formulář s devíti tématy, údaji o stávajícím zařízení, validací a uložením poptávky do administrace.
 - Odkazy pro telefon a e-mail, ovládání klávesnicí, podpora omezeného pohybu.
 
-Formulář neposílá data na server a nic neukládá. Ukázka neobsahuje analytické nebo reklamní trackery, API klíče ani zákaznická data. Před ostrým provozem je nutné připojit skutečný příjem poptávek, evidenci jejich výsledku a dokončit informační obsah pro zpracování údajů. Obsah je lokální kopie veřejných podkladů k 7. 11. 2026, nikoli automatická synchronizace.
+## Redakční systém (od 12. 11. 2026)
+
+- **Administrace** na adrese `/admin/`: reference s fotografiemi (přidání, úprava, skrytí, smazání, výběr na úvodní stránku), kategorie, poptávky se stavy a poznámkami, správci. Přihlášení e-mailem a heslem, e-mail musí být ověřený a uvedený na seznamu správců.
+- **Reference** se na úvodní stránku, do výpisu realizací, galerie a detailu načítají z databáze (Firestore). Statický výpis zůstává jako záloha pro případ výpadku. Kategorie: Domovní ČOV, Firemní a průmyslové ČOV, Servis, Rekonstrukce, Dešťová voda, Úpravny vody, Čerpací technika, Další řešení.
+- **Poptávkový formulář** poptávku ukládá do databáze; správce ji vidí v administraci. Automatické e-maily (upozornění firmě, potvrzení zákazníkovi) jsou připravené ve `functions/` a zapnou se nastavením SMTP přístupu — do té doby web potvrzovací e-mail neslibuje.
+- **Partneři:** sekce s logy ASIO, ENVI-PUR, EKOCIS, Vodohospodář a ROTO na úvodu a na stránce O nás (`scripts/partners.py`, loga v `dist/assets/partners/`).
+- **Zpracování osobních údajů:** `zpracovani-udaju.html` je pracovní text k revizi klientem.
+
+Backend je Firebase projekt `cista-reseni-20261112` (Firestore, Storage, Authentication, Functions; region europe-west3). Pravidla jsou ve `firestore.rules` a `storage.rules`, lokální kontrola v `scripts/test_rules.sh`. Web neobsahuje analytické ani reklamní trackery. Manuály: `docs/manualy/` a nápověda v administraci.
+
+Obsah převzatý z původního webu je lokální kopie veřejných podkladů k 7. 11. 2026, nikoli automatická synchronizace.
 
 ## Rozsah převzetí
 
@@ -57,6 +67,8 @@ node --check dist/services.js
 node --check dist/experience.js
 node --check dist/navigation.js
 node --check dist/motion.js
+node --check dist/site-data.js
+node --check dist/admin/admin.js
 python scripts/check_site.py
 python scripts/validate_content.py
 ```

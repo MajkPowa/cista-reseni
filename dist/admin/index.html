@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#12375b">
+<title>Administrace | Čistá řešení</title>
+<link rel="icon" href="../assets/brand-symbol.svg" type="image/svg+xml">
+<link rel="stylesheet" href="admin.css">
+<script src="../cms-config.js"></script>
+<script type="module" src="admin.js"></script>
+</head>
+<body>
+<noscript><p class="noscript">Administrace vyžaduje zapnutý JavaScript.</p></noscript>
+
+<!-- Načítání -->
+<div class="screen" id="view-loading"><div class="spinner" role="status" aria-label="Načítám"></div></div>
+
+<!-- Přihlášení -->
+<div class="screen" id="view-auth" hidden>
+  <div class="auth-card">
+    <img class="auth-logo" src="../assets/brand-logo.svg" width="1367" height="557" alt="Čistá řešení">
+    <h1>Administrace webu</h1>
+
+    <form id="form-login" novalidate>
+      <p class="auth-lead">Přihlaste se e-mailem a heslem.</p>
+      <label for="login-email">E-mail</label>
+      <input id="login-email" type="email" autocomplete="username" required>
+      <label for="login-password">Heslo</label>
+      <input id="login-password" type="password" autocomplete="current-password" required>
+      <p class="form-message" data-message role="alert" hidden></p>
+      <button class="btn btn-primary" type="submit">Přihlásit se</button>
+      <div class="auth-links">
+        <button type="button" class="link" data-auth-mode="setup">První přihlášení – nastavit heslo</button>
+        <button type="button" class="link" data-auth-mode="reset">Zapomenuté heslo</button>
+      </div>
+    </form>
+
+    <form id="form-setup" novalidate hidden>
+      <p class="auth-lead">Zadejte e-mail, kterému byl přidělen přístup, a zvolte si heslo. Na e-mail vám pošleme potvrzovací odkaz.</p>
+      <label for="setup-email">E-mail</label>
+      <input id="setup-email" type="email" autocomplete="username" required>
+      <label for="setup-password">Nové heslo <small>(alespoň 10 znaků)</small></label>
+      <input id="setup-password" type="password" autocomplete="new-password" minlength="10" required>
+      <label for="setup-password-repeat">Heslo znovu</label>
+      <input id="setup-password-repeat" type="password" autocomplete="new-password" minlength="10" required>
+      <p class="form-message" data-message role="alert" hidden></p>
+      <button class="btn btn-primary" type="submit">Vytvořit přístup</button>
+      <div class="auth-links"><button type="button" class="link" data-auth-mode="login">Zpět na přihlášení</button></div>
+    </form>
+
+    <form id="form-reset" novalidate hidden>
+      <p class="auth-lead">Pošleme vám e-mail s odkazem pro nastavení nového hesla.</p>
+      <label for="reset-email">E-mail</label>
+      <input id="reset-email" type="email" autocomplete="username" required>
+      <p class="form-message" data-message role="alert" hidden></p>
+      <button class="btn btn-primary" type="submit">Poslat odkaz</button>
+      <div class="auth-links"><button type="button" class="link" data-auth-mode="login">Zpět na přihlášení</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- Potvrzení e-mailu -->
+<div class="screen" id="view-verify" hidden>
+  <div class="auth-card">
+    <h2>Potvrďte svůj e-mail</h2>
+    <p class="auth-lead">Na adresu <strong data-user-email></strong> jsme poslali zprávu s potvrzovacím odkazem. Klikněte na něj a potom se vraťte sem.</p>
+    <p class="hint">Zpráva nedorazila? Podívejte se do nevyžádané pošty.</p>
+    <p class="form-message" id="verify-message" role="status" hidden></p>
+    <button class="btn btn-primary" type="button" id="verify-done">Mám potvrzeno, pokračovat</button>
+    <div class="auth-links">
+      <button type="button" class="link" id="verify-resend">Poslat zprávu znovu</button>
+      <button type="button" class="link" data-sign-out>Odhlásit se</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bez oprávnění -->
+<div class="screen" id="view-denied" hidden>
+  <div class="auth-card">
+    <h2>Tento účet nemá přístup</h2>
+    <p class="auth-lead">E-mail <strong data-user-email></strong> není na seznamu správců webu. O přidání požádejte někoho, kdo do administrace přístup má.</p>
+    <button class="btn" type="button" data-sign-out>Odhlásit se</button>
+  </div>
+</div>
+
+<!-- Administrace -->
+<div class="app" id="view-main" hidden>
+  <header class="topbar">
+    <a class="topbar-brand" href="../index.html" target="_blank" rel="noopener" title="Otevřít web"><img src="../assets/brand-symbol.svg" width="55" height="59" alt=""><span>Čistá řešení<small>administrace</small></span></a>
+    <nav class="tabs" aria-label="Části administrace">
+      <button type="button" data-tab="inquiries" aria-current="page">Poptávky <span class="badge" id="badge-new" hidden></span></button>
+      <button type="button" data-tab="references">Reference</button>
+      <button type="button" data-tab="categories">Kategorie</button>
+      <button type="button" data-tab="admins">Správci</button>
+      <a href="napoveda.html" target="_blank" rel="noopener">Nápověda ↗</a>
+    </nav>
+    <div class="topbar-user"><span data-user-email></span><button type="button" class="btn btn-small" data-sign-out>Odhlásit</button></div>
+  </header>
+
+  <main>
+    <!-- Poptávky -->
+    <section class="panel" id="tab-inquiries">
+      <div class="panel-head">
+        <div><h2>Poptávky</h2><p class="panel-note">Všechny poptávky odeslané formulářem na webu. Nové se objeví samy, stránku není třeba obnovovat.</p></div>
+        <button type="button" class="btn" id="export-inquiries">Stáhnout jako tabulku (CSV)</button>
+      </div>
+      <div class="chips" id="inquiry-status-filter" role="group" aria-label="Stav poptávky"></div>
+      <div class="toolbar">
+        <div class="field"><label for="inquiry-search">Hledat</label><input id="inquiry-search" type="search" placeholder="Jméno, obec, e-mail, text…"></div>
+        <div class="field"><label for="inquiry-service">Typ služby</label><select id="inquiry-service"></select></div>
+      </div>
+      <div class="list" id="inquiry-list" aria-live="polite"></div>
+    </section>
+
+    <!-- Reference -->
+    <section class="panel" id="tab-references" hidden>
+      <div class="panel-head">
+        <div><h2>Reference</h2><p class="panel-note">Realizace a servisní zakázky zobrazené na webu. Změny se na webu projeví ihned po uložení.</p></div>
+        <button type="button" class="btn btn-primary" id="add-reference">+ Přidat referenci</button>
+      </div>
+      <div class="toolbar">
+        <div class="field"><label for="reference-search">Hledat</label><input id="reference-search" type="search" placeholder="Název, místo…"></div>
+        <div class="field"><label for="reference-category">Kategorie</label><select id="reference-category"></select></div>
+        <div class="field"><label for="reference-state">Zobrazení</label><select id="reference-state"><option value="all">Vše</option><option value="published">Zveřejněné</option><option value="hidden">Skryté</option><option value="featured">Na úvodní stránce</option></select></div>
+      </div>
+      <p class="list-count" id="reference-count"></p>
+      <div class="list" id="reference-list"></div>
+    </section>
+
+    <!-- Kategorie -->
+    <section class="panel" id="tab-categories" hidden>
+      <div class="panel-head">
+        <div><h2>Kategorie referencí</h2><p class="panel-note">Podle kategorií si návštěvníci filtrují realizace. Kategorii lze přejmenovat, přidat novou nebo změnit pořadí. Smazat jde jen kategorie, kterou nepoužívá žádná reference.</p></div>
+      </div>
+      <div class="category-list" id="category-list"></div>
+      <form class="inline-form" id="form-category">
+        <div class="field"><label for="category-new">Nová kategorie</label><input id="category-new" maxlength="40" placeholder="Např. Odlučovače" required></div>
+        <button class="btn" type="submit">Přidat</button>
+      </form>
+      <div class="panel-actions"><button type="button" class="btn btn-primary" id="save-categories" disabled>Uložit změny</button><span class="saved-note" id="categories-note" role="status"></span></div>
+    </section>
+
+    <!-- Správci -->
+    <section class="panel" id="tab-admins" hidden>
+      <div class="panel-head">
+        <div><h2>Správci</h2><p class="panel-note">Lidé, kteří se smějí přihlásit do administrace. Nový správce si při prvním přihlášení sám nastaví heslo přes „První přihlášení – nastavit heslo“.</p></div>
+      </div>
+      <div class="list" id="admin-list"></div>
+      <form class="inline-form" id="form-admin">
+        <div class="field"><label for="admin-new">Přidat správce (e-mail)</label><input id="admin-new" type="email" placeholder="jmeno@firma.cz" required></div>
+        <button class="btn" type="submit">Přidat</button>
+      </form>
+    </section>
+  </main>
+</div>
+
+<!-- Detail poptávky -->
+<dialog class="drawer" id="inquiry-dialog" aria-labelledby="inquiry-title">
+  <div class="drawer-head"><h2 id="inquiry-title">Poptávka</h2><button type="button" class="icon-btn" data-close aria-label="Zavřít">×</button></div>
+  <div class="drawer-body">
+    <p class="inquiry-date" id="inquiry-date"></p>
+    <dl class="detail-list" id="inquiry-fields"></dl>
+    <div class="quick-actions" id="inquiry-actions"></div>
+    <div class="field"><label for="inquiry-status">Stav</label><select id="inquiry-status"></select></div>
+    <div class="field"><label for="inquiry-note">Interní poznámka <small>(zákazník ji nevidí)</small></label><textarea id="inquiry-note" rows="4" maxlength="4000"></textarea></div>
+    <p class="mail-state" id="inquiry-mail"></p>
+  </div>
+  <div class="drawer-foot">
+    <button type="button" class="btn btn-danger-ghost" id="inquiry-delete">Smazat poptávku</button>
+    <span class="saved-note" id="inquiry-saved" role="status"></span>
+    <button type="button" class="btn btn-primary" id="inquiry-save">Uložit</button>
+  </div>
+</dialog>
+
+<!-- Editor reference -->
+<dialog class="editor" id="reference-dialog" aria-labelledby="reference-dialog-title">
+  <form id="form-reference" novalidate>
+    <div class="drawer-head"><h2 id="reference-dialog-title">Nová reference</h2><button type="button" class="icon-btn" data-close aria-label="Zavřít bez uložení">×</button></div>
+    <div class="editor-body">
+      <p class="notice" id="reference-legacy-note" hidden>Tato reference byla převzata z původního webu. Jakmile změníte její název, text, kategorie nebo fotografie, začne se zobrazovat v novém jednotném detailu.</p>
+      <div class="field"><label for="ref-title">Název zakázky</label><input id="ref-title" maxlength="200" required placeholder="Např. Domovní ČOV pro rodinný dům"></div>
+      <div class="field-row">
+        <div class="field"><label for="ref-location">Lokalita</label><input id="ref-location" maxlength="120" placeholder="Např. Tábor"></div>
+        <div class="field"><label for="ref-month">Měsíc</label><select id="ref-month"></select></div>
+        <div class="field"><label for="ref-year">Rok</label><select id="ref-year"></select></div>
+      </div>
+      <fieldset class="field"><legend>Kategorie <small>(lze vybrat více)</small></legend><div class="check-grid" id="ref-categories"></div></fieldset>
+      <div class="field"><label for="ref-summary">Krátké shrnutí <small>(1–2 věty na kartu ve výpisu)</small></label><textarea id="ref-summary" rows="2" maxlength="240" placeholder="Co jsme udělali, stručně."></textarea></div>
+      <div class="field"><label for="ref-description">Popis realizace <small>(odstavce oddělte prázdným řádkem; řádky začínající pomlčkou vytvoří odrážky)</small></label><textarea id="ref-description" rows="9" maxlength="20000"></textarea></div>
+      <fieldset class="field"><legend>Parametry <small>(nepovinné – např. Technologie, Kapacita)</small></legend><div id="ref-facts"></div><button type="button" class="btn btn-small" id="ref-add-fact">+ Přidat parametr</button></fieldset>
+
+      <fieldset class="field"><legend>Fotografie</legend>
+        <label class="dropzone" id="ref-dropzone" for="ref-files"><strong>Vybrat fotografie</strong><span>z počítače nebo telefonu, případně je sem přetáhněte. Zmenší se automaticky.</span></label>
+        <input id="ref-files" class="visually-hidden" type="file" accept="image/*" multiple>
+        <p class="hint" id="ref-photo-status" role="status"></p>
+        <div class="photo-grid" id="ref-photos"></div>
+      </fieldset>
+
+      <fieldset class="field switches"><legend>Zobrazení na webu</legend>
+        <label class="switch"><input id="ref-published" type="checkbox" checked><span><strong>Zveřejnit na webu</strong><small>Vypnutím referenci skryjete, aniž byste ji mazali.</small></span></label>
+        <label class="switch"><input id="ref-featured" type="checkbox"><span><strong>Zobrazit na úvodní stránce</strong><small>Na úvodu se ukáže nejvýše 8 nejnovějších vybraných referencí.</small></span></label>
+        <div class="field" id="ref-headline-field"><label for="ref-headline">Titulek na úvodní stránce <small>(nepovinné – jinak se použije název)</small></label><input id="ref-headline" maxlength="120"></div>
+      </fieldset>
+    </div>
+    <div class="drawer-foot">
+      <button type="button" class="btn btn-danger-ghost" id="reference-delete">Smazat referenci</button>
+      <span class="saved-note" id="reference-progress" role="status"></span>
+      <button type="button" class="btn" data-close>Zrušit</button>
+      <button type="submit" class="btn btn-primary" id="reference-save">Uložit</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Potvrzení -->
+<dialog class="confirm" id="confirm-dialog" aria-labelledby="confirm-title">
+  <h2 id="confirm-title">Opravdu?</h2>
+  <p id="confirm-text"></p>
+  <div class="confirm-actions"><button type="button" class="btn" data-confirm="no">Zrušit</button><button type="button" class="btn btn-danger" data-confirm="yes">Smazat</button></div>
+</dialog>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+</body>
+</html>

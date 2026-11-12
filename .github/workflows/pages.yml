@@ -30,6 +30,11 @@ jobs:
           node --check dist/experience.js
           node --check dist/navigation.js
           node --check dist/motion.js
+          node --check dist/cms-config.js
+          node --check dist/site-data.js
+          node --check dist/admin/admin.js
+          node --check functions/index.js
+          node --check functions/mail.js
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
