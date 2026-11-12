@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Návrh písma a ikon | Čistá řešení</title>
+<!-- Pouze pro tento náhled: písma se načítají z Google Fonts. Vybrané písmo se pro web uloží lokálně. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Fraunces:opsz,wght@9..144,400..700&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:Manrope;src:url('../dist/assets/Manrope.woff2') format('woff2');font-weight:200 800;font-display:swap}
+:root{--ink:#042752;--green:#3ea215;--green-ink:#237c03;--soft:#e2f3d9;--ice:#f5f9ff;--muted:#546d88;--line:#d8e3ef;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ice);color:var(--ink);font-family:Manrope,system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,figure{margin:0}
+.wrap{width:min(1240px,100% - 40px);margin-inline:auto}
+header.top{padding:34px 0 26px;border-bottom:1px solid var(--line)}
+header.top img{width:190px;height:auto;display:block;margin-bottom:22px}
+header.top h1{font-size:clamp(28px,4vw,40px);font-weight:600;letter-spacing:-.03em;line-height:1.15}
+header.top p{color:var(--muted);max-width:68ch;margin-top:10px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green-ink)}
+section{padding:44px 0}
+section>h2{font-size:26px;font-weight:600;letter-spacing:-.03em;margin:6px 0 6px}
+section>p.note{color:var(--muted);max-width:70ch;margin-bottom:26px}
+
+/* ---------- Směry písma ---------- */
+.directions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.direction{background:var(--white);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.direction.is-pick{border-color:var(--green);box-shadow:0 0 0 2px var(--green)}
+.direction-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);background:var(--ice)}
+.direction-head strong{font-size:17px}
+.direction-head span{font-size:13px;color:var(--muted)}
+.direction-head .badge{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--green);color:var(--ink);padding:4px 10px;border-radius:20px;white-space:nowrap}
+.sample{padding:26px 22px 8px}
+.sample .kicker{margin-bottom:14px}
+.sample h3.hero{font-size:clamp(34px,3.3vw,46px);line-height:1.06;margin-bottom:14px}
+.sample h3.hero span{color:var(--green)}
+.sample p.lead{color:var(--muted);font-size:15.5px;margin-bottom:18px}
+.btn{display:inline-flex;align-items:center;gap:12px;min-height:52px;padding:12px 22px;border-radius:100px;background:var(--green);color:var(--ink);font-weight:700;font-size:15px}
+.btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.rule{height:1px;background:var(--line);margin:24px 0 20px}
+.sample h4{font-size:27px;line-height:1.15;margin:0 0 8px}
+.sample h5{font-size:20px;line-height:1.25;margin:16px 0 4px}
+.sample .meta{font-size:13px;color:var(--muted)}
+.phone{font-size:30px;line-height:1.2;margin-top:14px}
+.glyphs{font-size:19px;color:var(--muted);margin-top:8px;overflow-wrap:anywhere}
+.why{margin-top:auto;padding:18px 22px 22px;font-size:14.5px;color:var(--muted);border-top:1px solid var(--line)}
+.why b{color:var(--ink)}
+
+.a h3.hero,.a h4,.a h5,.a .phone,.a .glyphs{font-family:'Bricolage Grotesque',Manrope,sans-serif;font-weight:650;letter-spacing:-.035em}
+.a h5{font-weight:600;letter-spacing:-.02em}.a .phone{font-weight:600}.a .glyphs{font-weight:500;letter-spacing:0}
+.b h3.hero,.b h4,.b h5,.b .phone,.b .glyphs{font-family:Fraunces,Georgia,serif;font-weight:500;letter-spacing:-.025em;font-variation-settings:'opsz' 96}
+.b h5{font-variation-settings:'opsz' 36;letter-spacing:-.01em}.b .glyphs{font-weight:400;letter-spacing:0;font-variation-settings:'opsz' 24}
+.c h3.hero,.c h4,.c h5,.c .phone,.c .glyphs{font-family:Manrope,sans-serif;font-weight:800;letter-spacing:-.045em}
+.c h5{font-weight:700;letter-spacing:-.03em}.c .glyphs{font-weight:600;letter-spacing:0}
+
+/* ---------- Ikony ---------- */
+.icon-compare{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.icon-panel{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:22px}
+.icon-panel>strong{display:block;font-size:17px;margin-bottom:4px}
+.icon-panel>span{display:block;font-size:14px;color:var(--muted);margin-bottom:18px}
+.icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:14px 10px}
+.icon-grid figure{display:grid;justify-items:center;gap:8px;text-align:center}
+.icon-grid figcaption{font-size:12.5px;color:var(--muted);line-height:1.3}
+.old svg{width:30px;height:30px;fill:none;stroke:var(--ink);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.old .tile{width:60px;height:60px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%}
+.new .tile{width:60px;height:60px;display:grid;place-items:center;background:var(--soft);border-radius:18px 18px 18px 6px}
+.new svg{width:32px;height:32px;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.new svg .n{stroke:var(--ink)}
+.new svg .g{stroke:var(--green-ink)}
+.in-use{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:20px}
+.in-use a{display:flex;gap:14px;align-items:center;padding:16px;background:var(--white);border:1px solid var(--line);border-radius:14px;color:inherit;text-decoration:none}
+.in-use b{display:block;font-size:17px}
+.in-use small{color:var(--muted);font-size:13.5px}
+footer{padding:26px 0 60px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+@media (max-width:980px){.directions{grid-template-columns:1fr}.icon-compare{grid-template-columns:1fr}.in-use{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <img src="../dist/assets/brand-logo.svg" alt="Čistá řešení">
+  <p class="kicker">Návrh k výběru</p>
+  <h1>Nadpisové písmo a ikony</h1>
+  <p>Barvy už odpovídají logu (zelená #3ea215 a tmavě modrá #042752). Tady jsou tři směry pro nadpisy a nová sada ikon. Běžný text zůstává ve všech variantách v písmu Manrope, mění se jen nadpisy.</p>
+</div></header>
+
+<main class="wrap">
+<section>
+  <p class="kicker">1 · Nadpisové písmo</p>
+  <h2>Tři směry</h2>
+  <p class="note">Každý sloupec ukazuje stejný obsah: úvodní titulek, nadpis sekce, název realizace, telefon a českou diakritiku.</p>
+  <div class="directions">
+
+    <article class="direction a is-pick">
+      <div class="direction-head"><div><strong>A · Bricolage Grotesque</strong><br><span>výrazný moderní grotesk</span></div><span class="badge">Doporučuji</span></div>
+      <div class="sample">
+        <p class="kicker">Technologie. Provoz. Péče.</p>
+        <h3 class="hero">Čistá řešení<br><span>pro domácnosti,<br>firmy i obce.</span></h3>
+        <p class="lead">Nová čistírna, servis stávající technologie i voda pro zahradu.</p>
+        <span class="btn">Potřebuji servis <svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+        <div class="rule"></div>
+        <h4>Vaše čistírna.<br>Naše péče.</h4>
+        <h5>Domovní čistírna v Přehořově u Soběslavi</h5>
+        <p class="meta">Přehořov u Soběslavi · 07 / 2026</p>
+        <p class="phone">736 403 795</p>
+        <p class="glyphs">ěščřžýáíéúůďťň ĚŠČŘŽ 0123456789</p>
+      </div>
+      <p class="why"><b>Proč:</b> má charakter a působí technicky i přátelsky zároveň. Na telefonu je díky sevřenější kresbě dobře čitelný i ve velké velikosti a od běžného textu se jasně odliší.</p>
+    </article>
+
+    <article class="direction b">
+      <div class="direction-head"><div><strong>B · Fraunces</strong><br><span>měkká patková antikva</span></div></div>
+      <div class="sample">
+        <p class="kicker">Technologie. Provoz. Péče.</p>
+        <h3 class="hero">Čistá řešení<br><span>pro domácnosti,<br>firmy i obce.</span></h3>
+        <p class="lead">Nová čistírna, servis stávající technologie i voda pro zahradu.</p>
+        <span class="btn">Potřebuji servis <svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+        <div class="rule"></div>
+        <h4>Vaše čistírna.<br>Naše péče.</h4>
+        <h5>Domovní čistírna v Přehořově u Soběslavi</h5>
+        <p class="meta">Přehořov u Soběslavi · 07 / 2026</p>
+        <p class="phone">736 403 795</p>
+        <p class="glyphs">ěščřžýáíéúůďťň ĚŠČŘŽ 0123456789</p>
+      </div>
+      <p class="why"><b>Proč:</b> teplejší, „rodinná firma a řemeslo“. Největší odlišení od konkurence v oboru, ale nejvíc se vzdaluje od tučného bezpatkového nápisu v logu.</p>
+    </article>
+
+    <article class="direction c">
+      <div class="direction-head"><div><strong>C · Manrope ExtraBold</strong><br><span>stávající písmo, tučný řez</span></div></div>
+      <div class="sample">
+        <p class="kicker">Technologie. Provoz. Péče.</p>
+        <h3 class="hero">Čistá řešení<br><span>pro domácnosti,<br>firmy i obce.</span></h3>
+        <p class="lead">Nová čistírna, servis stávající technologie i voda pro zahradu.</p>
+        <span class="btn">Potřebuji servis <svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+        <div class="rule"></div>
+        <h4>Vaše čistírna.<br>Naše péče.</h4>
+        <h5>Domovní čistírna v Přehořově u Soběslavi</h5>
+        <p class="meta">Přehořov u Soběslavi · 07 / 2026</p>
+        <p class="phone">736 403 795</p>
+        <p class="glyphs">ěščřžýáíéúůďťň ĚŠČŘŽ 0123456789</p>
+      </div>
+      <p class="why"><b>Proč:</b> nejblíž tučnému nápisu v logu a bez dalšího souboru písma, takže web zůstane nejrychlejší. Nejmenší změna oproti dnešku.</p>
+    </article>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">2 · Ikony</p>
+  <h2>Nová sada ve dvou barvách loga</h2>
+  <p class="note">Dnešní ikony jsou tenké jednobarevné linky v kroužku. Návrh je kreslí silnější linkou v tmavě modré se zeleným detailem a staví je na světle zelenou dlaždici s jedním ostřejším rohem, který odkazuje na kapku.</p>
+  <div class="icon-compare">
+    <div class="icon-panel old">
+      <strong>Dnes</strong><span>jedna barva, linka 1,5 px</span>
+      <div class="icon-grid">
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7M5 9v12h14V9M10 21v-7h4v7"/></svg></span><figcaption>Domovní ČOV</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path d="M3 21V9l6 3V5h7v8l5-3v11H3M12 8h1m-1 4h1M6 16v1m5-1v1m5-1v1"/></svg></span><figcaption>Firmy a obce</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path d="m14 5 3 3 4-4a7 7 0 0 1-9 9l-7 7a2 2 0 0 1-3-3l7-7a7 7 0 0 1 9-9Z"/></svg></span><figcaption>Servis</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path d="M7 14a5 5 0 1 1 2-9 6 6 0 0 1 11 4 3 3 0 0 1-1 5H7M8 18l-1 3m6-3-1 3m6-3-1 3"/></svg></span><figcaption>Dešťová voda</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path d="M4 4v16h16V4M1 4h6m10 0h6M8 13l4-4 4 4m-4-4v8M5 6h14"/></svg></span><figcaption>Čerpací technika</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4Z"/></svg></span><figcaption>Zprovoznění</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path d="M12 6c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1Zm0 0v15"/></svg></span><figcaption>Školení</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path d="M20 8a9 9 0 0 0-15-3L2 8m0-6v6h6M4 16a9 9 0 0 0 15 3l3-3m0 6v-6h-6"/></svg></span><figcaption>Rekonstrukce</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path d="M12 2C9 7 5 10 5 15a7 7 0 0 0 14 0c0-5-4-8-7-13Z"/><path d="M9 15a3 3 0 0 0 3 3"/></svg></span><figcaption>Úprava vody</figcaption></figure>
+      </div>
+    </div>
+    <div class="icon-panel new">
+      <strong>Návrh</strong><span>dvě barvy loga, linka 1,7 px, dlaždice</span>
+      <div class="icon-grid">
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path class="n" d="m3 11 9-7 9 7M5.5 9.5V20h13V9.5"/><path class="g" d="M12 11.3c-1.5 1.9-2.5 3.1-2.5 4.5a2.5 2.5 0 0 0 5 0c0-1.4-1-2.6-2.5-4.5Z"/></svg></span><figcaption>Domovní ČOV</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path class="n" d="M3 20V10.5l5.5 3V10.5l5.5 3V5h6.5v15Z"/><path class="g" d="M7 16.8h.01M11.5 16.8h.01M17.2 9h.01M17.2 12.9h.01M17.2 16.8h.01" stroke-width="2.4"/></svg></span><figcaption>Firmy a obce</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path class="n" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9Z"/><path class="g" d="m15.5 18.5 1.8 1.8 3.7-3.8"/></svg></span><figcaption>Servis</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path class="n" d="M7 14a4 4 0 0 1 .6-7.95 5.5 5.5 0 0 1 10.6 1.5A3.25 3.25 0 0 1 17.5 14Z"/><path class="g" d="m8.6 17.3-.9 2.4m5-2.4-.9 2.4m5-2.4-.9 2.4"/></svg></span><figcaption>Dešťová voda</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path class="n" d="M12 15V4.5m0 0L8.2 8.3M12 4.5l3.8 3.8"/><path class="g" d="M3.5 19.5c1.4-1.1 2.8-1.1 4.25 0s2.85 1.1 4.25 0 2.8-1.1 4.25 0 2.85 1.1 4.25 0"/></svg></span><figcaption>Čerpací technika</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path class="n" d="M7.4 6.6a7.5 7.5 0 1 0 9.2 0"/><path class="g" d="M12 3.5v8"/></svg></span><figcaption>Zprovoznění</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path class="n" d="M12 6.5c-2.4-1.6-5.2-1.9-8.5-1v13c3.3-.9 6.1-.6 8.5 1 2.4-1.6 5.2-1.9 8.5-1v-13c-3.3-.9-6.1-.6-8.5 1Zm0 0v13"/><path class="g" d="M6.3 9.6c1-.1 2 0 3 .3M6.3 12.9c1-.1 2 0 3 .3"/></svg></span><figcaption>Školení</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path class="n" d="M20 11a8 8 0 0 0-14.3-4.3L3.5 9m0-5v5h5"/><path class="g" d="M4 13a8 8 0 0 0 14.3 4.3l2.2-2.3m0 5v-5h-5"/></svg></span><figcaption>Rekonstrukce</figcaption></figure>
+        <figure><span class="tile"><svg viewBox="0 0 24 24"><path class="n" d="M12 3c-3.2 4.2-6 7.2-6 10.8a6 6 0 0 0 12 0C18 10.2 15.2 7.2 12 3Z"/><path class="g" d="M9.4 14.3a2.7 2.7 0 0 0 2.5 2.6"/></svg></span><figcaption>Úprava vody</figcaption></figure>
+      </div>
+    </div>
+  </div>
+  <div class="in-use new">
+    <a href="#"><span class="tile"><svg viewBox="0 0 24 24"><path class="n" d="m3 11 9-7 9 7M5.5 9.5V20h13V9.5"/><path class="g" d="M12 11.3c-1.5 1.9-2.5 3.1-2.5 4.5a2.5 2.5 0 0 0 5 0c0-1.4-1-2.6-2.5-4.5Z"/></svg></span><span><b>Domácnosti</b><small>Domy a chalupy. Čistírna, dešťovka a péče o zařízení.</small></span></a>
+    <a href="#"><span class="tile"><svg viewBox="0 0 24 24"><path class="n" d="M3 20V10.5l5.5 3V10.5l5.5 3V5h6.5v15Z"/><path class="g" d="M7 16.8h.01M11.5 16.8h.01M17.2 9h.01M17.2 12.9h.01M17.2 16.8h.01" stroke-width="2.4"/></svg></span><span><b>Firmy a průmysl</b><small>Penziony, hotely, rekreační a výrobní areály.</small></span></a>
+    <a href="#"><span class="tile"><svg viewBox="0 0 24 24"><path class="n" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9Z"/><path class="g" d="m15.5 18.5 1.8 1.8 3.7-3.8"/></svg></span><span><b>Servis</b><small>Pravidelná péče i opravy, také u jiných výrobců.</small></span></a>
+  </div>
+</section>
+</main>
+<footer><div class="wrap">Pracovní náhled, není součástí zveřejněného webu. Písma A a B jsou volně licencovaná (SIL Open Font License) a po výběru se uloží přímo na web.</div></footer>
+</body>
+</html>

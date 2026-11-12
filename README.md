@@ -44,6 +44,10 @@ Obsah převzatý z původního webu je lokální kopie veřejných podkladů k 7
 
 Paleta vychází z loga: zelená `#3ea215` a tmavě modrá `#042752`. Tlačítka jsou zelená s tmavě modrým textem (kontrast 4,5 : 1; bílý text by měl jen 3,3 : 1). Zelená v malém textu a obrysech používá tmavší odstín `#237c03`. Původní jasně modrý akcent `#216fe5` byl nahrazen; mapování je v `scripts/align_palette_to_logo.py` (jednorázový záznam). Ilustrace vody zůstávají modré.
 
+## Nadpisové písmo a ikony (od 12. 11. 2026)
+
+Nadpisy používají Bricolage Grotesque (SIL Open Font License, licence v `dist/assets/BricolageGrotesque-OFL.txt`); běžný text zůstává v Manrope. Soubor `dist/assets/BricolageGrotesque.woff2` (50 kB) je odvozený z originálu: pevná šířka a optická velikost, řezy 400–800, znaky pro češtinu a západní latinku. Ikony služeb jsou dvoubarevné – tvar tmavě modrou, detail zelenou z loga (třídy `ico-n` a `ico-g` v `dist/polish.css`). Podklad k výběru je v `navrh-vzhledu/index.html` (není součástí zveřejněného webu).
+
 ## Rozsah převzetí
 
 Web obsahuje 62 HTML stránek. Ze zdroje jsou převzaty celé texty 51 článků, všechny odkazy nalezené v sitemap, 336 médií a dokumenty. Čtyři další stránky a rozšíření servisu vznikly z klientského zadání z 8. 11. 2026. Pro rychlejší načítání je připraveno 328 náhledů do 720 px; plné fotografie se načítají až při otevření. PDF zůstávají beze změny. Celková velikost statického webu je přibližně 210 MB.

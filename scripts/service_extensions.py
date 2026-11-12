@@ -226,23 +226,27 @@ _QUOTE = (
 
 
 def _icon(kind='arrow'):
+    # Two-tone icons: main shape in the ink colour, one detail in the logo green
+    # (classes ico-n / ico-g are styled in dist/polish.css).
     paths = {
-        'arrow': 'M4 12h16m-6-6 6 6-6 6',
-        'building': 'M5 21V3h14v18M3 21h18M9 7h1m4 0h1M9 11h1m4 0h1M10 21v-6h4v6',
-        'village': 'm2 12 5-5 5 5M4 11v9h6v-9m2-4 5-5 5 5M14 6v14h6V6M7 15v2m10-8v2m0 4v2',
-        'factory': 'M3 21V10l6-4v5l6-5v6h6v9H3M18 12V3h3v9M7 16v1m4-1v1m5-1v1',
-        'renew': 'M20 7v5h-5M4 17v-5h5M5 7a8 8 0 0 1 14 0M5 17a8 8 0 0 0 14 0',
-        'water': 'M12 3c-2 4-7 8-7 12a7 7 0 0 0 14 0c0-4-5-8-7-12ZM8 16a4 4 0 0 0 4 3',
-        'plan': 'M4 3h11l5 5v13H4V3Zm11 0v5h5M8 12h8M8 16h5',
-        'calendar': 'M4 5h16v16H4V5ZM8 3v4m8-4v4M4 10h16m-12 4h2m4 0h2m-8 4h2',
-        'search': 'M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm5 12 6 6M7 10h6',
-        'parts': 'M14 4a6 6 0 0 0-7 7l-4 4a3 3 0 0 0 4 4l4-4a6 6 0 0 0 7-7l-4 4-4-4 4-4Z',
-        'settings': 'M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6M9 15v6',
-        'document': 'M5 3h10l4 4v14H5V3Zm10 0v5h4M9 14l2 2 4-4',
-        'check': 'M12 3 3 7v6c0 4 5 7 9 9 4-2 9-5 9-9V7l-9-4ZM8 12l3 3 5-6',
-        'talk': 'M3 4h18v13H9l-6 4V4Zm4 5h10M7 13h6',
+        'arrow': ('M4 12h16m-6-6 6 6-6 6', ''),
+        'building': ('M5 21V3h14v18M3 21h18M10 21v-6h4v6', 'M9 7h1m4 0h1M9 11h1m4 0h1'),
+        'village': ('m2 12 5-5 5 5M4 11v9h6v-9m2-4 5-5 5 5M14 6v14h6V6', 'M7 15v2m10-8v2m0 4v2'),
+        'factory': ('M3 21V10l6-4v5l6-5v6h6v9H3M18 12V3h3v9', 'M7 16v1m4-1v1m5-1v1'),
+        'renew': ('M20 11a8 8 0 0 0-14.3-4.3L3.5 9m0-5v5h5', 'M4 13a8 8 0 0 0 14.3 4.3l2.2-2.3m0 5v-5h-5'),
+        'water': ('M12 3c-3.2 4.2-6 7.2-6 10.8a6 6 0 0 0 12 0C18 10.2 15.2 7.2 12 3Z', 'M9.4 14.3a2.7 2.7 0 0 0 2.5 2.6'),
+        'plan': ('M4 3h11l5 5v13H4V3Zm11 0v5h5', 'M8 12h8M8 16h5'),
+        'calendar': ('M4 5h16v16H4V5ZM8 3v4m8-4v4M4 10h16', 'M8 14h2m4 0h2m-8 4h2'),
+        'search': ('M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm5 12 6 6', 'M7 10h6'),
+        'parts': ('M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9Z', 'm15.5 18.5 1.8 1.8 3.7-3.8'),
+        'settings': ('M4 6h16M4 12h16M4 18h16', 'M8 3v6m8 0v6M9 15v6'),
+        'document': ('M5 3h10l4 4v14H5V3Zm10 0v5h4', 'M9 14l2 2 4-4'),
+        'check': ('M12 3 3 7v6c0 4 5 7 9 9 4-2 9-5 9-9V7l-9-4Z', 'M8 12l3 3 5-6'),
+        'talk': ('M3 4h18v13H9l-6 4V4Z', 'M7 9h10M7 13h6'),
     }
-    return f'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="{paths[kind]}"/></svg>'
+    main, accent = paths[kind]
+    detail = f'<path class="ico-g" d="{accent}"/>' if accent else ''
+    return f'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="ico-n" d="{main}"/>{detail}</svg>'
 
 
 def _find_project(number, ctx):

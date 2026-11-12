@@ -1,10 +1,28 @@
 /* Čistá řešení — závěrečná vrstva: čitelnost, ovládání na telefonu, ikony a jemný pohyb.
    Načítá se jako poslední stylesheet. Barvy a písmo zůstávají podle značky. */
-:root{--ease-out:cubic-bezier(.16,1,.3,1);--tap:48px}
+@font-face{font-family:'Bricolage Grotesque';src:url('assets/BricolageGrotesque.woff2') format('woff2');font-weight:400 800;font-display:swap}
+:root{--ease-out:cubic-bezier(.16,1,.3,1);--tap:48px;--display:'Bricolage Grotesque',Manrope,'Segoe UI',sans-serif}
+
+/* ---------- Nadpisy: Bricolage Grotesque; běžný text zůstává v Manrope ---------- */
+h1,h2,h3,.form-card legend,.contact-phone,.contact-channel strong,.proof-capacity strong,.ed-count b,.detail-chapter-title{font-family:var(--display)}
+h1,h2{font-weight:650!important;letter-spacing:-.035em!important}
+h3,.form-card legend,.detail-chapter-title{font-weight:600!important;letter-spacing:-.02em!important}
+.contact-phone,.contact-channel strong,.proof-capacity strong,.ed-count b{font-weight:600;letter-spacing:-.025em}
+
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{text-rendering:optimizeLegibility;font-kerning:normal}
 p,li,dd,figcaption{text-wrap:pretty}
 h1,h2,h3{text-wrap:balance}
+
+/* ---------- Dvoubarevné ikony: tvar tmavě modrou, detail zelenou z loga ---------- */
+.ico-g{stroke:var(--icon-accent,var(--green-ink))}
+.ico-dots{stroke-width:2.4}
+.audience-icon,.operation-icon,.ext-card-icon{width:52px;height:52px;border:0;border-radius:16px 16px 16px 6px;background:var(--sky);color:var(--ink)}
+.audience-icon svg,.operation-icon svg,.ext-card-icon svg{width:27px;height:27px;stroke-width:1.7}
+.service-icon{color:var(--ink);stroke-width:1.6}
+.choices label svg{stroke-width:1.6}
+.ext-note-icon{border-radius:20px 20px 20px 8px;color:var(--ink)}
+.ext-note-icon svg{stroke-width:1.7}
 
 /* ---------- Ikony (SVG místo znaků, které písmo neobsahuje) ---------- */
 .ico{display:inline-block;width:1em;height:1em;vertical-align:-.14em;stroke-width:1.9;flex-shrink:0}
@@ -12,7 +30,6 @@ h1,h2,h3{text-wrap:balance}
 .card-round-arrow .ico{width:18px;height:18px;vertical-align:middle}
 a .ico,button .ico{transition:transform .22s var(--ease-out)}
 .header .nav-group>summary>span .ico{width:20px;height:20px;vertical-align:middle}
-.service-icon,.audience-icon svg,.operation-icon svg{stroke-width:1.6}
 
 /* ---------- Plynulé přechody mezi stránkami ---------- */
 @view-transition{navigation:auto}
