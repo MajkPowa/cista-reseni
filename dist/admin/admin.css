@@ -1,5 +1,5 @@
 /* Čistá řešení — administrace. Barvy a písmo vycházejí z veřejného webu. */
-@font-face{font-family:Manrope;src:url('../assets/Manrope.ttf') format('truetype');font-weight:200 800;font-display:swap}
+@font-face{font-family:Manrope;src:url('../assets/Manrope.woff2') format('woff2'),url('../assets/Manrope.ttf') format('truetype');font-weight:200 800;font-display:swap}
 :root{--ink:#12375b;--blue:#216fe5;--sky:#dcecff;--ice:#f5f9ff;--muted:#546d88;--line:#d8e3ef;--white:#fff;--danger:#b3261e;--danger-soft:#fdecea;--ok:#1d7a4f;--ok-soft:#e4f5ec;--warn:#8a5a00;--warn-soft:#fff3d6;--radius:10px}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}

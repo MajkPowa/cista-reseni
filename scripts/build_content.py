@@ -53,6 +53,22 @@ def footer(current):
     return render_footer(current, rel)
 def lightbox():
     return '''<dialog id="photo-lightbox" class="lightbox" aria-label="Detail snímku"><button class="lightbox-close" aria-label="Zavřít snímek">×</button><figure><img alt=""><figcaption></figcaption></figure><div class="lightbox-controls"><button data-photo-prev aria-label="Předchozí snímek">← Předchozí</button><output aria-live="polite"></output><button data-photo-next aria-label="Další snímek">Další →</button></div></dialog>'''
+ICON_PATHS={'↗':'M7 17 17 7M8 7h9v9','⌄':'m6 9 6 6 6-6'}
+def iconize(document):
+    """Replace arrows missing from Manrope with inline SVG icons (text nodes only).
+
+    Without this every phone draws them with a different fallback font. Attributes,
+    <title>, <script> and <style> are left untouched.
+    """
+    out=[];skip=None
+    for part in re.split(r'(<[^>]+>)',document):
+        if part.startswith('<'):
+            tag=re.match(r'<(/?)(title|script|style|textarea)\b',part,re.I)
+            if tag:skip=None if tag.group(1) else tag.group(2).lower()
+            out.append(part)
+        elif skip:out.append(part)
+        else:out.append(re.sub('[↗⌄]',lambda m:f'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="{ICON_PATHS[m.group(0)]}"/></svg>',part))
+    return ''.join(out)
 def stamp_assets(document,current):
     def stamped(match):
         attr,url=match.groups()
@@ -82,10 +98,11 @@ def page(current,title,body,description='',has_gallery=False,reference_id=None):
     if current in CMS_PAGES or current.startswith('realizace/'):
         cms_assets+=f'<script src="{rel("cms-config.js",current)}" defer></script><script src="{rel("site-data.js",current)}" defer></script>'
     reference_attr=f' data-reference-id="{esc(reference_id)}"' if reference_id else ''
+    cms_assets+=f'<link rel="stylesheet" href="{rel("polish.css",current)}"><script src="{rel("polish.js",current)}" defer></script>'
     body_class='content-page experience-page'+(' solutions-page' if current=='sluzby.html' else '')+(' service-detail' if current.startswith('sluzby/') else ' reference-detail' if current.startswith('realizace/') else '')
     progress='<div class="reading-progress" aria-hidden="true"></div>' if is_detail else ''
-    document=f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#12375b"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="https://majkpowa.github.io/cista-reseni/assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.ttf',current)}" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script>{service_assets}{detail_assets}{experience_assets}{extension_assets}{shell_assets}{cms_assets}</head><body class="{body_class}"{reference_attr}>{progress}{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
-    return stamp_assets(document,current)
+    document=f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#12375b"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="https://majkpowa.github.io/cista-reseni/assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.woff2',current)}" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script>{service_assets}{detail_assets}{experience_assets}{extension_assets}{shell_assets}{cms_assets}</head><body class="{body_class}"{reference_attr}>{progress}{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
+    return stamp_assets(iconize(document),current)
 def save(current,title,body,description='',has_gallery=False,reference_id=None):
     document=page(current,title,body,description,has_gallery,reference_id)
     document='\n'.join(line.rstrip() for line in document.splitlines())+'\n'
@@ -252,5 +269,8 @@ if '--skip-home' not in sys.argv:
         tag=home_soup.new_tag('script',src='navigation.js',defer='');home_soup.head.append(tag)
     if not home_soup.select_one('script[src^="motion.js"]'):
         tag=home_soup.new_tag('script',src='motion.js',defer='');home_soup.head.append(tag)
-    homepage_document=stamp_assets(str(home_soup),'index.html')
+    for old in home_soup.select('link[href^="polish.css"],script[src^="polish.js"]'): old.decompose()
+    home_soup.head.append(home_soup.new_tag('link',rel='stylesheet',href='polish.css'))
+    home_soup.head.append(home_soup.new_tag('script',src='polish.js',defer=''))
+    homepage_document=stamp_assets(iconize(str(home_soup)),'index.html')
     homepage.write_text('\n'.join(line.rstrip() for line in homepage_document.splitlines())+'\n',encoding='utf-8',newline='\n')

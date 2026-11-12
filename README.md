@@ -34,6 +34,12 @@ Backend je Firebase projekt `cista-reseni-20261112` (Firestore, Storage, Authent
 
 Obsah převzatý z původního webu je lokální kopie veřejných podkladů k 7. 11. 2026, nikoli automatická synchronizace.
 
+## Čitelnost a ovládání na telefonu (od 12. 11. 2026)
+
+- Nejmenší velikosti písma (8–12 px) jsou zvednuté v celém webu (`scripts/raise_type_scale.py`, jednorázový záznam mapování); na telefonu má běžný text 15,5 px a popisky nejméně 12 px.
+- `dist/polish.css` a `dist/polish.js` se načítají jako poslední vrstva: kompaktní hlavička, která se po odrolování zmenší, spodní lišta „Zavolat / Poptat řešení" na telefonu, telefon v mobilní nabídce, posuvné pásy filtrů, dotykové plochy od 48 px, pole formuláře 16 px (iPhone při psaní nepřibližuje), plynulé přechody mezi stránkami a rozbalování odpovědí. Vše respektuje omezený pohyb.
+- Písmo Manrope se načítá jako WOFF2 (54 kB místo 165 kB). Šipky „↗" a „⌄", které písmo neobsahuje, generátor nahrazuje vloženými SVG ikonami (`iconize` v `scripts/build_content.py`).
+
 ## Rozsah převzetí
 
 Web obsahuje 62 HTML stránek. Ze zdroje jsou převzaty celé texty 51 článků, všechny odkazy nalezené v sitemap, 336 médií a dokumenty. Čtyři další stránky a rozšíření servisu vznikly z klientského zadání z 8. 11. 2026. Pro rychlejší načítání je připraveno 328 náhledů do 720 px; plné fotografie se načítají až při otevření. PDF zůstávají beze změny. Celková velikost statického webu je přibližně 210 MB.

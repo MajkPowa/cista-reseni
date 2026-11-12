@@ -143,6 +143,14 @@
     use.setAttribute('href', `#${name}`); svg.append(use); svg.setAttribute('aria-hidden', 'true');
     return svg;
   };
+  // Šipka jako SVG: znak ↗ v písmu Manrope není a každý telefon by ho kreslil jinak.
+  const arrowIcon = () => {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    svg.setAttribute('class', 'ico'); svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true');
+    path.setAttribute('d', 'M7 17 17 7M8 7h9v9'); svg.append(path);
+    return svg;
+  };
   const announce = name => document.dispatchEvent(new CustomEvent(name));
 
   // ---------- Úvodní stránka: vybrané reference ----------
@@ -192,7 +200,7 @@
       element('div', { class: 'card-picture' }, [
         picture(ref.cover, ref.title),
         element('span', { text: labels[categories[0]] || 'Realizace' }),
-        element('b', { class: 'card-round-arrow', 'aria-hidden': 'true', text: '↗' })
+        element('b', { class: 'card-round-arrow', 'aria-hidden': 'true' }, arrowIcon())
       ]),
       element('div', { class: 'card-meta', text: metaLine(ref) || 'Realizace' }),
       element('h2', { text: ref.title }),
@@ -200,7 +208,7 @@
       element('dl', { class: 'project-card-facts' }, facts.map(fact => element('div', {}, [
         element('dt', { text: fact.label }), element('dd', { text: fact.value })
       ]))),
-      element('span', { class: 'text-link' }, ['Prohlédnout projekt ', element('span', { 'aria-hidden': 'true', text: '↗' })])
+      element('span', { class: 'text-link' }, ['Prohlédnout projekt ', arrowIcon()])
     ]);
   }
 

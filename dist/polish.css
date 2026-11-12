@@ -1,0 +1,200 @@
+/* Čistá řešení — závěrečná vrstva: čitelnost, ovládání na telefonu, ikony a jemný pohyb.
+   Načítá se jako poslední stylesheet. Barvy a písmo zůstávají podle značky. */
+:root{--ease-out:cubic-bezier(.16,1,.3,1);--tap:48px}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{text-rendering:optimizeLegibility;font-kerning:normal}
+p,li,dd,figcaption{text-wrap:pretty}
+h1,h2,h3{text-wrap:balance}
+
+/* ---------- Ikony (SVG místo znaků, které písmo neobsahuje) ---------- */
+.ico{display:inline-block;width:1em;height:1em;vertical-align:-.14em;stroke-width:1.9;flex-shrink:0}
+.text-link .ico,.button .ico{width:1.15em;height:1.15em}
+.card-round-arrow .ico{width:18px;height:18px;vertical-align:middle}
+a .ico,button .ico{transition:transform .22s var(--ease-out)}
+.header .nav-group>summary>span .ico{width:20px;height:20px;vertical-align:middle}
+.service-icon,.audience-icon svg,.operation-icon svg{stroke-width:1.6}
+
+/* ---------- Plynulé přechody mezi stránkami ---------- */
+@view-transition{navigation:auto}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.24s;animation-timing-function:var(--ease-out)}
+
+/* ---------- Tlačítka a odkazy: odezva na dotek i myš ---------- */
+.button{transition:background-color .2s,border-color .2s,transform .18s var(--ease-out),box-shadow .2s}
+.button:active{transform:translateY(0) scale(.975)}
+.text-link:active,.operation-inquiry:active{opacity:.7}
+@media (hover:hover){
+  .button:hover{box-shadow:0 10px 24px -12px rgba(18,55,91,.55)}
+  a:hover>.ico,.text-link:hover .ico,.button:hover .ico{transform:translate(2px,-2px)}
+  .project .project-image img,.content-card .card-picture img,.detail-related-picture img,.home-solution-photo img,.featured-image img{transition:transform .7s var(--ease-out)}
+  .project:hover .project-image img,.content-card:hover .card-picture img,.detail-related-card:hover .detail-related-picture img,.featured-image:hover img{transform:scale(1.035)}
+  .content-card,.project{transition:transform .3s var(--ease-out)}
+  .content-card:hover,.project:hover{transform:translateY(-3px)}
+}
+.project-image,.card-picture,.detail-related-picture{overflow:hidden}
+
+/* ---------- Rozbalovací odpovědi: plynulé otevření ---------- */
+@supports (interpolate-size:allow-keywords){
+  :root{interpolate-size:allow-keywords}
+  .faq details::details-content,.detail-chapter::details-content,.source-accordions details::details-content{block-size:0;overflow:clip;transition:block-size .38s var(--ease-out),content-visibility .38s allow-discrete}
+  .faq details[open]::details-content,.detail-chapter[open]::details-content,.source-accordions details[open]::details-content{block-size:auto}
+}
+
+/* ---------- Hlavička: po odrolování se zmenší ---------- */
+.header .header-inner,.header .brand.brand-full{transition:height .28s var(--ease-out),min-height .28s var(--ease-out),flex-basis .28s var(--ease-out),width .28s var(--ease-out)}
+@media (min-width:1241px){
+  html.is-scrolled{--brand-header-height:92px}
+  html.is-scrolled .header{--nav-height:92px}
+  html.is-scrolled .header .brand.brand-full{flex-basis:186px;width:186px}
+}
+.header{transition:box-shadow .25s}
+html.is-scrolled .header{box-shadow:0 10px 30px -22px rgba(18,55,91,.5)}
+
+/* Odkaz „Zavolat“ v mobilní nabídce */
+.header .site-nav>a.nav-call{display:none}
+
+/* ---------- Spodní lišta s hlavními akcemi (jen telefon) ---------- */
+.mobile-actions{display:none}
+
+/* =====================================================================
+   Tablet a telefon: nabídka je sbalená (≤ 1240 px)
+   ===================================================================== */
+@media (max-width:1240px){
+  .header .site-nav>a.nav-call{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;margin-top:6px;padding:12px 4px;border-top:1px solid var(--line);font-size:16px;font-weight:650;color:var(--ink)}
+  .header .site-nav .nav-call span{display:grid;line-height:1.3}
+  .header .site-nav .nav-call small{font-size:12.5px;font-weight:500;color:var(--muted)}
+  .header .site-nav .nav-call svg{width:22px;height:22px;color:var(--blue)}
+  /* Otevřená nabídka se vejde na výšku displeje a dá se v ní rolovat. */
+  .header .site-nav.is-open{max-height:calc(100dvh - var(--nav-height) - 8px);overflow-y:auto;overscroll-behavior:contain}
+}
+
+/* =====================================================================
+   Telefon (≤ 780 px)
+   ===================================================================== */
+@media (max-width:780px){
+  /* Kompaktní hlavička: logo už nezabírá pětinu displeje. */
+  :root{--brand-header-height:72px}
+  .header{--nav-height:72px}
+  .header .header-inner{width:calc(100% - 40px);min-height:var(--nav-height)}
+  .header .brand.brand-full{flex-basis:148px;width:148px}
+  html.is-scrolled{--brand-header-height:62px}
+  html.is-scrolled .header{--nav-height:62px}
+  html.is-scrolled .header .brand.brand-full{flex-basis:124px;width:124px}
+  .menu-toggle{width:48px;height:48px;padding:13px}
+  .menu-toggle span{height:1.5px;width:20px}
+  .preview-bar{height:34px}
+
+  /* Čitelnost: běžný text 15–16 px, popisky nejméně 12 px. */
+  body{font-size:16px}
+  .hero-description,.detail-lead,.content-intro,.editorial-intro p,.section-heading>p,.section-caption>p,
+  .home-audience-grid p,.home-service-copy>p,.home-service-list li,.home-solution-copy>p,.home-solution-benefits p,
+  .home-operation p,.story-copy p,.about-copy p,.process-grid p,.faq details p,.contact-copy>p,
+  .project>p,.content-card>p,.article-copy p,.article-copy li,.detail-benefits p,.detail-final-cta p,
+  .partner-testimonial blockquote p,.featured-copy>p,.about-points p,.intent-grid p,.detail-story-intro>p,
+  .service-proof-grid p,.proof-note,.home-proof-card p{font-size:15.5px!important;line-height:1.7!important}
+  .editorial-intro p,.content-cta p,.about-source>p,.contact-copy-row>p,.explorer-lead,.solution-copy>p,.journey-heading>p,
+  .journey-summary>p,.detail-section-heading>p,.ext-lead,.ext-section-heading>p,.ext-scope-card>p,.ext-testimonial blockquote>p,
+  .ext-process-grid li>p,.ext-project>p,.ext-faq-item p,.ext-final-cta p,.ext-partner-note p,.ext-audience-grid article>p,
+  .ext-decision p,.water-illustration figcaption>span{font-size:15.5px!important;line-height:1.7!important}
+  .project-card-facts dd{font-size:14.5px}
+  .faq summary,.detail-chapter-title,.source-accordions summary{font-size:16.5px;line-height:1.4}
+  .eyebrow,.ed-kicker,.proof-eyebrow,.operation-number,.service-number,.feature-badge,.ext-photo-badge,.detail-image-action{font-size:12px!important;letter-spacing:.11em}
+  main figcaption,.card-picture>span,.card-meta,.detail-facts dt,.project-card-facts dt,.proof-capacity small,.hero-foot small,.address-card small,.service-link{font-size:12.5px!important}
+  .project-meta,.card-meta,.detail-related-meta,.image-tag,.photo-label,.home-photo-tag,figcaption,.result-count,#gallery-count{font-size:12.5px}
+  .project h3{font-size:21px;line-height:1.25}
+  .content-card h2{font-size:21px;line-height:1.25}
+  .detail-tags span{font-size:13px}
+  .project-card-facts dt{font-size:12px}.project-card-facts dd{font-size:13.5px}
+  .breadcrumbs,.detail-breadcrumbs{font-size:13px}
+
+  /* Dotykové plochy alespoň 48 px. */
+  .button{min-height:54px;font-size:15.5px;padding:14px 22px;gap:14px}
+  .text-link,.detail-text-link{min-height:var(--tap);font-size:15px;gap:10px}
+  .operation-inquiry{min-height:var(--tap)!important;display:flex!important;align-items:center;font-size:15px!important}
+  .faq summary{min-height:60px}
+  .breadcrumbs a,.detail-breadcrumbs a,.ext-breadcrumbs a{display:inline-flex;align-items:center;min-height:44px;font-size:13.5px}
+  .breadcrumbs,.detail-breadcrumbs,.ext-breadcrumbs{display:flex;align-items:center;flex-wrap:wrap;column-gap:8px}
+  .breadcrumbs [aria-current],.detail-breadcrumbs [aria-current],.ext-breadcrumbs [aria-current]{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+  /* Dvouřádkový popisek; průhledný okraj místo vnitřního odsazení, aby třetí řádek neprosvítal. */
+  .media-item figcaption{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;padding-block:0!important;border-block:10px solid transparent;line-height:1.45}
+  .detail-back{min-height:var(--tap)}
+  .contact-copy-row button,.address-actions button,.address-actions a,.detail-source-link,.end-phone{min-height:var(--tap);display:inline-flex;align-items:center;font-size:15px}
+  .legal-copy a{padding-block:4px}
+  .preview-bar a{min-height:34px;padding-inline:4px}
+  .faq a[href^="tel:"]{display:inline-flex;align-items:center;min-height:var(--tap);font-size:16px;font-weight:650}
+
+  /* Formulářová pole: 16 px, aby iPhone při psaní nepřibližoval stránku. */
+  input:not([type=checkbox]):not([type=radio]),select,textarea{font-size:16px!important}
+  .form-card input:not([type=radio]),.form-card textarea,.listing-search input,.document-toolbar input,.gallery-control select{min-height:54px}
+  .field-label{font-size:14px;margin:18px 0 8px}
+  .form-card legend{font-size:21px}
+  .choices{grid-template-columns:1fr 1fr;gap:10px}
+  .choices label>span{font-size:14px;min-height:60px;padding:12px 11px;gap:9px;border-radius:9px;line-height:1.3}
+  .choices label svg{width:22px;height:22px;stroke-width:1.5}
+  .form-actions .button{font-size:15.5px;min-height:54px;flex:1}
+  .form-actions .text-link{font-size:15px;min-width:64px}
+  .form-consent{font-size:12.5px}
+  .form-top{font-size:12px}
+  .equipment-fields legend{font-size:15px}#equipment-hint{font-size:13.5px}
+  .contact-phone{font-size:30px;min-height:56px}
+  .contact-email{font-size:17px;min-height:var(--tap)}
+
+  /* Filtry jako posuvný pás místo tří řádků tlačítek. */
+  .content-filters,#realizace .filters{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;
+    margin-inline:-20px;padding:2px 20px 6px;-webkit-overflow-scrolling:touch;
+    -webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 36px),transparent 100%);mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 36px),transparent 100%)}
+  .content-filters::-webkit-scrollbar,#realizace .filters::-webkit-scrollbar{display:none}
+  .content-filters>button,#realizace .filters>button{flex:0 0 auto;scroll-snap-align:start;min-height:46px;padding-inline:18px;font-size:14.5px;white-space:nowrap}
+
+  /* Záložky řešení: posuvný pás s naznačeným pokračováním. */
+  .home-solution-tabs{scroll-snap-type:x mandatory;scroll-padding-inline:20px;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 44px),transparent 100%);mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 44px),transparent 100%)}
+  .home-solution-tabs::-webkit-scrollbar{display:none}
+  .home-solution-tabs>.solution{scroll-snap-align:start}
+  .home-solution-tabs .solution h3{font-size:19px}
+  .home-solution-tabs .solution p{font-size:13.5px}
+  .home-solution-tabs .service-link{font-size:13.5px}
+
+  /* Kotvy a lepivé prvky počítají s nižší hlavičkou. */
+  html{scroll-padding-top:calc(var(--brand-header-height) + 14px)}
+
+  /* Patička: odkazy ve dvou sloupcích s pohodlnou výškou, čitelné kontakty. */
+  .footer-links{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;padding-bottom:20px}
+  .footer-links>a:not(.button){min-height:var(--tap);display:flex;align-items:center;font-size:15px;border-bottom:1px solid var(--line)}
+  .footer .footer-top .brand.brand-full{flex-basis:210px;width:210px}
+  .footer-top p{font-size:15px;line-height:1.9}
+  .footer-top p a{display:inline-block;padding-block:10px}
+  .footer-bottom{font-size:12.5px;gap:10px}
+  .footer-bottom a{display:inline-block;padding-block:12px}
+
+  /* Partneři a karty: o něco vzdušnější text. */
+  .partner-meta{font-size:13px}
+  .home-audience-grid h3{font-size:20px}
+  .process-grid h3{font-size:19px}
+
+  /* Lišta s akcemi */
+  body.has-mobile-actions{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+  .mobile-actions{position:fixed;z-index:9;left:0;right:0;bottom:0;display:grid;grid-template-columns:auto 1fr;gap:10px;
+    padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(245,249,255,.94);
+    -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-top:1px solid var(--line);
+    transform:translateY(110%);transition:transform .34s var(--ease-out);will-change:transform}
+  .mobile-actions.is-visible{transform:translateY(0)}
+  .mobile-actions a{display:flex;align-items:center;justify-content:center;gap:10px;min-height:54px;border-radius:100px;font-size:15.5px;font-weight:650;line-height:1.2;white-space:nowrap}
+  .mobile-actions a:active{transform:scale(.97)}
+  .mobile-actions svg{width:20px;height:20px;stroke-width:1.8}
+  .mobile-actions-call{padding-inline:20px;border:1px solid var(--ink);color:var(--ink);background:var(--white)}
+  .mobile-actions-inquiry{background:var(--blue);color:var(--white);border:1px solid var(--blue);box-shadow:0 10px 22px -12px rgba(33,111,229,.9)}
+}
+
+@media (max-width:370px){
+  .choices{grid-template-columns:1fr}
+  .mobile-actions-call span{display:none}
+  .mobile-actions-call{padding-inline:18px}
+}
+
+/* ---------- Omezený pohyb ---------- */
+@media (prefers-reduced-motion:reduce){
+  @view-transition{navigation:none}
+  .mobile-actions,.header .header-inner,.header .brand.brand-full,.ico{transition:none!important}
+  .content-card:hover,.project:hover{transform:none}
+}
+@media print{.mobile-actions{display:none!important}}
