@@ -18,12 +18,19 @@ a .ico,button .ico{transition:transform .22s var(--ease-out)}
 @view-transition{navigation:auto}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:.24s;animation-timing-function:var(--ease-out)}
 
+/* ---------- Tlačítka v zelené z loga, text v tmavě modré z loga (kontrast 4,5 : 1) ---------- */
+.button,.detail-page .button,.ext-page .button,.header .site-nav>.button,.button-light{background:var(--green);border-color:var(--green);color:var(--ink)}
+.button:hover,.detail-page .button:hover,.ext-page .button:hover,.header .site-nav>.button:hover,nav>a.button:hover,.button-light:hover{background:var(--green-hover);border-color:var(--green-hover);color:var(--ink)}
+.button-outline{background:transparent;border-color:var(--line);color:var(--ink)}
+.button-outline:hover{background:var(--sky);border-color:var(--green);color:var(--ink)}
+.button,.header .site-nav>.button{font-weight:700}
+
 /* ---------- Tlačítka a odkazy: odezva na dotek i myš ---------- */
 .button{transition:background-color .2s,border-color .2s,transform .18s var(--ease-out),box-shadow .2s}
 .button:active{transform:translateY(0) scale(.975)}
 .text-link:active,.operation-inquiry:active{opacity:.7}
 @media (hover:hover){
-  .button:hover{box-shadow:0 10px 24px -12px rgba(18,55,91,.55)}
+  .button:hover{box-shadow:0 10px 24px -12px rgba(4,39,82,.55)}
   a:hover>.ico,.text-link:hover .ico,.button:hover .ico{transform:translate(2px,-2px)}
   .project .project-image img,.content-card .card-picture img,.detail-related-picture img,.home-solution-photo img,.featured-image img{transition:transform .7s var(--ease-out)}
   .project:hover .project-image img,.content-card:hover .card-picture img,.detail-related-card:hover .detail-related-picture img,.featured-image:hover img{transform:scale(1.035)}
@@ -47,7 +54,7 @@ a .ico,button .ico{transition:transform .22s var(--ease-out)}
   html.is-scrolled .header .brand.brand-full{flex-basis:186px;width:186px}
 }
 .header{transition:box-shadow .25s}
-html.is-scrolled .header{box-shadow:0 10px 30px -22px rgba(18,55,91,.5)}
+html.is-scrolled .header{box-shadow:0 10px 30px -22px rgba(4,39,82,.5)}
 
 /* Odkaz „Zavolat“ v mobilní nabídce */
 .header .site-nav>a.nav-call{display:none}
@@ -62,7 +69,7 @@ html.is-scrolled .header{box-shadow:0 10px 30px -22px rgba(18,55,91,.5)}
   .header .site-nav>a.nav-call{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;margin-top:6px;padding:12px 4px;border-top:1px solid var(--line);font-size:16px;font-weight:650;color:var(--ink)}
   .header .site-nav .nav-call span{display:grid;line-height:1.3}
   .header .site-nav .nav-call small{font-size:12.5px;font-weight:500;color:var(--muted)}
-  .header .site-nav .nav-call svg{width:22px;height:22px;color:var(--blue)}
+  .header .site-nav .nav-call svg{width:22px;height:22px;color:var(--green-ink)}
   /* Otevřená nabídka se vejde na výšku displeje a dá se v ní rolovat. */
   .header .site-nav.is-open{max-height:calc(100dvh - var(--nav-height) - 8px);overflow-y:auto;overscroll-behavior:contain}
 }
@@ -182,7 +189,7 @@ html.is-scrolled .header{box-shadow:0 10px 30px -22px rgba(18,55,91,.5)}
   .mobile-actions a:active{transform:scale(.97)}
   .mobile-actions svg{width:20px;height:20px;stroke-width:1.8}
   .mobile-actions-call{padding-inline:20px;border:1px solid var(--ink);color:var(--ink);background:var(--white)}
-  .mobile-actions-inquiry{background:var(--blue);color:var(--white);border:1px solid var(--blue);box-shadow:0 10px 22px -12px rgba(33,111,229,.9)}
+  .mobile-actions-inquiry{background:var(--green);color:var(--ink);border:1px solid var(--green);font-weight:700;box-shadow:0 10px 22px -12px rgba(62,162,21,.9)}
 }
 
 @media (max-width:370px){

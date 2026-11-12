@@ -40,6 +40,10 @@ Obsah převzatý z původního webu je lokální kopie veřejných podkladů k 7
 - `dist/polish.css` a `dist/polish.js` se načítají jako poslední vrstva: kompaktní hlavička, která se po odrolování zmenší, spodní lišta „Zavolat / Poptat řešení" na telefonu, telefon v mobilní nabídce, posuvné pásy filtrů, dotykové plochy od 48 px, pole formuláře 16 px (iPhone při psaní nepřibližuje), plynulé přechody mezi stránkami a rozbalování odpovědí. Vše respektuje omezený pohyb.
 - Písmo Manrope se načítá jako WOFF2 (54 kB místo 165 kB). Šipky „↗" a „⌄", které písmo neobsahuje, generátor nahrazuje vloženými SVG ikonami (`iconize` v `scripts/build_content.py`).
 
+## Barvy podle loga (od 12. 11. 2026)
+
+Paleta vychází z loga: zelená `#3ea215` a tmavě modrá `#042752`. Tlačítka jsou zelená s tmavě modrým textem (kontrast 4,5 : 1; bílý text by měl jen 3,3 : 1). Zelená v malém textu a obrysech používá tmavší odstín `#237c03`. Původní jasně modrý akcent `#216fe5` byl nahrazen; mapování je v `scripts/align_palette_to_logo.py` (jednorázový záznam). Ilustrace vody zůstávají modré.
+
 ## Rozsah převzetí
 
 Web obsahuje 62 HTML stránek. Ze zdroje jsou převzaty celé texty 51 článků, všechny odkazy nalezené v sitemap, 336 médií a dokumenty. Čtyři další stránky a rozšíření servisu vznikly z klientského zadání z 8. 11. 2026. Pro rychlejší načítání je připraveno 328 náhledů do 720 px; plné fotografie se načítají až při otevření. PDF zůstávají beze změny. Celková velikost statického webu je přibližně 210 MB.
@@ -50,7 +54,7 @@ Přehled URL, kontrolní součty, úplná obsahová data, původní veřejné HT
 
 ## Vzhled a obsah
 
-Tmavě modrá, jasná vodní modrá a ledově světlé plochy; lokálně hostované písmo Manrope (licence přiložena). Celý web sdílí modrou paletu, fotografické kompozice a krátké konečné animace s podporou omezeného pohybu. Symbol slona pochází z existujícího lokálního návrhu vodní značky White Elephant; sestava s názvem Čistá řešení je návrhová. Náladový hero je AI ilustrační vizualizace, na stránce je označený. Fotografie realizací pocházejí ze současného webu; produktové ilustrace a obecné schéma jsou označené. Zdroje jsou v docs/assets-sources.json; prompt a původ hero jsou v dist/assets/hero-provenance.txt.
+Tmavě modrá a zelená z loga na ledově světlých plochách; lokálně hostované písmo Manrope (licence přiložena). Celý web sdílí paletu loga, fotografické kompozice a krátké konečné animace s podporou omezeného pohybu. Symbol slona pochází z existujícího lokálního návrhu vodní značky White Elephant; sestava s názvem Čistá řešení je návrhová. Náladový hero je AI ilustrační vizualizace, na stránce je označený. Fotografie realizací pocházejí ze současného webu; produktové ilustrace a obecné schéma jsou označené. Zdroje jsou v docs/assets-sources.json; prompt a původ hero jsou v dist/assets/hero-provenance.txt.
 
 ## Lokální spuštění
 

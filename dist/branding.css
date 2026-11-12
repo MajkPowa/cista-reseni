@@ -4,7 +4,7 @@ html{scroll-padding-top:calc(var(--brand-header-height) + 16px)}
 .header .brand.brand-full,.footer .brand.brand-full{display:flex;align-items:center;gap:0;padding:0;line-height:0;max-width:100%;border-radius:3px}
 .header .brand.brand-full{flex:0 0 264px;width:264px}
 .header .brand.brand-full>.brand-logo,.footer .brand.brand-full>.brand-logo{display:block;width:100%;height:auto;max-width:100%;object-fit:contain;flex-shrink:0}
-.header .brand.brand-full:focus-visible,.footer .brand.brand-full:focus-visible{outline:3px solid #216fe5;outline-offset:5px}
+.header .brand.brand-full:focus-visible,.footer .brand.brand-full:focus-visible{outline:3px solid var(--green-ink);outline-offset:5px}
 .footer .footer-top .brand.brand-full{flex:0 1 320px;width:320px;min-width:0}
 .footer .footer-top>p{min-width:0;overflow-wrap:anywhere}
 .about-stamp>img{width:62px;height:auto;object-fit:contain}
