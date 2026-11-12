@@ -75,7 +75,7 @@ Prosím o kontrolu, zda odkazy míří tam, kam chcete, a zda máte souhlas part
 - **Zabezpečení:** web je statický, nemá redakční systém ani pluginy, které by bylo nutné
   hlídat a záplatovat. Data jsou u Googlu v datovém centru v EU, přístup je jen po přihlášení
   ověřeným e-mailem. Vše běží přes HTTPS.
-- **Zálohování:** zdrojové soubory webu jsou verzované, databázi lze zálohovat denně.
+- **Zálohování:** zdrojové soubory webu jsou verzované, databáze se zálohuje každý den (záloha se drží 7 dní).
   Poptávky si navíc můžete kdykoli stáhnout.
 - **Aktualizace:** provádíme my, web kvůli nim nemá odstávky.
 - **Přístupy a vlastnictví:** administrátorský přístup máte Vy (info@cistareseni.cz) a my

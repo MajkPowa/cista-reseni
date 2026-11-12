@@ -132,16 +132,16 @@ Pro ostrý provoz zvažte Firebase App Check (reCAPTCHA Enterprise).
 
 - **Kód a statický obsah:** historie Gitu na GitHubu.
 - **Původní média:** obnovitelná skriptem `scripts/restore_media.py` z manifestu s kontrolními součty.
-- **Databáze:** doporučeno zapnout denní zálohy Firestore (uchování 7 dní):
-  ```sh
-  gcloud firestore backups schedules create --database="(default)" --recurrence=daily --retention=7d --project=cista-reseni-20261112
-  ```
-  Obnova: `gcloud firestore databases restore`. Ruční export: `gcloud firestore export gs://<bucket>/<složka>`.
+- **Databáze:** denní zálohy Firestore s uchováním 7 dní jsou zapnuté od 12. 11. 2026
+  (`gcloud firestore backups schedules list --database="(default)" --project=cista-reseni-20261112`).
+  Seznam záloh: `gcloud firestore backups list --project=cista-reseni-20261112`.
+  Obnova do nové databáze: `gcloud firestore databases restore --source-backup=<záloha> --destination-database=<název>`.
+  Ruční export: `gcloud firestore export gs://<bucket>/<složka>`.
 - **Fotografie ve Storage:** v bucketu lze zapnout verzování objektů
   (`gcloud storage buckets update gs://cista-reseni-20261112.firebasestorage.app --versioning`).
 - **Poptávky:** správce si je může kdykoli stáhnout jako CSV v administraci.
 
-Zálohy databáze ani verzování bucketu zatím zapnuté nejsou.
+Verzování bucketu s fotografiemi zatím zapnuté není.
 
 ## 7. Zabezpečení a aktualizace
 
@@ -175,7 +175,7 @@ Zatím nastavené není.
 4. Přidat doménu mezi autorizované domény Firebase Authentication
    (konzole → Authentication → Settings → Authorized domains).
 5. Upravit `ADMIN_URL` ve `functions/.env` a nasadit funkce.
-6. Zapnout e-maily (kapitola 5) a zálohy (kapitola 6).
+6. Zapnout e-maily (kapitola 5).
 
 ## 10. Řešení potíží
 
