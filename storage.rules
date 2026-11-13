@@ -11,6 +11,16 @@ service firebase.storage {
         && firestore.exists(/databases/(default)/documents/admins/$(request.auth.token.email));
     }
 
+    // Přílohy poptávek: návštěvník smí soubor jen jednou nahrát (obrázek nebo PDF do 10 MB),
+    // číst a mazat je smí pouze správci.
+    match /inquiries/{inquiryId}/{fileName} {
+      allow create: if inquiryId.matches('^[A-Za-z0-9]{10,40}$')
+        && fileName.matches('^[0-9]-[A-Za-z0-9._-]{1,80}$')
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)|application/pdf');
+      allow get, list, delete: if isAdmin();
+    }
+
     match /references/{referenceId}/{fileName} {
       allow get: if true;
       allow list: if isAdmin();

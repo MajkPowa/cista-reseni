@@ -307,6 +307,24 @@ def _special(mode, current, ctx):
     return f'''<section class="ext-partner-note container" data-reveal><span class="ext-note-icon">{_icon('document')}</span><div><p class="eyebrow">PŘEDÁNÍ ZAŘÍZENÍ</p><h2>Protokol. A srozumitelná návaznost.</h2><p>Součástí zprovoznění je protokol a předání zákazníkovi. Pokud potřebujete také praktické zaškolení obsluhy, domluvíme jeho rozsah společně.</p></div><a class="ext-text-link" href="{rel('sluzby/skoleni-obsluhy-cov.html', current)}">Školení obsluhy {_icon()}</a></section>'''
 
 
+def _programs(current, ctx):
+    """Regular service programmes from the client brief of 2026-11-13. No prices are published."""
+    rel = ctx['rel']
+    check = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L20 5"/></svg>'
+    def card(name, key, visits, items, extra=''):
+        href = rel('index.html', current) + f'?reseni=pravidelny_servis&program={key}#poptavka'
+        points = ''.join(f'<li>{check}{item}</li>' for item in items)
+        return (f'<article class="program-card{extra}"><p class="program-name">{name}</p><p class="program-visits"><strong>{visits}</strong>'
+                f'<span>plánované servisní<br>návštěvy ročně</span></p><ul>{points}</ul><a class="button" href="{href}">Nezávazně poptat servis {_icon()}</a></article>')
+    return ('<section class="ext-programs" id="ext-programy"><div class="container"><div class="program-intro"><div><p class="eyebrow">PRAVIDELNÝ SERVIS ČOV</p>'
+            '<h2>Vaše čistírna.<br>Naše starost.</h2></div><p>Dva servisní programy podle toho, kolik péče vaše čistírna potřebuje. '
+            'Servisujeme technologie různých výrobců, nejen zařízení, která jsme sami dodali.</p></div><div class="program-grid">'
+            + card('STANDARD', 'standard', '2', ['Pravidelná kontrola technologie', 'Základní údržba a vyhodnocení provozu', 'Doporučení k zajištění správného fungování ČOV'])
+            + card('PREMIUM', 'premium', '4', ['Rozšířená pravidelná servisní péče', 'Kontrola technologických komponentů', 'Preventivní údržba a vyhodnocování provozu'], ' program-card--premium')
+            + '</div><p class="program-note">Každou nabídku připravíme individuálně podle výrobce, typu a velikosti ČOV, technického stavu zařízení, '
+            'lokality a požadovaného rozsahu služeb.</p></div></section>')
+
+
 def render_extension(current, ctx):
     """Return body HTML for a known extension route; raise KeyError otherwise."""
     if isinstance(current, dict):
@@ -322,6 +340,8 @@ def render_extension(current, ctx):
     body = f'''<div class="ext-page ext-page--{mode}"><section class="ext-hero"><div class="container"><div class="ext-breadcrumbs" aria-label="Drobečková navigace"><a href="{rel('index.html',current)}">Úvod</a><span aria-hidden="true">/</span><a href="{rel('sluzby.html',current)}">Naše řešení</a><span aria-hidden="true">/</span><span aria-current="page">{esc(meta['title'])}</span></div><div class="ext-hero-grid"><div class="ext-hero-copy" data-reveal><p class="eyebrow">{esc(copy['eyebrow'])}</p><h1>{esc(copy['heading'])}</h1><p class="ext-lead">{esc(copy['lead'])}</p><div class="ext-tags">{tags}</div><div class="ext-hero-actions"><a class="button" href="{inquiry}">{esc(copy['cta'])} {_icon()}</a><a class="ext-text-link" href="#ext-rozsah">Co služba zahrnuje <span aria-hidden="true">↓</span></a></div></div><figure class="ext-hero-figure" data-reveal><a href="{cover_href}" aria-label="Prohlédnout skutečnou realizaci: {esc(_PROJECTS[copy['cover']][0])}">{_photo(copy['cover'],current,ctx,priority=True)}<span class="ext-photo-badge">Z naší realizace {_icon()}</span></a><figcaption>{esc(copy['cover_note'])}</figcaption></figure></div></div></section><div class="ext-jumpbar"><div class="container ext-jumplinks" role="navigation" aria-label="Na této stránce"><a href="#ext-rozsah">Rozsah služby</a><a href="#ext-postup">Jak postupujeme</a><a href="#ext-realizace">Související realizace</a><a href="#ext-otazky">Časté otázky</a><a href="{inquiry}">{esc(copy['cta'])} {_icon()}</a></div></div>'''
     cards = ''.join(f'<article class="ext-scope-card" data-reveal><span class="ext-card-icon">{_icon(icon)}</span><h3>{esc(title)}</h3><p>{esc(text)}</p></article>' for icon, title, text in copy['cards'])
     body += f'''<section class="ext-section container" id="ext-rozsah">{_section_heading('CO PRO VÁS ZAJISTÍME', copy['scope_title'], copy['scope_lead'], esc)}<div class="ext-scope-grid ext-scope-grid--{len(copy['cards'])}">{cards}</div></section>'''
+    if mode == 'servis':
+        body += _programs(current, ctx)
     body += _special(mode, current, ctx)
     steps = ''.join(f'<li data-reveal><span class="ext-step-number">{i:02d}</span><h3>{esc(title)}</h3><p>{esc(text)}</p></li>' for i, (title, text) in enumerate(copy['steps'], 1))
     body += f'''<section class="ext-process" id="ext-postup"><div class="container">{_section_heading('JASNÁ NÁVAZNOST JEDNOTLIVÝCH KROKŮ', copy['process_title'], copy['process_note'], esc)}<ol class="ext-process-grid ext-process-grid--{len(copy['steps'])}">{steps}</ol></div></section>'''

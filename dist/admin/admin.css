@@ -175,6 +175,32 @@ dialog::backdrop{background:rgba(4,39,82,.45)}
 .switch strong{font-weight:650}
 .switches .field{margin:0}
 
+/* Přílohy poptávky */
+.attachments{margin-bottom:18px}
+.attachments-title{font-size:13px;font-weight:650;margin-bottom:8px}
+.attachments-list{display:flex;flex-wrap:wrap;gap:8px}
+.attachments-list .btn{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+
+/* Statistiky */
+.stat-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.stat-card{display:grid;gap:4px;padding:18px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius)}
+.stat-card strong{font-size:32px;font-weight:650;line-height:1.1;letter-spacing:-.03em}
+.stat-card span{font-size:13px;color:var(--muted)}
+.stat-columns{display:grid;grid-template-columns:1.4fr 1fr;gap:12px}
+.stat-box{padding:18px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius)}
+.stat-box h3{font-size:15px;font-weight:650;margin:0 0 14px}
+.stat-box h3:not(:first-child){margin-top:24px}
+.stat-bars{display:flex;align-items:flex-end;gap:3px;height:170px}
+.stat-bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;height:100%;min-width:0}
+.stat-bar i{display:block;width:100%;min-height:2px;border-radius:3px 3px 0 0;background:var(--green,#3ea215)}
+.stat-bar small{font-size:9.5px;color:var(--muted)}
+.stat-bar:nth-child(even) small{visibility:hidden}
+.stat-rows{display:grid;gap:10px}
+.stat-row{position:relative;display:flex;justify-content:space-between;gap:12px;padding:8px 10px;border-radius:6px;background:var(--ice);font-size:14px;overflow:hidden}
+.stat-row span,.stat-row b{position:relative;z-index:1}
+.stat-row i{position:absolute;inset:0 auto 0 0;background:var(--sky)}
+@media (max-width:860px){.stat-cards{grid-template-columns:1fr 1fr}.stat-columns{grid-template-columns:1fr}}
+
 /* Oznámení */
 .toasts{position:fixed;z-index:50;left:50%;bottom:20px;transform:translateX(-50%);display:grid;gap:8px;width:min(440px,calc(100vw - 32px));pointer-events:none}
 .toast{padding:12px 16px;border-radius:10px;background:var(--ink);color:var(--white);font-size:14px;box-shadow:0 12px 30px -12px rgba(4,39,82,.6)}

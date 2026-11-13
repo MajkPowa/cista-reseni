@@ -33,6 +33,6 @@ def render_partners(current, ctx, variant='content'):
     return (
         f'<section class="container partners-section partners-section--{variant}" id="partneri" aria-labelledby="partners-title" data-reveal>'
         f'<div class="{heading}"><div><p class="{kicker}">{label}</p><h2 id="partners-title">S kým<br>spolupracujeme.</h2></div>'
-        f'<p>Technologie a projekty, na kterých stavíme.<br>Kliknutím přejdete na web partnera.</p></div>'
+        f'<p>Jsme nezávislý dodavatel: technologii vybíráme podle vašich potřeb, ne podle jednoho výrobce.</p></div>'
         f'<ul class="partners-grid">{items}</ul></section>'
     )

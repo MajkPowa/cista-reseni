@@ -16,13 +16,13 @@ window.CR_CMS = {
 
   // Výchozí kategorie referencí; správce je může v administraci přejmenovat a doplnit.
   categories: [
-    { key: 'cov', label: 'Domovní ČOV' },
+    { key: 'cov', label: 'Domovní čistírny odpadních vod' },
     { key: 'commercial', label: 'Firemní a průmyslové ČOV' },
-    { key: 'servis', label: 'Servis' },
-    { key: 'rekonstrukce', label: 'Rekonstrukce' },
-    { key: 'destovka', label: 'Dešťová voda' },
-    { key: 'upravny', label: 'Úpravny vody' },
-    { key: 'cerpani', label: 'Čerpací technika' },
+    { key: 'rekonstrukce', label: 'Rekonstrukce a intenzifikace ČOV' },
+    { key: 'upravny', label: 'Úpravny pitné a technologické vody' },
+    { key: 'destovka', label: 'Hospodaření s dešťovou vodou' },
+    { key: 'cerpani', label: 'Čerpací stanice a související technologie' },
+    { key: 'servis', label: 'Servisní zásahy' },
     { key: 'ostatni', label: 'Další řešení' }
   ],
 
@@ -36,6 +36,13 @@ window.CR_CMS = {
     rekonstrukce: 'Rekonstrukce a modernizace ČOV',
     destovka: 'Dešťová voda',
     cerpani: 'Čerpací technika',
+    upravna: 'Úpravna vody',
+    komplex: 'Komplexní řešení',
+    pravidelny_servis: 'Pravidelný servis ČOV',
     poradit: 'Odborná konzultace'
-  }
+  },
+
+  // Druhy poptávek (tři formuláře na úvodní stránce) a servisní programy.
+  inquiryKinds: { realizace: 'Nová realizace', servis: 'Servis a opravy', pravidelny: 'Pravidelný servis' },
+  programs: { standard: 'STANDARD', premium: 'PREMIUM' }
 };

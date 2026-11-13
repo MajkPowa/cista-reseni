@@ -8,7 +8,7 @@ from pathlib import PurePosixPath
 import re
 from bs4 import BeautifulSoup, Tag
 
-CATEGORIES = {'cov': 'Domovní čistírny', 'commercial': 'Firemní a průmyslové ČOV', 'destovka': 'Dešťová voda', 'cerpani': 'Čerpací technika', 'servis': 'Servis', 'rekonstrukce': 'Rekonstrukce', 'upravny': 'Úpravny vody', 'ostatni': 'Další vodní řešení'}
+CATEGORIES = {'cov': 'Domovní čistírny odpadních vod', 'commercial': 'Firemní a průmyslové ČOV', 'rekonstrukce': 'Rekonstrukce a intenzifikace ČOV', 'upravny': 'Úpravny pitné a technologické vody', 'destovka': 'Hospodaření s dešťovou vodou', 'cerpani': 'Čerpací stanice a související technologie', 'servis': 'Servisní zásahy', 'ostatni': 'Další řešení'}
 SERVICE_FACTS = {
     'konzultace-a-poradenstvi': [('Podle vašeho místa', 'Doporučení vychází z místních podmínek a plánovaného záměru.'), ('S ohledem na rozpočet', 'Při výběru řešení bereme v úvahu také finanční možnosti.'), ('První společný krok', 'Úvodní konzultaci běžně poskytujeme zdarma.')],
     'cisteni-odpadnich-vod': [('ENVI-PUR a ASIO', 'Domovní technologie pro rodinné i rekreační domy.'), ('Celá cesta k řešení', 'Od konzultace a dokumentace po montáž a servis.'), ('Podle konkrétního zadání', 'Výběr čistírny i způsob odtoku se řeší při přípravě projektu.')],

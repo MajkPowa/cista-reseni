@@ -186,3 +186,33 @@ Zatím nastavené není.
 | Nejdou nahrát fotografie | `storage.rules`; role `roles/firebaserules.firestoreServiceAgent` pro účet `service-447610071813@gcp-sa-firebasestorage.iam.gserviceaccount.com` |
 | E-maily neodcházejí | Pole `mail` u poptávky; logy funkce: `firebase functions:log --only onInquiryCreated --project cista-reseni-20261112` |
 | Nasazení webu selhalo | GitHub → Actions → poslední běh „Publish website preview“ |
+
+## 11. Rozšíření z 13. 11. 2026
+
+### Poptávky: tři formuláře a přílohy
+- Formulář na úvodní stránce má tři typy (`kind`): `realizace`, `servis`, `pravidelny`; u pravidelného servisu se ukládá `program` (`standard` / `premium`). Seznam služeb je v `dist/cms-config.js` (`services`), ve `firestore.rules` (`validInquiry`) a ve `functions/mail.js` – při přidání služby upravte všechna tři místa.
+- Přílohy (fotografie, PDF; nejvýše 5 souborů po 10 MB) se nahrávají do Storage pod `inquiries/<id poptávky>/`. Návštěvník smí soubor jen jednou vytvořit, číst a mazat smí pouze správci (`storage.rules`). Fotografie se v prohlížeči před odesláním zmenší.
+- Funkce `onInquiryDeleted` po smazání poptávky odstraní i její přílohy.
+- Riziko: nahrávat může kdokoli bez přihlášení (jinak by formulář nefungoval). Omezuje to typ a velikost souboru; pro ostrý provoz zvažte Firebase App Check.
+
+### Návštěvnost
+- `dist/site-data.js` (`countVisit`) na každé stránce přičte jedničku do dokumentu `stats/<RRRR-MM-DD>`: `views`, skupina stránky (`home`, `sluzby`, `servis`, `reference`, `realizace`, `kontakt`, `ostatni`) a `visits` při příchodu odjinud. Bez cookies, bez identifikátorů; nepočítá localhost, roboty a prohlížeče s „nesledovat“.
+- Pravidla dovolují veřejnosti jen přičtení 1 k povoleným počitadlům; číst smí správci. Čísla lze uměle navýšit, slouží jen jako orientační ukazatel. Zobrazují se v administraci v záložce Statistiky.
+- Pro podrobnou analytiku (zdroje, klíčová slova) lze doplnit Google Analytics 4 nebo jiný nástroj – vyžaduje účet klienta a souhlasovou lištu.
+
+### Vyhledávače (SEO)
+- Úvodní stránka má titulek a popis s hlavními výrazy a strukturovaná data `LocalBusiness` (JSON-LD).
+- Web je stále náhled: `INDEXABLE=False` ve `scripts/build_content.py` drží `noindex`. Po přechodu na ostrou doménu nastavte `SITE_URL` a `INDEXABLE=True` a spusťte build: stránky dostanou `index, follow` a kanonickou adresu a vznikne `sitemap.xml` a `robots.txt` (administrace a CRM jsou v něm zakázané).
+
+### Úvodní video
+- Tlačítko „Přehrát video“ v úvodu otevře dialog; soubor se stahuje až po kliknutí (`preload="none"`), takže načtení stránky nezpomaluje. Na telefonu na výšku se použije svislá verze.
+- Soubory: `dist/assets/video/cista-reseni-16x9.mp4`, `cista-reseni-9x16.mp4` a dva plakáty. Po novém renderu je vytvořte znovu:
+  ```sh
+  ffmpeg -y -i final.mp4 -vf "scale=1280:720,fps=30" -c:v libx264 -preset slow -crf 27 -pix_fmt yuv420p -movflags +faststart -c:a aac -b:a 128k dist/assets/video/cista-reseni-16x9.mp4
+  ffmpeg -y -i final_9x16.mp4 -vf "scale=720:1280,fps=30" -c:v libx264 -preset slow -crf 27 -pix_fmt yuv420p -movflags +faststart -c:a aac -b:a 128k dist/assets/video/cista-reseni-9x16.mp4
+  ```
+
+### CRM
+- Aplikace je v `dist/crm/` (`index.html`, `crm.css`, `crm.js`, `manifest.webmanifest`), adresa `/crm/`. Stejné přihlášení a stejný seznam uživatelů jako administrace (`admins/`).
+- Kolekce: `customers`, `devices`, `jobs`, `tasks`, `activities`; čte také `inquiries` (převod poptávky na zákazníka a zakázku) a `admins`. Pravidla: plný přístup jen pro správce.
+- Uživatele přidáte v administraci (Správci) nebo skriptem; e-maily nikdy neukládejte do repozitáře.

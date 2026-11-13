@@ -93,6 +93,17 @@ exports.onInquiryCreated = onDocumentCreated(
   },
 );
 
+// Po smazání poptávky odstraní i její přílohy.
+exports.onInquiryDeleted = onDocumentDeleted('inquiries/{inquiryId}', async event => {
+  const { inquiryId } = event.params;
+  if (!/^[A-Za-z0-9]{1,80}$/.test(inquiryId)) return;
+  try {
+    await getStorage().bucket().deleteFiles({ prefix: `inquiries/${inquiryId}/` });
+  } catch (error) {
+    logger.error('Přílohy smazané poptávky se nepodařilo odstranit.', { inquiryId, error: String(error) });
+  }
+});
+
 exports.onReferenceDeleted = onDocumentDeleted('references/{referenceId}', async event => {
   const { referenceId } = event.params;
   // Pouze znaky, které generuje administrace; nic mimo složku dané reference.

@@ -15,6 +15,12 @@ from PIL import Image
 
 sys.stdout.reconfigure(encoding='utf-8')
 ROOT=Path(__file__).resolve().parents[1]; DIST=ROOT/'dist'; DOC=ROOT/'docs'/'source-inventory'
+# Zveřejnění pro vyhledávače: po přechodu na ostrou doménu nastavte SITE_URL a INDEXABLE=True.
+# Stránky pak dostanou index,follow a kanonickou adresu a vznikne sitemap.xml a robots.txt.
+SITE_URL='https://majkpowa.github.io/cista-reseni/'
+INDEXABLE=False
+ROBOTS='index, follow' if INDEXABLE else 'noindex, nofollow'
+BUILT=[]
 DATA=json.loads((DOC/'content.json').read_text(encoding='utf-8'))
 PAGES=DATA['pages']; ASSETS=DATA['assets']; BASE=DATA['source']
 BUSINESS=json.loads((ROOT/'docs/business-expansion.json').read_text(encoding='utf-8'))
@@ -94,19 +100,22 @@ def page(current,title,body,description='',has_gallery=False,reference_id=None):
     extension_assets=f'<link rel="stylesheet" href="{rel("service-extensions.css",current)}">' if current in EXTENSION_PAGES else ''
     if current=='o-nas.html':
         extension_assets+=f'<link rel="stylesheet" href="{rel("partner-testimonial.css",current)}">'
+    # Datová vrstva je na všech stránkách: reference z administrace a anonymní počítání návštěv.
     cms_assets=f'<link rel="stylesheet" href="{rel("cms.css",current)}">'
-    if current in CMS_PAGES or current.startswith('realizace/'):
-        cms_assets+=f'<script src="{rel("cms-config.js",current)}" defer></script><script src="{rel("site-data.js",current)}" defer></script>'
+    cms_assets+=f'<script src="{rel("cms-config.js",current)}" defer></script><script src="{rel("site-data.js",current)}" defer></script>'
+    if INDEXABLE and current!='realizace/detail.html':
+        cms_assets+=f'<link rel="canonical" href="{SITE_URL}{current}">'
     reference_attr=f' data-reference-id="{esc(reference_id)}"' if reference_id else ''
     cms_assets+=f'<link rel="stylesheet" href="{rel("polish.css",current)}"><script src="{rel("polish.js",current)}" defer></script>'
     body_class='content-page experience-page'+(' solutions-page' if current=='sluzby.html' else '')+(' service-detail' if current.startswith('sluzby/') else ' reference-detail' if current.startswith('realizace/') else '')
     progress='<div class="reading-progress" aria-hidden="true"></div>' if is_detail else ''
-    document=f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#042752"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="https://majkpowa.github.io/cista-reseni/assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.woff2',current)}" as="font" type="font/woff2" crossorigin><link rel="preload" href="{rel('assets/BricolageGrotesque.woff2',current)}" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script>{service_assets}{detail_assets}{experience_assets}{extension_assets}{shell_assets}{cms_assets}</head><body class="{body_class}"{reference_attr}>{progress}{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
+    document=f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="{ROBOTS if current!="realizace/detail.html" else "noindex, follow"}"><meta name="theme-color" content="#042752"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="https://majkpowa.github.io/cista-reseni/assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.woff2',current)}" as="font" type="font/woff2" crossorigin><link rel="preload" href="{rel('assets/BricolageGrotesque.woff2',current)}" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script>{service_assets}{detail_assets}{experience_assets}{extension_assets}{shell_assets}{cms_assets}</head><body class="{body_class}"{reference_attr}>{progress}{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
     return stamp_assets(iconize(document),current)
 def save(current,title,body,description='',has_gallery=False,reference_id=None):
     document=page(current,title,body,description,has_gallery,reference_id)
     document='\n'.join(line.rstrip() for line in document.splitlines())+'\n'
     f=DIST/current;f.parent.mkdir(parents=True,exist_ok=True);f.write_text(document,encoding='utf-8',newline='\n')
+    BUILT.append(current)
 def hero(current,title,eyebrow,intro='',parent=None,meta=''):
     crumbs=f'<a href="{rel("index.html",current)}">Úvod</a><span aria-hidden="true">/</span>'
     if parent: crumbs+=f'<a href="{rel(parent[0],current)}">{esc(parent[1])}</a><span aria-hidden="true">/</span>'
@@ -272,5 +281,8 @@ if '--skip-home' not in sys.argv:
     for old in home_soup.select('link[href^="polish.css"],script[src^="polish.js"]'): old.decompose()
     home_soup.head.append(home_soup.new_tag('link',rel='stylesheet',href='polish.css'))
     home_soup.head.append(home_soup.new_tag('script',src='polish.js',defer=''))
+    home_soup.select_one('meta[name=robots]')['content']=ROBOTS
+    for old in home_soup.select('link[rel=canonical]'): old.decompose()
+    if INDEXABLE: home_soup.head.append(home_soup.new_tag('link',rel='canonical',href=SITE_URL))
     homepage_document=stamp_assets(iconize(str(home_soup)),'index.html')
     homepage.write_text('\n'.join(line.rstrip() for line in homepage_document.splitlines())+'\n',encoding='utf-8',newline='\n')

@@ -1,0 +1,335 @@
+/* Čistá řešení — CRM. Barvy a písmo vycházejí z veřejného webu a ze Správy webu.
+   Nejdřív telefon (375 px): spodní lišta, formuláře jako spodní listy. Od 900 px levý panel. */
+@font-face{font-family:Manrope;src:url('../assets/Manrope.woff2') format('woff2'),url('../assets/Manrope.ttf') format('truetype');font-weight:200 800;font-display:swap}
+@font-face{font-family:'Bricolage Grotesque';src:url('../assets/BricolageGrotesque.woff2') format('woff2');font-weight:400 800;font-display:swap}
+:root{
+  --ink:#042752;--green:#3ea215;--green-ink:#237c03;--green-hover:#4ab31c;--soft:#e2f3d9;--bg:#f5f9ff;--white:#fff;
+  --line:#d8e3ef;--line-strong:#b9c9db;--muted:#546d88;--danger:#b3261e;--danger-soft:#fdecea;--warn:#8a5a00;--warn-soft:#fff3d6;
+  --grey-soft:#e9edf2;--blue-soft:#e3ecf9;--radius:14px;--nav-height:60px;--side:240px;
+  --heading:'Bricolage Grotesque',Manrope,'Segoe UI',system-ui,sans-serif;
+  --safe-bottom:env(safe-area-inset-bottom,0px);--safe-top:env(safe-area-inset-top,0px)
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,'Segoe UI',system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-wrap:anywhere}
+[hidden]{display:none!important}
+h1,h2,p,figure,dl,dd,ol{margin:0}
+ol{padding:0;list-style:none}
+h1,h2{font-family:var(--heading);font-weight:650;letter-spacing:-.02em;line-height:1.2}
+h2{font-size:22px}
+small{font-weight:400;color:var(--muted)}
+img{max-width:100%;display:block}
+a{color:var(--green-ink)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:focus-visible{outline:3px solid var(--green-ink);outline-offset:2px}
+#screen:focus{outline:0}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.noscript{padding:24px;text-align:center}
+.icon{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.icon-small{width:18px;height:18px}
+
+/* ---------- Formulářové prvky (písmo 16 px, výška 48 px kvůli telefonům) ---------- */
+label,legend{display:block;font-size:14px;font-weight:650;margin-bottom:6px;padding:0}
+input:not([type=checkbox]):not([type=file]),select,textarea{width:100%;min-height:48px;padding:10px 12px;border:1px solid var(--line-strong);border-radius:10px;background:var(--white);font-size:16px;transition:border-color .15s,box-shadow .15s}
+textarea{resize:vertical;line-height:1.5}
+input:focus,select:focus,textarea:focus{border-color:var(--green-ink);box-shadow:0 0 0 3px rgba(62,162,21,.2);outline:0}
+input[type=search]{-webkit-appearance:none;appearance:none}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+.field{margin-bottom:16px;min-width:0}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hint{font-size:14px;color:var(--muted);margin-top:8px}
+.notice{background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:12px 14px;font-size:14px;margin-bottom:14px}
+.form-message{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:14px;background:var(--danger-soft);color:var(--danger)}
+.form-message[data-kind=ok],#verify-message{background:var(--soft);color:var(--ink)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 18px;border:1px solid var(--line-strong);border-radius:10px;background:var(--white);font-weight:650;font-size:15px;text-decoration:none;color:var(--ink);white-space:nowrap;transition:background .15s,border-color .15s,opacity .15s}
+.btn-primary{background:var(--green);border-color:var(--green);color:var(--ink);font-weight:700}
+.btn-small{padding:8px 14px;font-size:14px}
+.btn-danger{background:var(--danger);border-color:var(--danger);color:var(--white)}
+.btn-danger-ghost{color:var(--danger);border-color:transparent;background:transparent}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn[aria-busy=true]{opacity:.7;cursor:progress}
+.btn:active{transform:translateY(1px)}
+.link{min-height:48px;background:none;border:0;padding:6px 0;color:var(--green-ink);font-weight:650;font-size:15px;text-decoration:underline;text-underline-offset:3px}
+.icon-btn{display:inline-grid;place-items:center;width:48px;height:48px;border:0;border-radius:10px;background:transparent;color:var(--muted);flex-shrink:0}
+@media (hover:hover){
+  .btn:hover{background:var(--soft);border-color:#9fb9d8}
+  .btn-primary:hover{background:var(--green-hover);border-color:var(--green-hover)}
+  .btn-danger:hover{background:#8f1d17;border-color:#8f1d17}
+  .btn-danger-ghost:hover{background:var(--danger-soft);border-color:transparent}
+  .icon-btn:hover{background:var(--soft);color:var(--ink)}
+}
+
+/* ---------- Přihlašovací obrazovky (shodné se Správou webu) ---------- */
+.screen{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:24px 16px}
+.auth-card{width:min(440px,100%);background:var(--white);border:1px solid var(--line);border-radius:18px;padding:28px 22px;box-shadow:0 20px 50px -30px rgba(4,39,82,.35)}
+.auth-logo{width:190px;height:auto;margin-bottom:20px}
+.auth-card h2{margin-bottom:10px}
+.auth-lead{color:var(--muted);margin-bottom:18px}
+.auth-card form label{margin-top:14px}
+.auth-card .btn{width:100%;margin-top:20px}
+.auth-links{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0 16px;margin-top:10px}
+.spinner{width:38px;height:38px;border-radius:50%;border:3px solid var(--soft);border-top-color:var(--green-ink);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.screen-loading{display:grid;place-items:center;min-height:50vh}
+
+/* ---------- Kostra aplikace ---------- */
+.app{min-height:100vh;min-height:100dvh;padding-bottom:calc(var(--nav-height) + var(--safe-bottom))}
+.appbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:8px;min-height:calc(56px + var(--safe-top));padding:calc(4px + var(--safe-top)) 12px 4px 16px;background:var(--ink);color:var(--white)}
+.appbar h1{flex:1;min-width:0;font-size:21px;color:var(--white);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.appbar-back{display:grid;place-items:center;width:48px;height:48px;margin-left:-12px;border-radius:10px;color:var(--white)}
+.appbar :focus-visible{outline-color:var(--white)}
+.appbar-action{flex-shrink:0}
+.btn-action{padding:8px 14px 8px 10px}
+main{padding:16px 16px 28px;min-width:0}
+.stack{display:grid;gap:18px;min-width:0}
+.stack>*{min-width:0}
+
+/* Spodní lišta s pěti záložkami */
+.nav{position:fixed;z-index:20;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:var(--safe-bottom);background:var(--white);border-top:1px solid var(--line);box-shadow:0 -8px 24px -18px rgba(4,39,82,.45)}
+.nav-brand,.nav-foot{display:none}
+.nav-item{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:var(--nav-height);padding:6px 2px;color:var(--muted);font-size:11.5px;font-weight:650;text-decoration:none;line-height:1.2}
+.nav-item[aria-current=page]{color:var(--green-ink)}
+.nav-item[aria-current=page]::before{content:'';position:absolute;top:0;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px;background:var(--green)}
+.badge{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--danger);color:var(--white);font-size:11.5px;font-weight:700}
+.nav-item .badge{position:absolute;top:5px;left:calc(50% + 6px)}
+
+/* ---------- Přehled ---------- */
+.greeting h2{font-size:28px}
+.greeting p{color:var(--muted);font-size:15px}
+.greeting p::first-letter{text-transform:uppercase}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{display:grid;align-content:start;gap:2px;min-height:132px;padding:14px;background:var(--white);border:1px solid var(--line);border-radius:16px;color:var(--ink);text-decoration:none}
+.stat .icon{color:var(--green-ink);margin-bottom:6px}
+.stat-number{font-family:var(--heading);font-size:34px;font-weight:700;line-height:1;letter-spacing:-.03em}
+.stat-label{font-size:14px;font-weight:650;line-height:1.3}
+.stat-sub{font-size:13px;color:var(--muted)}
+.stat.is-alert{border-color:#efcb7f;background:#fffaf0}
+.stat.is-alert .stat-sub{color:var(--warn);font-weight:700}
+
+/* ---------- Oddíly, výpisy, karty ---------- */
+.section{min-width:0}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;margin-bottom:6px}
+.section-head h2{font-size:19px}
+.section-link{display:inline-flex;align-items:center;gap:2px;min-height:48px;color:var(--green-ink);font-size:14px;font-weight:650;text-decoration:none;white-space:nowrap}
+.list{display:grid;gap:8px;min-width:0}
+.list-count{font-size:14px;color:var(--muted);margin-top:-8px}
+.empty{display:grid;justify-items:center;gap:14px;padding:28px 18px;text-align:center;color:var(--muted);background:var(--white);border:1px dashed var(--line-strong);border-radius:var(--radius);font-size:15px}
+.card{padding:16px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);min-width:0}
+.row{display:grid;gap:4px;width:100%;min-height:56px;padding:13px 16px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);color:var(--ink);text-align:left;text-decoration:none;min-width:0;transition:border-color .15s,box-shadow .15s}
+.row strong{font-weight:650}
+.row-main{display:grid;min-width:0}
+.row-sub{font-size:14px;color:var(--muted);font-weight:400}
+.row-text{font-size:14px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.row-date{font-size:13px;color:var(--muted)}
+@media (hover:hover){a.row:hover,button.row:hover,.stat:hover{border-color:#9fb9d8;box-shadow:0 8px 20px -14px rgba(4,39,82,.45)}}
+.job-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.job-top strong,.job-top a{min-width:0}
+.job-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px;font-size:14px}
+.job-due{display:inline-flex;align-items:center;gap:5px;color:var(--muted)}
+.job-due.is-overdue{color:var(--danger);font-weight:700}
+.job-value{font-weight:700;white-space:nowrap}
+.inquiry-row.is-new{border-left:4px solid var(--green)}
+.customer-row,.menu-item,.user-row,.user-card{grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px}
+.user-card{display:grid}
+.customer-row>.icon,.menu-item>.icon-small{color:var(--muted)}
+.menu-item>.icon:first-child{color:var(--green-ink)}
+.menu-item .row-main{font-weight:650}
+.avatar{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--soft);color:var(--green-ink);font-family:var(--heading);font-weight:700;font-size:17px}
+.device-row.is-overdue,.service-row.is-overdue,.service-card.is-overdue{border-color:#e9a39d;background:#fff8f7}
+.service-date{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:650}
+.is-overdue .service-date{color:var(--danger)}
+
+/* Štítky stavů */
+.pill{display:inline-block;flex-shrink:0;padding:3px 10px;border-radius:12px;font-size:12.5px;font-weight:700;line-height:1.4;white-space:nowrap;background:var(--grey-soft);color:var(--muted)}
+.stage-lead{background:var(--blue-soft);color:var(--ink)}
+.stage-quote{background:var(--warn-soft);color:var(--warn)}
+.stage-scheduled{background:var(--soft);color:var(--green-ink)}
+.stage-done{background:var(--green-ink);color:var(--white)}
+.stage-invoiced{background:var(--ink);color:var(--white)}
+.stage-lost{background:var(--grey-soft);color:var(--muted)}
+.program-standard{background:var(--soft);color:var(--green-ink)}
+.program-premium{background:var(--ink);color:var(--white)}
+.status-new{background:var(--green-ink);color:var(--white)}
+.status-in_progress{background:var(--warn-soft);color:var(--warn)}
+.status-quoted{background:var(--blue-soft);color:var(--ink)}
+.status-won{background:var(--soft);color:var(--green-ink)}
+.type-pill{background:var(--blue-soft);color:var(--ink)}
+
+/* Filtrovací štítky; řada se na telefonu posouvá do strany, stránka ne */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips-scroll{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px;padding:4px 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chips-scroll::-webkit-scrollbar{display:none}
+.chip{position:relative;display:inline-flex;align-items:center;gap:8px;flex-shrink:0;min-height:40px;padding:6px 14px;border:1px solid var(--line);border-radius:20px;background:var(--white);font-size:14px;font-weight:650;color:var(--muted);white-space:nowrap}
+.chip::after{content:'';position:absolute;inset:-4px 0} /* dotyková plocha 48 px */
+.chip span{font-size:12.5px;padding:1px 7px;border-radius:10px;background:var(--bg);color:var(--muted)}
+.chip[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--white)}
+.chip[aria-pressed=true] span{background:rgba(255,255,255,.18);color:var(--white)}
+.search-field,.toolbar .field{margin-bottom:0}
+.toolbar{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+
+/* Úkoly */
+.task{display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:4px;min-height:56px;padding:4px 14px 4px 4px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius)}
+.task-check{display:grid;place-items:center;width:48px;height:48px;padding:0;border:0;border-radius:50%;background:none}
+.task-check .icon{width:28px;height:28px;padding:4px;border:2px solid #8ea6c1;border-radius:50%;stroke:transparent;stroke-width:2.4;transition:background .15s,border-color .15s}
+.task.is-done .task-check .icon{background:var(--green);border-color:var(--green);stroke:var(--ink)}
+.task-main{display:grid;min-height:48px;align-content:center;padding:4px 0;border:0;background:none;text-align:left;min-width:0}
+.task-main strong{font-weight:650}
+.task.is-done .task-main strong{text-decoration:line-through;color:var(--muted);font-weight:500}
+.task-due{font-size:13.5px;font-weight:650;color:var(--muted);white-space:nowrap}
+.task.is-overdue{border-color:#e9a39d}
+.task.is-overdue .task-due{color:var(--danger)}
+
+/* ---------- Detail ---------- */
+.detail-head h2{font-size:26px}
+.detail-sub{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px;color:var(--muted);font-size:15px}
+.detail-list{display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+.detail-list dt{font-size:13px;color:var(--muted)}
+.detail-list dd{margin-bottom:12px;white-space:pre-wrap}
+.detail-list dd:last-child{margin-bottom:0}
+.card-edit{margin-top:14px}
+.big-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.big-action{display:grid;justify-items:center;align-content:center;gap:6px;min-height:76px;padding:10px 6px;border-radius:var(--radius);background:var(--green);color:var(--ink);font-weight:700;font-size:14px;text-decoration:none;text-align:center}
+.big-action.is-disabled{background:var(--grey-soft);color:#8496ab}
+@media (hover:hover){a.big-action:hover{background:var(--green-hover)}}
+.stage-card{display:grid;gap:12px}
+.stage-card .field{margin:0}
+.danger-zone{display:flex;justify-content:center;padding-top:4px}
+
+/* Historie a přidání záznamu */
+.composer{display:grid;gap:10px;margin-bottom:16px}
+.composer-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.timeline{display:grid;gap:0}
+.timeline-item{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.timeline-icon{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--soft);color:var(--green-ink)}
+.kind-system .timeline-icon{background:var(--grey-soft);color:var(--muted)}
+.kind-system .timeline-text{color:var(--muted)}
+.timeline-text{white-space:pre-wrap}
+.timeline-meta{font-size:13px;color:var(--muted);margin-top:2px}
+.timeline-item .icon-btn{margin:-8px -10px -8px 0}
+.timeline-empty{padding:12px 0 2px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+
+/* Servis */
+.service-card{display:grid;gap:6px}
+.service-customer{font-weight:700;color:var(--ink);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px;padding:6px 0;margin:-6px 0}
+.service-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+.service-planned{display:inline-flex;align-items:center;gap:6px;min-height:48px;font-size:14px;font-weight:650;color:var(--green-ink)}
+
+/* Poptávka z webu */
+.convert-card{display:grid;gap:12px;background:var(--soft);border-color:#c5e3b5}
+.convert-card .btn{width:100%;white-space:normal;text-align:center}
+.attachments{display:grid;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.attachments-title{font-size:13px;color:var(--muted)}
+.attachment{display:flex;align-items:center;gap:8px;min-height:48px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;color:var(--ink);font-weight:650;text-decoration:none}
+.attachment span{flex:1;min-width:0}
+.attachment:not([href]){color:var(--muted)}
+.attachment.is-missing{border-style:dashed;text-decoration:line-through}
+
+/* Více */
+.btn-signout{width:100%}
+.app-note{text-align:center;font-size:13px;color:var(--muted)}
+.section>.hint{margin-top:10px}
+
+/* Nástěnka zakázek (jen počítač) */
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(210px,1fr);gap:12px;align-items:start;overflow-x:auto;padding-bottom:12px}
+.board-column{display:grid;gap:8px;min-width:0;padding:10px;border-radius:var(--radius);background:#e9f0f9}
+.board-head{display:flex;align-items:center;gap:8px;padding:2px 4px 4px}
+.board-head h2{font-size:15px;font-family:inherit;font-weight:700;letter-spacing:0}
+.board-count{padding:1px 8px;border-radius:10px;background:var(--white);font-size:12.5px;font-weight:700}
+.board-sum{margin-left:auto;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.board-empty{padding:14px 6px;font-size:13.5px;color:var(--muted);text-align:center}
+.board-card{background:var(--white);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.board-link{display:grid;gap:4px;padding:12px;color:var(--ink);text-decoration:none;font-size:15px}
+.board-link strong{font-weight:650}
+.board-link .row-sub,.board-link .job-bottom{font-size:13px}
+select.board-select{min-height:40px;padding:6px 10px;border:0;border-top:1px solid var(--line);border-radius:0;background:var(--bg);font-size:14px;font-weight:650}
+@media (hover:hover){.board-card:hover{border-color:#9fb9d8;box-shadow:0 8px 20px -14px rgba(4,39,82,.45)}}
+
+/* ---------- Dialogy ---------- */
+dialog{border:0;padding:0;color:var(--ink);background:var(--white);max-width:none;max-height:none}
+dialog::backdrop{background:rgba(4,39,82,.5)}
+.sheet{width:100%;margin:auto 0 0;max-height:92vh;max-height:92dvh;border-radius:20px 20px 0 0;overflow:hidden}
+.sheet[open]{display:flex;flex-direction:column;animation:sheet-up .22s ease-out}
+.sheet form{display:flex;flex-direction:column;flex:1;min-height:0}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 8px 10px 18px;border-bottom:1px solid var(--line);flex-shrink:0}
+.sheet-head h2{font-size:20px}
+.sheet-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:18px 16px 8px}
+.sheet-context{margin-bottom:14px;padding:10px 12px;border-radius:10px;background:var(--soft);font-size:14px;font-weight:650}
+.sheet-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:12px 16px calc(12px + var(--safe-bottom));border-top:1px solid var(--line);background:var(--bg);flex-shrink:0}
+.sheet-foot .btn-danger-ghost{padding-inline:10px}
+.sheet-gap{flex:1}
+@keyframes sheet-up{from{transform:translateY(32px);opacity:0}}
+@keyframes sheet-side{from{transform:translateX(32px);opacity:0}}
+.confirm{width:min(420px,calc(100vw - 32px));border-radius:16px;padding:22px}
+.confirm p{color:var(--muted);margin:10px 0 22px}
+.confirm-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px}
+
+/* Výběr zákazníka ve formuláři */
+.picker{display:grid;gap:8px}
+.picker-results{display:grid;gap:6px}
+.picker-option{display:grid;gap:0;width:100%;min-height:48px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--white);text-align:left}
+.picker-option strong{font-weight:650}
+.picker-new{display:flex;align-items:center;gap:8px;border-style:dashed;border-color:var(--green-ink);color:var(--green-ink);font-weight:700}
+.picker-chosen{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 8px 8px 12px;border:1px solid var(--green-ink);border-radius:10px;background:var(--soft)}
+.picker-draft{padding:14px 14px 4px;border:1px dashed var(--green-ink);border-radius:10px;background:#f6fbf2}
+.picker-draft-title{font-weight:700;margin-bottom:10px}
+@media (hover:hover){.picker-option:hover{background:var(--soft)}}
+
+/* ---------- Oznámení ---------- */
+.toasts{position:fixed;z-index:50;left:50%;bottom:calc(var(--nav-height) + var(--safe-bottom) + 12px);transform:translateX(-50%);display:grid;gap:8px;width:min(440px,calc(100vw - 32px));pointer-events:none}
+.toast{padding:12px 16px;border-radius:12px;background:var(--ink);color:var(--white);font-size:15px;box-shadow:0 12px 30px -12px rgba(4,39,82,.6);animation:toast-in .2s ease-out}
+.toast-error{background:var(--danger)}
+.toast-warn{background:var(--warn-soft);color:var(--warn);border:1px solid #efcb7f}
+@keyframes toast-in{from{transform:translateY(8px);opacity:0}}
+
+/* Úzké telefony: dvojice polí pod sebe */
+@media (max-width:359px){.field-row{grid-template-columns:1fr}.stat-number{font-size:30px}}
+
+/* ---------- Počítač: levý panel místo spodní lišty ---------- */
+@media (min-width:900px){
+  .app{padding-bottom:0}
+  .nav{top:0;right:auto;width:var(--side);display:flex;flex-direction:column;gap:4px;padding:20px 14px;border-top:0;border-right:1px solid var(--line);box-shadow:none;overflow-y:auto}
+  .nav-brand{display:flex;align-items:center;gap:10px;padding:0 10px 18px;font-family:var(--heading);font-weight:700;font-size:18px;line-height:1.15}
+  .nav-brand img{width:36px;height:auto}
+  .nav-brand small{display:block;font-family:Manrope,sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+  .nav-item{flex-direction:row;justify-content:flex-start;gap:12px;min-height:48px;padding:0 14px;border-radius:10px;font-size:15px}
+  .nav-item[aria-current=page]{background:var(--soft);color:var(--ink)}
+  .nav-item[aria-current=page]::before{display:none}
+  .nav-item[aria-current=page] .icon{color:var(--green-ink)}
+  .nav-item .badge{position:static;margin-left:auto}
+  .nav-foot{display:grid;gap:2px;margin-top:auto;padding-top:16px;border-top:1px solid var(--line)}
+  .nav-link{display:flex;align-items:center;min-height:40px;padding:0 14px;border-radius:10px;color:var(--muted);font-size:14px;font-weight:650;text-decoration:none}
+  .nav-user{padding:8px 14px;font-size:13px;color:var(--muted)}
+  .nav-foot .btn{min-height:40px;margin:0 14px}
+  .shell{margin-left:var(--side)}
+  .appbar{min-height:72px;padding:12px 32px;background:rgba(245,249,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);color:var(--ink)}
+  .appbar h1{font-size:28px;color:var(--ink)}
+  .appbar-back{color:var(--ink);margin-left:-8px}
+  .appbar :focus-visible{outline-color:var(--green-ink)}
+  main{width:min(1100px,100%);margin:0 auto;padding:28px 32px 64px}
+  main.is-wide{width:100%}
+  .stats{grid-template-columns:repeat(4,1fr);gap:14px}
+  .toolbar{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+  .chips-scroll{flex-wrap:wrap;overflow:visible;margin:0;padding:0}
+  .is-board .jobs-chips{display:none}
+  .btn-small{min-height:40px}
+  .detail-list{grid-template-columns:160px minmax(0,1fr);gap:10px 16px}
+  .detail-list dd{margin-bottom:0}
+  .big-actions{max-width:520px}
+  .big-action{grid-auto-flow:column;justify-content:center;min-height:56px;gap:10px}
+  .stage-card{grid-template-columns:minmax(0,280px) auto;align-items:end;justify-content:start}
+  .toasts{bottom:24px;left:calc(50% + var(--side) / 2)}
+  .sheet{width:min(520px,100vw);height:100vh;height:100dvh;max-height:none;margin:0 0 0 auto;border-radius:0;box-shadow:-20px 0 60px -30px rgba(4,39,82,.5)}
+  .sheet[open]{animation-name:sheet-side}
+  .sheet-body{padding:22px 24px 8px}
+  .sheet-head{padding:14px 14px 14px 24px}
+  .sheet-foot{padding:14px 24px}
+  @media (hover:hover){.nav-item:hover,.nav-link:hover{background:var(--bg);color:var(--ink)}}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .spinner{animation-duration:2.4s!important;animation-iteration-count:infinite!important}
+}

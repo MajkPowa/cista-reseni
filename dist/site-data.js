@@ -84,12 +84,61 @@
   }
 
   // ---------- Poptávka ----------
+  const storageHost = emulator ? 'http://127.0.0.1:9199' : 'https://firebasestorage.googleapis.com';
+  const newId = () => Array.from(crypto.getRandomValues(new Uint8Array(20)),
+    byte => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'[byte % 62]).join('');
+
+  // Fotografie z telefonu mívají i přes 10 MB; před odesláním je zmenšíme na JPEG.
+  async function prepareAttachment(file) {
+    if (file.type === 'application/pdf') return file;
+    const small = file.size <= 1.5 * 1024 * 1024 && ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
+    if (small) return file;
+    let source;
+    try { source = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+    catch { throw new Error(`Soubor ${file.name} se nepodařilo načíst.`); }
+    const scale = Math.min(1, 2200 / Math.max(source.width, source.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(source.width * scale); canvas.height = Math.round(source.height * scale);
+    const context = canvas.getContext('2d');
+    context.fillStyle = '#fff'; context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(source, 0, 0, canvas.width, canvas.height);
+    source.close?.();
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.85));
+    if (!blob) throw new Error(`Soubor ${file.name} se nepodařilo zpracovat.`);
+    return new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' });
+  }
+
+  // Nahraje přílohu poptávky; soubor pak mohou číst jen přihlášení správci.
+  async function uploadAttachment(inquiryId, index, original) {
+    const file = await prepareAttachment(original);
+    if (file.size > 10 * 1024 * 1024) throw new Error(`Soubor ${file.name} je větší než 10 MB.`);
+    const safeName = file.name.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '').slice(-70) || 'soubor';
+    const path = `inquiries/${inquiryId}/${index}-${safeName}`;
+    // Vícedílné nahrání (stejné, jaké používá Firebase SDK): typ souboru jde v metadatech, která kontrolují pravidla úložiště.
+    const boundary = `cr${newId()}`;
+    const metadata = JSON.stringify({ name: path, contentType: file.type });
+    const body = new Blob([
+      `--${boundary}\r\nContent-Type: application/json; charset=utf-8\r\n\r\n${metadata}\r\n--${boundary}\r\nContent-Type: ${file.type}\r\n\r\n`,
+      file, `\r\n--${boundary}--`
+    ]);
+    const response = await fetch(`${storageHost}/v0/b/${config.storageBucket}/o?name=${encodeURIComponent(path)}`, {
+      method: 'POST', headers: { 'X-Goog-Upload-Protocol': 'multipart', 'Content-Type': `multipart/related; boundary=${boundary}` }, body
+    });
+    if (!response.ok) throw new Error(`Storage ${response.status}`);
+    return { name: file.name.slice(0, 120), path, size: file.size, type: file.type };
+  }
+
   async function createInquiry(data) {
-    const id = Array.from(crypto.getRandomValues(new Uint8Array(15)), byte => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'[byte % 62]).join('');
+    const id = data.id || newId();
     const fields = { status: text('new') };
-    for (const name of ['service', 'serviceLabel', 'location', 'manufacturer', 'deviceType', 'name', 'email', 'phone', 'message', 'page']) {
+    for (const name of ['service', 'serviceLabel', 'kind', 'program', 'location', 'manufacturer', 'deviceType', 'name', 'email', 'phone', 'message', 'page']) {
       const value = (data[name] || '').toString().trim();
       if (value) fields[name] = text(value);
+    }
+    if (Array.isArray(data.attachments) && data.attachments.length) {
+      fields.attachments = { arrayValue: { values: data.attachments.slice(0, 5).map(item => ({ mapValue: { fields: {
+        name: text(item.name), path: text(item.path), size: { integerValue: String(item.size) }, type: text(item.type)
+      } } })) } };
     }
     await request(`${documents}:commit${keyParam}`, {
       method: 'POST',
@@ -103,6 +152,35 @@
       })
     });
     return id;
+  }
+
+  // ---------- Návštěvnost: anonymní denní počitadla ----------
+  // Bez cookies a bez údajů o návštěvníkovi: jen součty zobrazení za den a skupinu stránek.
+  // Nepočítá se místní vývoj, roboti ani prohlížeče s požadavkem „nesledovat“.
+  function countVisit() {
+    if (local && !emulator) return;
+    if (navigator.webdriver || navigator.doNotTrack === '1' || /bot|crawl|spider|lighthouse|headless/i.test(navigator.userAgent)) return;
+    const page = location.href.slice(siteRoot.length).split(/[?#]/)[0];
+    const group = page === '' || page === 'index.html' ? 'home'
+      : page === 'sluzby/servis-a-udrzba.html' ? 'servis'
+      : page.startsWith('sluzby') ? 'sluzby'
+      : page === 'reference.html' || page === 'galerie.html' ? 'reference'
+      : page.startsWith('realizace/') ? 'realizace'
+      : page === 'kontakt.html' ? 'kontakt' : 'ostatni';
+    const counters = ['views', group];
+    // Návštěva = příchod odjinud než z vlastního webu.
+    let internal = false;
+    try { internal = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch { /* neplatný referrer */ }
+    if (!internal) counters.push('visits');
+    const day = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Prague' }).format(new Date());
+    fetch(`${documents}:commit${keyParam}`, {
+      method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ writes: [{
+        update: { name: `${database}/documents/stats/${day}`, fields: {} },
+        updateMask: { fieldPaths: [] },
+        updateTransforms: counters.map(fieldPath => ({ fieldPath, increment: { integerValue: '1' } }))
+      }] })
+    }).catch(() => { /* měření nesmí web nijak ovlivnit */ });
   }
 
   // ---------- Pomocné funkce pro vykreslení ----------
@@ -385,7 +463,7 @@
     }
   }
 
-  window.CRData = { listReferences, getReference, getSettings, createInquiry, dateLabel, detailUrl, siteRoot, emulator };
+  window.CRData = { listReferences, getReference, getSettings, createInquiry, uploadAttachment, newId, dateLabel, detailUrl, siteRoot, emulator };
 
   const run = (selector, task) => {
     const node = document.querySelector(selector);
@@ -397,4 +475,5 @@
   run('[data-cms="reference-detail"]', renderReferenceDetail);
   const legacyId = document.body.dataset.referenceId;
   if (legacyId) guardLegacyDetail(legacyId);
+  countVisit();
 })();

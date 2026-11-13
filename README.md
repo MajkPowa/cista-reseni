@@ -48,6 +48,19 @@ Paleta vychází z loga: zelená `#3ea215` a tmavě modrá `#042752`. Tlačítka
 
 Nadpisy používají Bricolage Grotesque (SIL Open Font License, licence v `dist/assets/BricolageGrotesque-OFL.txt`); běžný text zůstává v Manrope. Soubor `dist/assets/BricolageGrotesque.woff2` (50 kB) je odvozený z originálu: pevná šířka a optická velikost, řezy 400–800, znaky pro češtinu a západní latinku. Ikony služeb jsou dvoubarevné – tvar tmavě modrou, detail zelenou z loga (třídy `ico-n` a `ico-g` v `dist/polish.css`). Podklad k výběru je v `navrh-vzhledu/index.html` (není součástí zveřejněného webu).
 
+## Zadání z 13. 11. 2026
+
+- **Úvod:** „Více než 70 realizací“, nezávislý dodavatel, od návrhu po servis, pět cílových skupin, tlačítka „Nezávazně poptat realizaci“ a „Poptat servis“, úvodní video na kliknutí.
+- **Pravidelný servis:** programy STANDARD a PREMIUM bez cen (úvod i stránka servisu), samostatná sekce jednorázového servisu a oprav.
+- **Komplexní řešení, firmy a obce, regionální působnost:** nové sekce úvodní stránky; regiony i na stránce Kontakt.
+- **Reference:** kategorie podle zadání klienta, v administraci samostatné pole Typ technologie.
+- **Poptávky:** tři formuláře (nová realizace, servis a opravy, pravidelný servis) s přílohami; v administraci typ, program a přílohy.
+- **Měření:** anonymní počítání návštěv bez cookies a přehled v administraci (Statistiky).
+- **SEO:** titulky a popisy s hlavními výrazy, strukturovaná data, přepínač `INDEXABLE` pro ostrý provoz.
+- **CRM:** `dist/crm/` – zákazníci, zařízení, zakázky, servisní plán a úkoly; přihlášení jako do administrace.
+
+Texty nových sekcí vycházejí ze zadání klienta; ceny servisních programů se nezveřejňují. Podrobnosti jsou v `docs/manualy/02-technicka-sprava.md`, kapitola 11.
+
 ## Rozsah převzetí
 
 Web obsahuje 62 HTML stránek. Ze zdroje jsou převzaty celé texty 51 článků, všechny odkazy nalezené v sitemap, 336 médií a dokumenty. Čtyři další stránky a rozšíření servisu vznikly z klientského zadání z 8. 11. 2026. Pro rychlejší načítání je připraveno 328 náhledů do 720 px; plné fotografie se načítají až při otevření. PDF zůstávají beze změny. Celková velikost statického webu je přibližně 210 MB.

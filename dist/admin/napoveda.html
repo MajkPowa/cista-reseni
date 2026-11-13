@@ -28,7 +28,9 @@
   <a href="#kategorie">7. Kategorie</a>
   <a href="#spravci">8. Správci</a>
   <a href="#telefon">9. Práce z telefonu</a>
-  <a href="#potize">10. Když něco nejde</a>
+  <a href="#statistiky">10. Statistiky</a>
+  <a href="#crm">11. CRM: zákazníci a zakázky</a>
+  <a href="#potize">12. Když něco nejde</a>
 </nav>
 
 <main class="help-main">
@@ -43,7 +45,9 @@
 <tr><td><strong>Poptávky</strong></td><td>Vidíte každou poptávku odeslanou formulářem na webu, měníte její stav a píšete si k ní interní poznámky.</td></tr>
 <tr><td><strong>Reference</strong></td><td>Přidáváte, upravujete, skrýváte a mažete realizace a servisní zakázky včetně fotografií. Vybíráte, které se ukážou na úvodní stránce.</td></tr>
 <tr><td><strong>Kategorie</strong></td><td>Spravujete seznam kategorií, podle kterých si návštěvníci reference filtrují.</td></tr>
-<tr><td><strong>Správci</strong></td><td>Určujete, kdo se do administrace smí přihlásit.</td></tr>
+<tr><td><strong>Statistiky</strong></td><td>Vidíte návštěvnost webu a počty poptávek za posledních 30 dní.</td></tr>
+<tr><td><strong>Správci</strong></td><td>Určujete, kdo se do administrace a do CRM smí přihlásit.</td></tr>
+<tr><td><strong>CRM</strong></td><td>Samostatná aplikace pro evidenci zákazníků, zařízení, zakázek a servisních návštěv. Otevřete ji odkazem CRM v horní liště.</td></tr>
 </tbody>
 </table>
 <p>Adresa administrace: <strong>adresa webu + <code>/admin/</code></strong>. Odkaz „Administrace“ najdete také úplně dole v patičce webu.</p>
@@ -69,6 +73,17 @@
 <h2>3. Poptávky</h2>
 <p>Každá poptávka odeslaná z webu se tu objeví během několika vteřin, stránku není potřeba obnovovat. U záložky <strong>Poptávky</strong> svítí počet nových.</p>
 <figure><img src="napoveda/poptavky.jpg" width="800" height="537" alt="Seznam poptávek se stavy a filtrem" loading="lazy"><figcaption>Seznam poptávek. Nové poptávky mají modrý proužek.</figcaption></figure>
+<h3>Tři typy poptávek</h3>
+<p>Formulář na webu má tři záložky a u každé poptávky v administraci vidíte, o který typ jde:</p>
+<table class="help-table">
+<thead><tr><th>Typ</th><th>Co zákazník vyplní</th></tr></thead>
+<tbody>
+<tr><td><strong>Nová realizace</strong></td><td>Požadované řešení, lokalitu, popis záměru a kontakt. Může přiložit projektovou dokumentaci.</td></tr>
+<tr><td><strong>Servis a opravy</strong></td><td>Lokalitu, výrobce a typ ČOV, popis problému a kontakt. Může přiložit fotografie.</td></tr>
+<tr><td><strong>Pravidelný servis</strong></td><td>Program STANDARD nebo PREMIUM, výrobce a typ technologie, lokalitu a kontakt.</td></tr>
+</tbody>
+</table>
+<p><strong>Přílohy</strong> (fotografie, PDF) najdete v detailu poptávky pod údaji zákazníka. Otevřou se po kliknutí a jsou dostupné jen přihlášeným správcům. Když poptávku smažete, smažou se i její přílohy.</p>
 <h3>Stavy poptávky</h3>
 <table class="help-table">
 <thead><tr><th>Stav</th><th>Kdy ho použít</th></tr></thead>
@@ -108,7 +123,7 @@
 <li>Vyplňte <strong>Název zakázky</strong> (povinné), <strong>Lokalitu</strong> a <strong>Měsíc a rok</strong> realizace.</li>
 <li>Zaškrtněte jednu nebo více <strong>Kategorií</strong>.</li>
 <li>Napište <strong>Krátké shrnutí</strong> (jedna až dvě věty, zobrazí se na kartě ve výpisu) a <strong>Popis realizace</strong>.</li>
-<li>Podle potřeby přidejte <strong>Parametry</strong> – například Technologie: BC 4 OPTIMA, Kapacita: 4 EO.</li>
+<li>Vyplňte <strong>Typ technologie</strong> (např. BC 4 OPTIMA) a podle potřeby <strong>Další parametry</strong> – například Kapacita: 4 EO.</li>
 <li>Nahrajte <strong>Fotografie</strong> (viz další kapitola).</li>
 <li>Klikněte na <strong>Uložit</strong>. Reference je okamžitě na webu.</li>
 </ol>
@@ -197,8 +212,49 @@
 </div>
 </section>
 
+<section id="statistiky">
+<h2>10. Statistiky</h2>
+<p>Záložka <strong>Statistiky</strong> ukazuje posledních 30 dní:</p>
+<ul>
+<li><strong>Návštěvy</strong> – kolikrát někdo přišel na web odjinud (z vyhledávače, odkazu, přímým zadáním adresy).</li>
+<li><strong>Zobrazení stránek</strong> – kolik stránek si návštěvníci celkem prohlédli a které části webu je zajímají.</li>
+<li><strong>Poptávky</strong> – kolik poptávek přišlo, rozdělené podle typu.</li>
+<li><strong>Poptávek na 100 návštěv</strong> – orientační ukazatel, jak dobře web přivádí zákazníky.</li>
+</ul>
+<p class="help-note"><strong>Jak se měří.</strong> Web nepoužívá cookies ani služby třetích stran. Počítají se jen anonymní denní součty, proto nejde o přesná čísla: nezapočítávají se roboti ani návštěvníci, kteří mají v prohlížeči zapnuté „nesledovat“. Stačí to na sledování vývoje v čase; pro podrobnější analytiku (zdroje návštěv, klíčová slova) lze později doplnit specializovaný nástroj.</p>
+</section>
+
+<section id="crm">
+<h2>11. CRM: zákazníci a zakázky</h2>
+<p>CRM je samostatná aplikace na adrese <strong>adresa webu + <code>/crm/</code></strong> (odkaz <strong>CRM</strong> v horní liště administrace). Přihlašujete se stejným e-mailem a heslem jako do administrace. Je navržená hlavně pro telefon: na telefonu si ji přidejte na plochu (v nabídce prohlížeče „Přidat na plochu“).</p>
+<table class="help-table">
+<thead><tr><th>Část</th><th>K čemu slouží</th></tr></thead>
+<tbody>
+<tr><td><strong>Přehled</strong></td><td>Co je potřeba udělat dnes: nové poptávky z webu, úkoly po termínu, blížící se servisy a otevřené zakázky.</td></tr>
+<tr><td><strong>Zakázky</strong></td><td>Každá zakázka prochází fázemi Poptávka → Nabídka → Naplánováno → Hotovo → Fakturováno (případně Nerealizováno). Fázi posunete jedním tlačítkem.</td></tr>
+<tr><td><strong>Zákazníci</strong></td><td>Kontakty s tlačítky Zavolat, E-mail a Navigovat. U zákazníka vidíte jeho zařízení, zakázky, úkoly a historii poznámek.</td></tr>
+<tr><td><strong>Servis</strong></td><td>Zařízení se servisním programem seřazená podle termínu dalšího servisu. Po návštěvě stačí klepnout na „Servis proveden“ a termín se sám posune (STANDARD o 6 měsíců, PREMIUM o 3 měsíce).</td></tr>
+<tr><td><strong>Více</strong></td><td>Uživatelé, export zákazníků do tabulky, odhlášení.</td></tr>
+</tbody>
+</table>
+<h3>Z poptávky zakázka</h3>
+<ol>
+<li>Na <strong>Přehledu</strong> otevřete novou poptávku z webu.</li>
+<li>Klepněte na <strong>Převést na zákazníka a zakázku</strong>. Pokud zákazníka se stejným e-mailem nebo telefonem už máte, zakázka se přiřadí k němu; jinak vznikne nový.</li>
+<li>Zakázka se založí ve fázi Poptávka a poptávka na webu se označí jako „Řeší se“.</li>
+</ol>
+<h3>Pravidelný servis krok za krokem</h3>
+<ol>
+<li>U zákazníka přidejte <strong>Zařízení</strong> (výrobce, typ, umístění) a vyberte servisní program.</li>
+<li>Vyplňte datum dalšího servisu. Zařízení se objeví v části <strong>Servis</strong>.</li>
+<li>Tlačítkem <strong>Naplánovat</strong> si z termínu uděláte úkol, který uvidíte na Přehledu.</li>
+<li>Po návštěvě klepněte na <strong>Servis proveden</strong>. Zapíše se do historie zákazníka a nastaví se další termín.</li>
+</ol>
+<p class="help-note"><strong>Kdo má do CRM přístup.</strong> Stejní lidé jako do administrace – spravujete je v administraci v záložce Správci.</p>
+</section>
+
 <section id="potize">
-<h2>10. Když něco nejde</h2>
+<h2>12. Když něco nejde</h2>
 <table class="help-table">
 <thead><tr><th>Co se děje</th><th>Co zkusit</th></tr></thead>
 <tbody>

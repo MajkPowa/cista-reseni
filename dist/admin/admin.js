@@ -10,7 +10,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js';
 import {
   getFirestore, connectFirestoreEmulator, collection, doc, getDoc, setDoc, updateDoc, deleteDoc,
-  onSnapshot, query, orderBy, limit, serverTimestamp
+  onSnapshot, query, orderBy, limit, where, serverTimestamp, documentId
 } from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-firestore.js';
 import {
   getStorage, connectStorageEmulator, ref as storageRef, uploadBytes, getDownloadURL, deleteObject
@@ -193,6 +193,7 @@ const state = {
   categoryDraft: null,
   references: [],
   inquiries: [],
+  stats: [],
   admins: [],
   inquiryStatus: 'open',
   tab: 'inquiries'
@@ -218,7 +219,13 @@ function startListening() {
   }, fail));
   unsubscribers.push(onSnapshot(query(collection(db, 'inquiries'), orderBy('createdAt', 'desc'), limit(500)), snapshot => {
     state.inquiries = snapshot.docs.map(item => ({ id: item.id, ...item.data({ serverTimestamps: 'estimate' }) }));
-    renderInquiries();
+    renderInquiries(); renderStats();
+  }, fail));
+  // Denní počitadla mají jako ID datum (RRRR-MM-DD); stačí posledních 45 dní.
+  const statsFrom = new Date(Date.now() - 45 * 86400000).toISOString().slice(0, 10);
+  unsubscribers.push(onSnapshot(query(collection(db, 'stats'), where(documentId(), '>=', statsFrom)), snapshot => {
+    state.stats = snapshot.docs.map(item => ({ day: item.id, ...item.data() }));
+    renderStats();
   }, fail));
   unsubscribers.push(onSnapshot(collection(db, 'admins'), snapshot => {
     state.admins = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => a.id.localeCompare(b.id));
@@ -236,7 +243,7 @@ function openTab(name) {
   state.tab = name;
   $$('[data-tab]').forEach(button => button.toggleAttribute('aria-current', button.dataset.tab === name));
   $$('[data-tab]').forEach(button => { if (button.dataset.tab === name) button.setAttribute('aria-current', 'page'); });
-  ['inquiries', 'references', 'categories', 'admins'].forEach(tab => { $(`#tab-${tab}`).hidden = tab !== name; });
+  ['inquiries', 'references', 'categories', 'stats', 'admins'].forEach(tab => { $(`#tab-${tab}`).hidden = tab !== name; });
   try { sessionStorage.setItem('crAdminTab', name); } catch { /* bez úložiště */ }
 }
 $$('[data-tab]').forEach(button => button.addEventListener('click', () => openTab(button.dataset.tab)));
@@ -251,6 +258,8 @@ inquiryServiceSelect.append(h('option', { value: 'all', text: 'Všechny služby'
 inquiryServiceSelect.addEventListener('change', renderInquiries);
 $('#inquiry-search').addEventListener('input', renderInquiries);
 const serviceLabel = inquiry => config.services[inquiry.service] || inquiry.serviceLabel || 'Poptávka';
+const kindLabel = inquiry => (config.inquiryKinds || {})[inquiry.kind] || '';
+const programLabel = inquiry => (config.programs || {})[inquiry.program] || '';
 
 function renderInquiries() {
   const counts = Object.fromEntries(STATUSES.map(([key]) => [key, 0]));
@@ -281,7 +290,7 @@ function renderInquiries() {
     h('span', { class: `status-pill status-${inquiry.status}`, text: statusLabel[inquiry.status] || inquiry.status }),
     h('span', { class: 'row-main' }, [
       h('strong', { text: inquiry.name || 'Bez jména' }),
-      h('span', { class: 'row-sub', text: [serviceLabel(inquiry), inquiry.location].filter(Boolean).join(' · ') })
+      h('span', { class: 'row-sub', text: [serviceLabel(inquiry), programLabel(inquiry), inquiry.location, (inquiry.attachments || []).length ? `příloh: ${inquiry.attachments.length}` : ''].filter(Boolean).join(' · ') })
     ]),
     h('span', { class: 'row-text', text: inquiry.message || '' }),
     h('span', { class: 'row-date', text: formatDate(inquiry.createdAt) })
@@ -297,9 +306,19 @@ function openInquiry(id) {
   activeInquiry = inquiry;
   $('#inquiry-title').textContent = inquiry.name || 'Poptávka';
   $('#inquiry-date').textContent = `Přijato ${formatDate(inquiry.createdAt)}`;
-  const fields = [['Služba', serviceLabel(inquiry)], ['Obec', inquiry.location], ['Výrobce', inquiry.manufacturer], ['Typ zařízení', inquiry.deviceType],
+  const fields = [['Typ poptávky', kindLabel(inquiry)], ['Služba', serviceLabel(inquiry)], ['Servisní program', programLabel(inquiry)], ['Obec', inquiry.location], ['Výrobce', inquiry.manufacturer], ['Typ zařízení', inquiry.deviceType],
     ['E-mail', inquiry.email], ['Telefon', inquiry.phone], ['Zpráva', inquiry.message]].filter(([, value]) => value);
   $('#inquiry-fields').replaceChildren(...fields.flatMap(([label, value]) => [h('dt', { text: label }), h('dd', { text: value })]));
+  // Přílohy jsou neveřejné; odkaz ke stažení vznikne až po kliknutí přihlášeného správce.
+  const attachments = Array.isArray(inquiry.attachments) ? inquiry.attachments : [];
+  $('#inquiry-attachments').hidden = !attachments.length;
+  fill($('#inquiry-attachment-list'), attachments.map(item => h('button', {
+    type: 'button', class: 'btn btn-small', text: item.name || 'Příloha',
+    onclick: async event => busy(event.currentTarget, async () => {
+      try { window.open(await getDownloadURL(storageRef(storage, item.path)), '_blank', 'noopener'); }
+      catch (error) { toast(explain(error), 'error'); }
+    })
+  })));
   const subject = encodeURIComponent(`Re: Poptávka – ${serviceLabel(inquiry)}`);
   fill($('#inquiry-actions'),
     inquiry.email && h('a', { class: 'btn btn-small', href: `mailto:${encodeURIComponent(inquiry.email).replace('%40', '@')}?subject=${subject}`, text: 'Odpovědět e-mailem' }),
@@ -336,8 +355,8 @@ $('#inquiry-delete').addEventListener('click', async () => {
 });
 $('#export-inquiries').addEventListener('click', () => {
   const cell = value => `"${String(value ?? '').replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
-  const header = ['Přijato', 'Stav', 'Služba', 'Jméno', 'E-mail', 'Telefon', 'Obec', 'Výrobce', 'Typ zařízení', 'Zpráva', 'Poznámka'];
-  const lines = state.inquiries.map(inquiry => [formatDate(inquiry.createdAt), statusLabel[inquiry.status] || inquiry.status, serviceLabel(inquiry),
+  const header = ['Přijato', 'Stav', 'Typ', 'Služba', 'Program', 'Jméno', 'E-mail', 'Telefon', 'Obec', 'Výrobce', 'Typ zařízení', 'Zpráva', 'Poznámka'];
+  const lines = state.inquiries.map(inquiry => [formatDate(inquiry.createdAt), statusLabel[inquiry.status] || inquiry.status, kindLabel(inquiry), serviceLabel(inquiry), programLabel(inquiry),
     inquiry.name, inquiry.email, inquiry.phone, inquiry.location, inquiry.manufacturer, inquiry.deviceType, inquiry.message, inquiry.note].map(cell).join(';'));
   const blob = new Blob(['﻿' + [header.map(cell).join(';'), ...lines].join('\r\n')], { type: 'text/csv;charset=utf-8' });
   const link = h('a', { href: URL.createObjectURL(blob), download: `poptavky-${new Date().toISOString().slice(0, 10)}.csv` });
@@ -433,7 +452,9 @@ function openReference(id) {
   ])));
   $('#ref-summary').value = ref?.summary || '';
   $('#ref-description').value = ref?.description || '';
-  $('#ref-facts').replaceChildren(...(ref?.facts || []).map(factRow));
+  const facts = ref?.facts || [];
+  $('#ref-technology').value = (facts.find(fact => fact.label === 'Technologie') || {}).value || '';
+  $('#ref-facts').replaceChildren(...facts.filter(fact => fact.label !== 'Technologie').map(factRow));
   $('#ref-published').checked = ref ? !!ref.published : true;
   $('#ref-featured').checked = !!ref?.featured;
   $('#ref-headline').value = ref?.headline || '';
@@ -579,6 +600,8 @@ $('#form-reference').addEventListener('submit', event => {
       const categories = $$('#ref-categories input:checked').map(input => input.value);
       const facts = $$('#ref-facts .fact-row').map(row => { const [label, value] = $$('input', row).map(input => input.value.trim()); return { label, value }; })
         .filter(fact => fact.label && fact.value);
+      const technology = $('#ref-technology').value.trim();
+      if (technology) facts.unshift({ label: 'Technologie', value: technology });
       const description = $('#ref-description').value.replace(/\r\n/g, '\n').trim();
       const summary = $('#ref-summary').value.trim() || description.split(/\n\s*\n/)[0].replace(/\s+/g, ' ').slice(0, 180);
       const data = {
@@ -715,6 +738,38 @@ $('#form-admin').addEventListener('submit', event => {
     } catch (error) { toast(explain(error), 'error'); }
   });
 });
+
+// =====================================================================
+// STATISTIKY
+// =====================================================================
+const PAGE_GROUPS = [['home', 'Úvodní stránka'], ['sluzby', 'Řešení a služby'], ['servis', 'Servis ČOV'], ['reference', 'Realizace a galerie'],
+  ['realizace', 'Detaily realizací'], ['kontakt', 'Kontakt'], ['ostatni', 'Ostatní stránky']];
+function renderStats() {
+  if (!$('#stat-cards')) return;
+  const dayKey = date => new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Prague' }).format(date);
+  const days = Array.from({ length: 30 }, (_, index) => dayKey(new Date(Date.now() - (29 - index) * 86400000)));
+  const byDay = Object.fromEntries(state.stats.map(item => [item.day, item]));
+  const sum = name => days.reduce((total, day) => total + ((byDay[day] || {})[name] || 0), 0);
+  const since = Date.now() - 30 * 86400000;
+  const recent = state.inquiries.filter(inquiry => (toDate(inquiry.createdAt)?.getTime() || 0) >= since);
+  const visits = sum('visits'), views = sum('views');
+  const rate = visits ? (recent.length / visits * 100).toFixed(1).replace('.', ',') + ' %' : '—';
+  fill($('#stat-cards'), [['Návštěvy', visits], ['Zobrazení stránek', views], ['Poptávky', recent.length], ['Poptávek na 100 návštěv', rate.replace(' %', '')]]
+    .map(([label, value]) => h('div', { class: 'stat-card' }, [h('strong', { text: String(value) }), h('span', { text: label })])));
+  const peak = Math.max(1, ...days.map(day => (byDay[day] || {}).visits || 0));
+  fill($('#stat-days'), days.map(day => {
+    const value = (byDay[day] || {}).visits || 0;
+    return h('div', { class: 'stat-bar', title: `${day.slice(8)}. ${day.slice(5, 7)}.: ${value}` }, [
+      h('i', { style: `height:${Math.round(value / peak * 100)}%` }), h('small', { text: day.slice(8) })
+    ]);
+  }));
+  const row = (label, value, total) => h('div', { class: 'stat-row' }, [
+    h('span', { text: label }), h('b', { text: String(value) }), h('i', { style: `width:${total ? Math.round(value / total * 100) : 0}%` })
+  ]);
+  fill($('#stat-pages'), PAGE_GROUPS.map(([key, label]) => row(label, sum(key), views)));
+  const kinds = [['realizace', 'Nová realizace'], ['servis', 'Servis a opravy'], ['pravidelny', 'Pravidelný servis']];
+  fill($('#stat-kinds'), kinds.map(([key, label]) => row(label, recent.filter(inquiry => (inquiry.kind || 'realizace') === key).length, recent.length)));
+}
 
 // ---------- Zavírání dialogů ----------
 $$('dialog [data-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));

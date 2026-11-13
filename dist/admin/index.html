@@ -93,7 +93,9 @@
       <button type="button" data-tab="inquiries" aria-current="page">Poptávky <span class="badge" id="badge-new" hidden></span></button>
       <button type="button" data-tab="references">Reference</button>
       <button type="button" data-tab="categories">Kategorie</button>
+      <button type="button" data-tab="stats">Statistiky</button>
       <button type="button" data-tab="admins">Správci</button>
+      <a href="../crm/index.html">CRM</a>
       <a href="napoveda.html" target="_blank" rel="noopener">Nápověda</a>
     </nav>
     <div class="topbar-user"><span data-user-email></span><button type="button" class="btn btn-small" data-sign-out>Odhlásit</button></div>
@@ -142,6 +144,19 @@
       <div class="panel-actions"><button type="button" class="btn btn-primary" id="save-categories" disabled>Uložit změny</button><span class="saved-note" id="categories-note" role="status"></span></div>
     </section>
 
+    <!-- Statistiky -->
+    <section class="panel" id="tab-stats" hidden>
+      <div class="panel-head">
+        <div><h2>Statistiky</h2><p class="panel-note">Návštěvnost webu a poptávky za posledních 30 dní. Počítá se anonymně, bez cookies; čísla jsou orientační (nezahrnují roboty ani prohlížeče s nastavením „nesledovat“).</p></div>
+      </div>
+      <div class="stat-cards" id="stat-cards"></div>
+      <div class="stat-columns">
+        <div class="stat-box"><h3>Návštěvy po dnech</h3><div class="stat-bars" id="stat-days"></div></div>
+        <div class="stat-box"><h3>Zobrazení podle části webu</h3><div class="stat-rows" id="stat-pages"></div>
+          <h3>Poptávky podle typu</h3><div class="stat-rows" id="stat-kinds"></div></div>
+      </div>
+    </section>
+
     <!-- Správci -->
     <section class="panel" id="tab-admins" hidden>
       <div class="panel-head">
@@ -162,6 +177,7 @@
   <div class="drawer-body">
     <p class="inquiry-date" id="inquiry-date"></p>
     <dl class="detail-list" id="inquiry-fields"></dl>
+    <div class="attachments" id="inquiry-attachments" hidden><p class="attachments-title">Přílohy</p><div class="attachments-list" id="inquiry-attachment-list"></div></div>
     <div class="quick-actions" id="inquiry-actions"></div>
     <div class="field"><label for="inquiry-status">Stav</label><select id="inquiry-status"></select></div>
     <div class="field"><label for="inquiry-note">Interní poznámka <small>(zákazník ji nevidí)</small></label><textarea id="inquiry-note" rows="4" maxlength="4000"></textarea></div>
@@ -189,7 +205,8 @@
       <fieldset class="field"><legend>Kategorie <small>(lze vybrat více)</small></legend><div class="check-grid" id="ref-categories"></div></fieldset>
       <div class="field"><label for="ref-summary">Krátké shrnutí <small>(1–2 věty na kartu ve výpisu)</small></label><textarea id="ref-summary" rows="2" maxlength="240" placeholder="Co jsme udělali, stručně."></textarea></div>
       <div class="field"><label for="ref-description">Popis realizace <small>(odstavce oddělte prázdným řádkem; řádky začínající pomlčkou vytvoří odrážky)</small></label><textarea id="ref-description" rows="9" maxlength="20000"></textarea></div>
-      <fieldset class="field"><legend>Parametry <small>(nepovinné – např. Technologie, Kapacita)</small></legend><div id="ref-facts"></div><button type="button" class="btn btn-small" id="ref-add-fact">+ Přidat parametr</button></fieldset>
+      <div class="field"><label for="ref-technology">Typ technologie <small>(např. BC 4 OPTIMA, ASIO AS-ANASEP)</small></label><input id="ref-technology" maxlength="200"></div>
+      <fieldset class="field"><legend>Další parametry <small>(nepovinné – např. Kapacita, Typ objektu)</small></legend><div id="ref-facts"></div><button type="button" class="btn btn-small" id="ref-add-fact">+ Přidat parametr</button></fieldset>
 
       <fieldset class="field"><legend>Fotografie</legend>
         <label class="dropzone" id="ref-dropzone" for="ref-files"><strong>Vybrat fotografie</strong><span>z počítače nebo telefonu, případně je sem přetáhněte. Zmenší se automaticky.</span></label>

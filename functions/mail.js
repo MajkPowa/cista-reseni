@@ -10,8 +10,13 @@ const SERVICE_LABELS = {
   rekonstrukce: 'Rekonstrukce a modernizace ČOV',
   destovka: 'Dešťová voda',
   cerpani: 'Čerpací technika',
+  upravna: 'Úpravna vody',
+  komplex: 'Komplexní řešení',
+  pravidelny_servis: 'Pravidelný servis ČOV',
   poradit: 'Odborná konzultace',
 };
+const KIND_LABELS = { realizace: 'Nová realizace', servis: 'Servis a opravy', pravidelny: 'Pravidelný servis' };
+const PROGRAM_LABELS = { standard: 'STANDARD', premium: 'PREMIUM' };
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => (
   { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]
@@ -21,12 +26,18 @@ const oneLine = (value, limit = 200) => String(value ?? '').replace(/[\r\n\t]+/g
 
 function inquiryRows(inquiry) {
   const service = SERVICE_LABELS[inquiry.service] || oneLine(inquiry.serviceLabel) || 'Poptávka';
-  const rows = [['Řešení', service], ['Obec', inquiry.location]];
+  const rows = [];
+  if (KIND_LABELS[inquiry.kind]) rows.push(['Typ poptávky', KIND_LABELS[inquiry.kind]]);
+  rows.push(['Řešení', service]);
+  if (PROGRAM_LABELS[inquiry.program]) rows.push(['Servisní program', PROGRAM_LABELS[inquiry.program]]);
+  rows.push(['Obec', inquiry.location]);
   if (inquiry.manufacturer) rows.push(['Výrobce', inquiry.manufacturer]);
   if (inquiry.deviceType) rows.push(['Typ zařízení', inquiry.deviceType]);
   rows.push(['Jméno', inquiry.name], ['E-mail', inquiry.email]);
   if (inquiry.phone) rows.push(['Telefon', inquiry.phone]);
   if (inquiry.message) rows.push(['Zpráva', inquiry.message]);
+  const attachments = Array.isArray(inquiry.attachments) ? inquiry.attachments.length : 0;
+  if (attachments) rows.push(['Přílohy', `${attachments} (k otevření v administraci)`]);
   return { service, rows: rows.map(([label, value]) => [label, String(value ?? '').trim()]) };
 }
 

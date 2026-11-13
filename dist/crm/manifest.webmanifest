@@ -1,0 +1,21 @@
+{
+  "name": "Čistá řešení – CRM",
+  "short_name": "CRM",
+  "description": "Zákazníci, zařízení, zakázky, úkoly a servis firmy WHITE ELEPHANT s.r.o.",
+  "lang": "cs",
+  "dir": "ltr",
+  "id": "./index.html",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f9ff",
+  "theme_color": "#042752",
+  "icons": [
+    {
+      "src": "../assets/brand-symbol.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

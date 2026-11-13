@@ -41,7 +41,7 @@ def render_privacy(current, ctx):
          f'<p>Správcem osobních údajů je společnost {esc(company["name"])}, IČ {esc(company["ico"])}, se sídlem {esc(company["address"])} (značka Čistá řešení). '
          'Obrátit se na nás můžete e-mailem na <a href="mailto:info@cistareseni.cz">info@cistareseni.cz</a> nebo telefonicky na <a href="tel:+420736403795">+420 736 403 795</a>.</p>'),
         ('Jaké údaje a proč',
-         '<p>Když odešlete poptávkový formulář, uložíme údaje, které do něj sami vyplníte: jméno, e-mail, případně telefon, obec, vybranou službu, údaje o zařízení a text zprávy. '
+         '<p>Když odešlete poptávkový formulář, uložíme údaje, které do něj sami vyplníte: jméno, e-mail, případně telefon, obec, vybranou službu, údaje o zařízení, text zprávy a soubory, které k poptávce přiložíte (fotografie nebo dokumentace). '
          'Používáme je pouze k vyřízení vaší poptávky a k související komunikaci. Právním základem je jednání o smlouvě na vaši žádost.</p>'
          '<p>Údaje nepoužíváme k zasílání obchodních sdělení a nepředáváme je dalším osobám k jejich vlastním účelům.</p>'),
         ('Kde jsou údaje uloženy',
@@ -54,7 +54,8 @@ def render_privacy(current, ctx):
          '<p>Máte právo na přístup ke svým údajům, jejich opravu, výmaz, omezení zpracování, přenositelnost a právo vznést námitku. '
          'Stačí nám napsat na <a href="mailto:info@cistareseni.cz">info@cistareseni.cz</a>. Máte také právo podat stížnost u Úřadu pro ochranu osobních údajů (<a href="https://uoou.gov.cz/" target="_blank" rel="noopener">uoou.gov.cz</a>).</p>'),
         ('Cookies a měření návštěvnosti',
-         '<p>Web nepoužívá reklamní ani analytické cookies a nevkládá měřicí kódy třetích stran.</p>'),
+         '<p>Web nepoužívá reklamní ani analytické cookies a nevkládá měřicí kódy třetích stran. Návštěvnost počítáme jen jako anonymní denní součty zobrazení stránek, '
+         'bez ukládání čehokoli do vašeho zařízení a bez údajů, podle kterých by vás bylo možné rozpoznat. Prohlížeče s nastavením „nesledovat“ se nepočítají.</p>'),
     ]
     body = (f'<section class="container editorial-heading">{crumbs}<div class="editorial-title"><div><p class="ed-kicker">Ochrana soukromí</p>'
             '<h1>Zpracování<br><span>osobních údajů.</span></h1></div><div class="editorial-intro"><p>Stručně a srozumitelně: jaké údaje od vás získáme poptávkovým formulářem, proč je potřebujeme a jak s nimi zacházíme.</p></div></div></section>')

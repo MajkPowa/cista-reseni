@@ -31,13 +31,13 @@ DISPLAY_CATEGORY_LABELS = {
 # Short labels for filters, cards and the administration (client brief 2026-11-12).
 # Keep in sync with the default list in dist/cms-config.js.
 CATEGORY_LABELS = {
-    'cov': 'Domovní ČOV',
+    'cov': 'Domovní čistírny odpadních vod',
     'commercial': 'Firemní a průmyslové ČOV',
-    'servis': 'Servis',
-    'rekonstrukce': 'Rekonstrukce',
-    'destovka': 'Dešťová voda',
-    'upravny': 'Úpravny vody',
-    'cerpani': 'Čerpací technika',
+    'rekonstrukce': 'Rekonstrukce a intenzifikace ČOV',
+    'upravny': 'Úpravny pitné a technologické vody',
+    'destovka': 'Hospodaření s dešťovou vodou',
+    'cerpani': 'Čerpací stanice a související technologie',
+    'servis': 'Servisní zásahy',
     'ostatni': 'Další řešení',
 }
 

@@ -60,3 +60,186 @@
 
 /* ---------- Patička ---------- */
 .footer-bottom a{text-decoration:underline;text-underline-offset:2px}
+
+/* =====================================================================
+   Úvodní stránka podle zadání z 13. 11. 2026
+   ===================================================================== */
+
+/* ---------- Úvod: dvě hlavní tlačítka, 70+ realizací, video ---------- */
+.hero-actions .button-outline{border-color:var(--ink);border-width:1.5px;font-weight:700}
+.hero-actions .button-outline svg{width:20px;height:20px}
+.hero-stat{display:inline-flex;align-items:center;gap:16px;margin-top:34px;padding:14px 20px 14px 16px;border:1px solid var(--line);border-radius:16px 16px 16px 6px;background:var(--white);transition:border-color .2s,transform .2s}
+.hero-stat strong{font-family:var(--display,inherit);font-size:44px;font-weight:650;line-height:1;letter-spacing:-.04em;color:var(--green)}
+.hero-stat>span{font-size:15px;font-weight:650;line-height:1.35;color:var(--ink)}
+.hero-stat small{display:block;font-size:13px;font-weight:400;color:var(--muted)}
+.hero-stat>svg{width:20px;height:20px;color:var(--green-ink);margin-left:6px}
+.hero-stat:hover{border-color:var(--green)}
+.hero-play{position:absolute;z-index:2;top:26px;right:26px;display:flex;align-items:center;gap:12px;padding:8px 18px 8px 8px;border:0;border-radius:100px;background:rgba(4,39,82,.9);color:var(--white);text-align:left;font-size:14px;font-weight:650;line-height:1.25;box-shadow:0 10px 30px -12px rgba(4,39,82,.8);transition:transform .2s,background .2s}
+.hero-play small{display:block;font-size:12px;font-weight:400;color:#cfdef2}
+.hero-play-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--green);color:var(--ink)}
+.hero-play-icon svg{width:20px;height:20px;fill:currentColor;stroke:none;margin-left:2px}
+.hero-play:hover{transform:scale(1.03);background:var(--ink)}
+.video-dialog{width:min(1040px,calc(100% - 24px));background:#000;overflow:visible}
+.video-dialog video{display:block;width:100%;max-height:86dvh;border-radius:12px;background:#000}
+.video-dialog.is-tall{width:min(440px,calc(100% - 24px))}
+.video-dialog .dialog-close{top:-52px;right:0;background:var(--white)}
+
+/* ---------- Pro koho: pět skupin ---------- */
+.home-audience-grid--five{grid-template-columns:repeat(5,minmax(0,1fr))}
+.home-audience-grid--five>a{grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:14px 10px;padding:24px 18px 24px 0}
+.home-audience-grid--five>a+a{padding-left:18px}
+.home-audience-grid--five>a>div{grid-column:1/-1}
+.home-audience-grid--five .audience-arrow{grid-column:2;grid-row:1}
+.home-audience-grid--five h3{font-size:19px}
+.home-audience-grid--five p{font-size:13.5px;line-height:1.6;margin-top:5px;max-width:none}
+
+/* ---------- Pravidelný servis: STANDARD a PREMIUM ---------- */
+.program-intro{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:end;margin-bottom:38px}
+.program-intro .eyebrow{color:#a5e384}
+.program-intro h2{color:var(--white)}
+.program-intro>p{color:#dce8f7;font-size:15px;line-height:1.8;max-width:46ch}
+.program-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.program-card{display:flex;flex-direction:column;padding:30px 30px 28px;border:1px solid #6d92b666;border-radius:16px;background:rgba(255,255,255,.04)}
+.program-card--premium{border-color:var(--green);background:rgba(62,162,21,.12)}
+.program-name{font-family:var(--display,inherit);font-size:26px;font-weight:650;letter-spacing:.02em;color:var(--white)}
+.program-visits{display:flex;align-items:center;gap:16px;margin:18px 0 22px;padding-bottom:22px;border-bottom:1px solid #6d92b666;color:#dce8f7;font-size:14.5px;line-height:1.45}
+.program-visits strong{font-family:var(--display,inherit);font-size:66px;font-weight:600;line-height:.9;color:#a5e384}
+.program-card ul{list-style:none;margin:0 0 26px;padding:0;display:grid;gap:12px}
+.program-card li{display:flex;gap:12px;align-items:flex-start;color:var(--white);font-size:15px;line-height:1.5}
+.program-card li svg{width:18px;height:18px;margin-top:3px;color:#a5e384}
+.program-card .button{margin-top:auto;align-self:flex-start}
+.program-note{margin-top:20px;color:#bfd0e4;font-size:14px;line-height:1.7;max-width:78ch}
+.program-proof{margin-top:46px;padding-top:30px;border-top:1px solid #6d92b666}
+.program-proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+.program-proof .home-proof-card h3{color:var(--white)}
+.program-proof .text-link{color:var(--white);margin-top:10px}
+
+/* ---------- Jednorázový servis a opravy ---------- */
+.repair-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.repair-grid li>*{display:flex;flex-direction:column;gap:16px;height:100%;min-height:168px;padding:22px 20px;border:1px solid var(--line);border-radius:14px;background:var(--white)}
+.repair-grid h3{font-size:17px;line-height:1.35}
+.repair-grid .operation-icon{margin:0}
+.repair-grid a{transition:border-color .2s,transform .25s}
+.repair-grid a:hover{border-color:var(--green);transform:translateY(-3px)}
+.repair-more{display:inline-flex;align-items:center;gap:8px;margin-top:auto;font-size:13.5px;font-weight:650;color:var(--green-ink)}
+.repair-more svg{width:16px;height:16px}
+.repair-cta{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-top:30px}
+.repair-phone{display:inline-flex;align-items:center;gap:10px;min-height:48px;font-family:var(--display,inherit);font-size:24px;font-weight:600;letter-spacing:-.02em}
+.repair-phone svg{width:22px;height:22px;color:var(--green-ink)}
+
+/* ---------- Komplexní řešení ---------- */
+.complete-grid{list-style:none;margin:0 0 34px;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.complete-grid li{padding:24px 22px 28px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--white)}
+.complete-grid span{display:block;font-family:var(--display,inherit);font-size:15px;font-weight:650;color:var(--green-ink);margin-bottom:26px}
+.complete-grid h3{font-size:18px;line-height:1.35}
+
+/* ---------- Firmy, obce a průmysl ---------- */
+.home-business{background:var(--sky);padding-block:80px}
+.home-business-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.home-business-copy>p:not(.eyebrow){font-size:15px;line-height:1.8;max-width:44ch;margin-top:18px;color:#3d5673}
+.home-business-actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-top:28px}
+.home-business-lists{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:30px;border-radius:16px;background:var(--white)}
+.home-business-lists h3{font-size:17px;margin-bottom:16px}
+.home-business-lists ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.home-business-lists li{display:flex;gap:11px;align-items:flex-start;font-size:15px;line-height:1.45;color:var(--ink)}
+.home-business-lists li svg{width:17px;height:17px;margin-top:3px;color:var(--green-ink)}
+
+/* ---------- Regionální působnost ---------- */
+.regions-list{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:12px}
+.regions-list li{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:10px 22px 10px 16px;border:1px solid var(--line);border-radius:100px;background:var(--white);font-size:16px;font-weight:650}
+.regions-list svg{width:22px;height:22px}
+
+/* ---------- Tři poptávkové formuláře ---------- */
+.form-kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:5px;margin-bottom:26px;border-radius:12px;background:#e6ecf3}
+.form-kinds button{min-height:48px;padding:8px 6px;border:0;border-radius:9px;background:transparent;font-size:14px;font-weight:650;line-height:1.25;color:var(--muted);transition:background .2s,color .2s}
+.form-kinds button[aria-selected=true]{background:var(--white);color:var(--ink);box-shadow:0 2px 8px -3px rgba(4,39,82,.35)}
+.form-kinds button:focus-visible{outline:3px solid var(--green-ink);outline-offset:2px}
+.choices input:checked+span{border-color:var(--green);background:var(--sky);box-shadow:inset 0 0 0 1px var(--green)}
+.program-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.program-choices label{position:relative}
+.program-choices input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.program-choices label>span{display:grid;gap:6px;min-height:92px;padding:16px;border:1px solid #d0d8e2;border-radius:9px;cursor:pointer}
+.program-choices strong{font-family:var(--display,inherit);font-size:19px;letter-spacing:.02em}
+.program-choices small{font-size:13px;line-height:1.4;color:var(--muted)}
+.program-choices input:checked+span{border-color:var(--green);background:var(--sky);box-shadow:inset 0 0 0 1px var(--green)}
+.program-choices input:focus-visible+span{outline:3px solid var(--green-ink);outline-offset:2px}
+.attach{margin-top:4px}
+.attach p.field-label{color:var(--ink)}
+.attach-input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.attach-button{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:10px 18px;border:1.5px dashed #9fb9d8;border-radius:10px;background:var(--white);font-size:14.5px;font-weight:650;cursor:pointer;transition:border-color .2s,background .2s}
+.attach-button svg{width:18px;height:18px;color:var(--green-ink);transform:rotate(-45deg)}
+.attach-button:hover,.attach-input:focus-visible+.attach-button{border-color:var(--green);background:var(--sky)}
+.attach-hint{font-size:12.5px;line-height:1.6;margin-top:8px}
+.attach-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+.attach-list li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 8px 8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--white);font-size:13.5px}
+.attach-list li span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.attach-list li small{color:var(--muted);flex-shrink:0}
+.attach-list button{flex-shrink:0;width:36px;height:36px;border:0;border-radius:8px;background:transparent;font-size:20px;line-height:1;color:var(--muted)}
+.attach-list button:hover{background:#fdecea;color:#b3261e}
+.attach-error{color:#8f1d17;font-size:13px;margin-top:8px}
+
+@media (max-width:1100px){
+  .home-audience-grid--five{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .home-audience-grid--five>a:nth-child(4){padding-left:0;border-left:0;border-top:1px solid var(--line)}
+  .home-audience-grid--five>a:nth-child(5){border-top:1px solid var(--line)}
+  .repair-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .complete-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .home-business-grid{grid-template-columns:1fr;gap:36px}
+  .program-intro{grid-template-columns:1fr;gap:18px}
+}
+@media (max-width:780px){
+  .hero-actions{flex-direction:column!important;align-items:stretch!important;gap:10px!important}
+  .hero-actions .button{width:100%;justify-content:space-between}
+  .hero-stat{display:flex;margin-top:22px}
+  .hero-stat strong{font-size:40px}
+  .hero-stat>svg{margin-left:auto}
+  .hero-play{top:16px;right:16px;padding:6px 16px 6px 6px}
+  .hero-play-icon{width:40px;height:40px}
+  .assurance{display:grid!important;grid-template-columns:1fr 1fr;gap:12px 14px!important}
+  .home-audience-grid--five{grid-template-columns:1fr}
+  .home-audience-grid--five>a,.home-audience-grid--five>a+a{grid-template-columns:52px minmax(0,1fr) 20px;grid-template-rows:auto;padding:16px 0;border-left:0;border-top:0}
+  .home-audience-grid--five>a+a,.home-audience-grid--five>a:nth-child(4),.home-audience-grid--five>a:nth-child(5){border-top:1px solid var(--line);padding-left:0}
+  .home-audience-grid--five>a>div{grid-column:2}
+  .home-audience-grid--five .audience-arrow{grid-column:3;grid-row:1}
+  .home-audience-grid--five p{font-size:14.5px!important;line-height:1.5!important}
+  .home-service-section{padding-block:56px}
+  .program-grid{grid-template-columns:1fr;gap:14px}
+  .program-card{padding:24px 20px}
+  .program-card .button{align-self:stretch}
+  .program-visits strong{font-size:56px}
+  .program-proof-grid{grid-template-columns:1fr}
+  .repair-grid{grid-template-columns:1fr;gap:10px}
+  .repair-grid li>*{flex-direction:row;align-items:center;min-height:76px;padding:12px 14px;gap:14px}
+  .repair-grid h3{font-size:16px;flex:1}
+  .repair-more{margin:0;font-size:0;gap:0}
+  .repair-more svg{width:20px;height:20px}
+  .repair-cta{flex-direction:column;align-items:stretch;gap:12px}
+  .repair-cta .button{justify-content:space-between}
+  .repair-phone{justify-content:center}
+  .complete-grid{grid-template-columns:1fr}
+  .complete-grid li{display:flex;align-items:baseline;gap:16px;padding:16px 16px}
+  .complete-grid span{margin:0}
+  .complete-grid h3{font-size:16.5px}
+  .home-complete>.button{width:100%;justify-content:space-between}
+  .home-business{padding-block:56px}
+  .home-business-lists{grid-template-columns:1fr;padding:22px 20px}
+  .home-business-actions{flex-direction:column;align-items:stretch;gap:8px}
+  .home-business-actions .button{justify-content:space-between}
+  .regions-list{display:grid;gap:8px}
+  .regions-list li{border-radius:14px}
+  .form-kinds button{font-size:13.5px}
+  .program-choices{grid-template-columns:1fr}
+  .program-choices label>span{min-height:76px}
+  .attach-button{width:100%;justify-content:center}
+}
+
+/* ---------- Servisní programy na stránce servisu, regiony na kontaktu ---------- */
+.ext-programs{background:var(--ink);color:#fff;padding-block:75px}
+.ext-programs .program-intro h2{color:#fff;font-size:clamp(34px,4vw,54px)}
+.contact-regions{padding-block:10px 60px}
+.contact-regions .regions-list li{padding-inline:22px}
+@media (max-width:780px){.ext-programs{padding-block:52px}}
+.program-card .program-name{color:#fff}
+.program-card .program-visits{color:#dce8f7}
+.ext-programs .program-intro>p{color:#dce8f7}
+.ext-programs .program-note{color:#bfd0e4}
