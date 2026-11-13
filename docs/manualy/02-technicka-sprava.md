@@ -216,3 +216,8 @@ Zatím nastavené není.
 - Aplikace je v `dist/crm/` (`index.html`, `crm.css`, `crm.js`, `manifest.webmanifest`), adresa `/crm/`. Stejné přihlášení a stejný seznam uživatelů jako administrace (`admins/`).
 - Kolekce: `customers`, `devices`, `jobs`, `tasks`, `activities`; čte také `inquiries` (převod poptávky na zákazníka a zakázku) a `admins`. Pravidla: plný přístup jen pro správce.
 - Uživatele přidáte v administraci (Správci) nebo skriptem; e-maily nikdy neukládejte do repozitáře.
+
+### Ukázkový režim CRM
+- Záznam `admins/<e-mail>` s `role: "demo"` dává přístup jen do CRM nad kolekcemi `demoCustomers`, `demoDevices`, `demoJobs`, `demoTasks`, `demoActivities` a `demoInquiries`. Pravidla (`isAdmin` vyžaduje jinou roli než `demo`) mu ostrá data, seznam uživatelů, statistiky i Storage uzavírají.
+- Ukázkový účet nepotvrzuje e-mail, takže jeho heslo chrání jen smyšlená data. Nikdy tuto roli nedávejte účtu, který má vidět skutečné zákazníky.
+- Smyšlená data naplní nebo obnoví `python scripts/seed_demo.py` (smaže stávající ukázková data a zapíše výchozí); `--demo-user <e-mail>` rovnou přidá ukázkového uživatele. Totéž jde v administraci v záložce Správci.

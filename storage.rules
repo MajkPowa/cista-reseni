@@ -8,7 +8,8 @@ service firebase.storage {
       return request.auth != null
         && request.auth.token.email != null
         && request.auth.token.email_verified == true
-        && firestore.exists(/databases/(default)/documents/admins/$(request.auth.token.email));
+        && firestore.exists(/databases/(default)/documents/admins/$(request.auth.token.email))
+        && firestore.get(/databases/(default)/documents/admins/$(request.auth.token.email)).data.get('role', 'admin') != 'demo';
     }
 
     // Přílohy poptávek: návštěvník smí soubor jen jednou nahrát (obrázek nebo PDF do 10 MB),

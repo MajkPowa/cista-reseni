@@ -223,7 +223,8 @@ $('#form-setup').addEventListener('submit', event => {
   busy($('button[type="submit"]', form), async () => {
     try {
       const credential = await createUserWithEmailAndPassword(auth, $('#setup-email').value.trim(), $('#setup-password').value);
-      await sendEmailVerification(credential.user).catch(() => {});
+      // Ukázkový účet potvrzovat e-mail nemusí (vidí jen smyšlená data).
+      if (await roleOf(credential.user) !== 'demo') await sendEmailVerification(credential.user).catch(() => {});
     } catch (error) { formMessage(form, explain(error)); }
   });
 });
@@ -265,17 +266,31 @@ onAuthStateChanged(auth, async user => {
   resetData();
   if (!user) { show('auth'); authMode('login'); return; }
   $$('[data-user-email]').forEach(node => { node.textContent = user.email; });
-  if (!user.emailVerified) { show('verify'); return; }
+  if (!user.emailVerified && await roleOf(user) !== 'demo') { show('verify'); return; }
   await enter(user);
 });
 
-// Přístup má ten, kdo má ověřený e-mail a záznam v admins/{e-mail}.
-async function enter(user) {
-  show('loading');
+// Role uživatele ze seznamu admins/{e-mail}: 'admin', 'demo', nebo null, když na seznamu není.
+async function roleOf(user) {
   try {
     const snapshot = await getDoc(doc(db, 'admins', user.email));
-    if (!snapshot.exists()) return show('denied');
-  } catch { return show('denied'); }
+    return snapshot.exists() ? (snapshot.data().role || 'admin') : null;
+  } catch { return null; }
+}
+// Ukázkový režim: stejná aplikace nad oddělenými kolekcemi se smyšlenými daty.
+let demo = false;
+const DEMO_COLLECTIONS = { customers: 'demoCustomers', devices: 'demoDevices', jobs: 'demoJobs', tasks: 'demoTasks', activities: 'demoActivities', inquiries: 'demoInquiries' };
+const pathOf = name => (demo && DEMO_COLLECTIONS[name]) || name;
+
+// Přístup má ten, kdo má záznam v admins/{e-mail}; běžný uživatel navíc ověřený e-mail.
+async function enter(user) {
+  show('loading');
+  const role = await roleOf(user);
+  if (!role) return show('denied');
+  demo = role === 'demo';
+  document.body.classList.toggle('is-demo', demo);
+  if (demo && !$('.demo-banner')) document.body.append(h('div', { class: 'demo-banner', role: 'note', text: 'Ukázkový režim – data jsou smyšlená' }));
+  $('.demo-banner')?.toggleAttribute('hidden', !demo);
   show('main');
   startListening();
   route();
@@ -335,14 +350,16 @@ function startListening() {
   loaded.clear();
   let warned = false;
   const sources = {
-    customers: collection(db, 'customers'),
-    devices: collection(db, 'devices'),
-    jobs: collection(db, 'jobs'),
-    tasks: collection(db, 'tasks'),
-    activities: collection(db, 'activities'),
-    inquiries: query(collection(db, 'inquiries'), orderBy('createdAt', 'desc'), limit(500)),
+    customers: collection(db, pathOf('customers')),
+    devices: collection(db, pathOf('devices')),
+    jobs: collection(db, pathOf('jobs')),
+    tasks: collection(db, pathOf('tasks')),
+    activities: collection(db, pathOf('activities')),
+    inquiries: query(collection(db, pathOf('inquiries')), orderBy('createdAt', 'desc'), limit(500)),
     admins: collection(db, 'admins')
   };
+  // Ukázkový účet seznam uživatelů číst nesmí; uvidí jen sám sebe.
+  if (demo) { delete sources.admins; state.admins = [{ id: me(), role: 'demo' }]; loaded.add('admins'); }
   for (const [name, source] of Object.entries(sources)) {
     unsubscribers.push(onSnapshot(source, snapshot => {
       state[name] = snapshot.docs.map(item => ({ id: item.id, ...item.data({ serverTimestamps: 'estimate' }) }));
@@ -378,8 +395,8 @@ window.addEventListener('online', () => toast('Připojení je zpět.'));
 // =====================================================================
 // ZÁPISY DO DATABÁZE
 // =====================================================================
-const refOf = (name, id) => doc(db, name, id);
-const newId = name => doc(collection(db, name)).id;
+const refOf = (name, id) => doc(db, pathOf(name), id);
+const newId = name => doc(collection(db, pathOf(name))).id;
 const stamp = () => ({ updatedAt: serverTimestamp(), updatedBy: me() });
 const created = () => ({ createdAt: serverTimestamp(), ...stamp() });
 const activityData = (customerId, kind, text, jobId = '') => ({ customerId, jobId, kind, text, at: serverTimestamp(), by: me() });

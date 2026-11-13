@@ -173,7 +173,12 @@ onAuthStateChanged(auth, async user => {
   stopListening();
   if (!user) { show('auth'); authMode('login'); return; }
   $$('[data-user-email]').forEach(node => { node.textContent = user.email; });
-  if (!user.emailVerified) { show('verify'); return; }
+  if (!user.emailVerified) {
+    // Ukázkový účet (jen CRM) e-mail nepotvrzuje; do správy webu přístup nemá.
+    const own = await getDoc(doc(db, 'admins', user.email)).catch(() => null);
+    show(own?.exists() && own.data().role === 'demo' ? 'denied' : 'verify');
+    return;
+  }
   await enter(user);
 });
 
@@ -181,7 +186,8 @@ async function enter(user) {
   show('loading');
   try {
     const snapshot = await getDoc(doc(db, 'admins', user.email));
-    if (!snapshot.exists()) return show('denied');
+    // Ukázkový účet patří jen do CRM; správu webu nevidí.
+    if (!snapshot.exists() || snapshot.data().role === 'demo') return show('denied');
   } catch { return show('denied'); }
   show('main');
   startListening();
@@ -715,7 +721,8 @@ $('#save-categories').addEventListener('click', async event => {
 function renderAdmins() {
   const me = auth.currentUser?.email;
   $('#admin-list').replaceChildren(...state.admins.map(admin => h('div', { class: 'row row-admin' }, [
-    h('span', { class: 'row-main' }, [h('strong', { text: admin.id }), admin.id === me ? h('span', { class: 'row-sub', text: 'to jste vy' }) : null]),
+    h('span', { class: 'row-main' }, [h('strong', { text: admin.id }), admin.id === me ? h('span', { class: 'row-sub', text: 'to jste vy' }) : null,
+      admin.role === 'demo' ? h('span', { class: 'row-sub', text: 'ukázkový přístup – jen CRM se smyšlenými daty' }) : null]),
     h('span', { class: 'row-actions' }, admin.id === me ? null : h('button', {
       type: 'button', class: 'btn btn-small btn-danger-ghost', text: 'Odebrat přístup', onclick: async () => {
         if (!await confirmDialog('Odebrat přístup?', `${admin.id} se už do administrace nepřihlásí.`, 'Odebrat')) return;
@@ -732,9 +739,10 @@ $('#form-admin').addEventListener('submit', event => {
   const email = input.value.trim().toLowerCase();
   busy($('button', form), async () => {
     try {
-      await setDoc(doc(db, 'admins', email), { email, addedAt: serverTimestamp(), addedBy: auth.currentUser.email });
-      input.value = '';
-      toast(`Přístup přidán. ${email} si nastaví heslo přes „První přihlášení“.`);
+      const role = $('#admin-demo').checked ? 'demo' : 'admin';
+      await setDoc(doc(db, 'admins', email), { email, role, addedAt: serverTimestamp(), addedBy: auth.currentUser.email });
+      input.value = ''; $('#admin-demo').checked = false;
+      toast(role === 'demo' ? `Ukázkový přístup přidán. ${email} si nastaví heslo v CRM přes „První přihlášení“.` : `Přístup přidán. ${email} si nastaví heslo přes „První přihlášení“.`);
     } catch (error) { toast(explain(error), 'error'); }
   });
 });

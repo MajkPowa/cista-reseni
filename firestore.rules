@@ -9,10 +9,19 @@ service cloud.firestore {
     function signedIn() {
       return request.auth != null && request.auth.token.email != null;
     }
+    function userRole() {
+      return get(/databases/$(database)/documents/admins/$(request.auth.token.email)).data.get('role', 'admin');
+    }
+    function listed() {
+      return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+    // Správce: ověřený e-mail na seznamu a jiná role než „demo“.
     function isAdmin() {
-      return signedIn()
-        && request.auth.token.email_verified == true
-        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+      return listed() && request.auth.token.email_verified == true && userRole() != 'demo';
+    }
+    // Ukázkový účet: vidí jen smyšlená data v kolekcích demo*, k ostrým datům nemá přístup.
+    function isDemoUser() {
+      return listed() && userRole() == 'demo';
     }
 
     // ---------- Reference ----------
@@ -108,6 +117,12 @@ service cloud.firestore {
       allow read, delete: if isAdmin();
       allow create, update: if isAdmin() && request.resource.data.customerId is string
         && request.resource.data.text is string && request.resource.data.text.size() > 0;
+    }
+
+    // ---------- Ukázkový režim CRM: oddělená smyšlená data ----------
+    match /{demoCollection}/{id} {
+      allow read, write: if demoCollection in ['demoCustomers', 'demoDevices', 'demoJobs', 'demoTasks', 'demoActivities', 'demoInquiries']
+        && (isAdmin() || isDemoUser());
     }
 
     // ---------- Návštěvnost: anonymní denní počitadla bez cookies ----------

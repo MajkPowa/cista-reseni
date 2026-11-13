@@ -233,3 +233,6 @@ dialog::backdrop{background:rgba(4,39,82,.45)}
   .drawer-foot{flex-wrap:wrap}
   .inline-form{flex-direction:column;align-items:stretch}
 }
+
+.check-inline{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;font-weight:500;color:var(--muted)}
+.check-inline input{width:18px;height:18px;accent-color:var(--blue)}
