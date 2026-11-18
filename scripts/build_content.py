@@ -286,3 +286,9 @@ if '--skip-home' not in sys.argv:
     if INDEXABLE: home_soup.head.append(home_soup.new_tag('link',rel='canonical',href=SITE_URL))
     homepage_document=stamp_assets(iconize(str(home_soup)),'index.html')
     homepage.write_text('\n'.join(line.rstrip() for line in homepage_document.splitlines())+'\n',encoding='utf-8',newline='\n')
+
+# Language versions (dist/en, dist/hu) and the language switcher on every page: scripts/i18n.py.
+# --draft keeps Czech text where a translation is missing instead of failing.
+if '--skip-i18n' not in sys.argv:
+    import i18n
+    raise SystemExit(i18n.main(['i18n','build']+(['--draft'] if '--draft' in sys.argv else [])))

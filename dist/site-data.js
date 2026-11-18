@@ -13,6 +13,15 @@
   if (!config) return;
   const script = document.currentScript;
   const siteRoot = new URL('.', script.src).href;
+  // Jazykové verze (en/, hu/) mají vlastní stránky a skripty, obrázky sdílejí s českým webem o úroveň výš.
+  const lang = config.lang || 'cs';
+  const assetRoot = lang === 'cs' ? siteRoot : new URL('..', siteRoot).href;
+  const strings = config.strings || {};
+  // Text z databáze v jazyce stránky: překlad zadaný u reference, jinak slovník původních referencí, jinak česky.
+  const tr = value => (value && strings[value]) || value;
+  const loc = (ref, field) => (lang !== 'cs' && ref.i18n && ref.i18n[lang] && ref.i18n[lang][field]) || tr(ref[field]);
+  const translated = ref => lang === 'cs' || !!(ref.i18n && ref.i18n[lang] && ref.i18n[lang].title);
+  const plural = (count, forms) => forms.split('|')[count === 1 ? 0 : count < 5 ? 1 : 2];
   const local = ['localhost', '127.0.0.1'].includes(location.hostname);
   let emulator = false;
   try { emulator = local && localStorage.getItem('crEmulator') === '1'; } catch { /* soukromý režim */ }
@@ -54,7 +63,7 @@
 
   // ---------- Čtení ----------
   const LIST_FIELDS = ['title', 'location', 'date', 'sortDate', 'categories', 'summary', 'headline', 'cover',
-    'coverNote', 'featured', 'published', 'legacyUrl', 'dynamic', 'facts', 'createdAt'];
+    'coverNote', 'featured', 'published', 'legacyUrl', 'dynamic', 'facts', 'createdAt', 'i18n'];
 
   async function listReferences({ withDescription = false, withPhotos = false } = {}) {
     const fields = [...LIST_FIELDS, ...(withDescription ? ['description'] : []), ...(withPhotos ? ['photos'] : [])];
@@ -190,12 +199,16 @@
     return String(b.createdAt || '').localeCompare(String(a.createdAt || ''));
   }
   const dateLabel = date => /^\d{4}-\d{2}$/.test(date || '') ? `${date.slice(5)} / ${date.slice(0, 4)}` : '';
-  const assetUrl = url => url ? new URL(url, siteRoot).href : '';
-  const detailUrl = ref => (ref.legacyUrl && !ref.dynamic)
+  const assetUrl = url => url ? new URL(url, assetRoot).href : '';
+  // Původní reference mají v jazykových verzích přeloženou statickou stránku; dynamický detail jen s vlastním překladem.
+  const detailUrl = ref => (ref.legacyUrl && !(ref.dynamic && translated(ref)))
     ? new URL(ref.legacyUrl, siteRoot).href
     : `${siteRoot}realizace/detail.html?id=${encodeURIComponent(ref.id)}`;
-  const labelsOf = settings => Object.fromEntries(settings.categories.map(item => [item.key, item.label]));
-  const metaLine = ref => [ref.location, dateLabel(ref.date), ref.coverNote].filter(Boolean).join(' · ');
+  // Názvy kategorií upravené v administraci platí pro češtinu; jazykové verze berou přeložené výchozí názvy.
+  const defaultLabels = Object.fromEntries(config.categories.map(item => [item.key, item.label]));
+  const categoryLabel = item => lang === 'cs' ? item.label : (defaultLabels[item.key] || item.label);
+  const labelsOf = settings => Object.fromEntries(settings.categories.map(item => [item.key, categoryLabel(item)]));
+  const metaLine = ref => [loc(ref, 'location'), dateLabel(ref.date), tr(ref.coverNote)].filter(Boolean).join(' · ');
 
   function element(tag, attributes = {}, children = []) {
     const node = document.createElement(tag);
@@ -239,19 +252,19 @@
     const labels = labelsOf(settings);
     grid.replaceChildren(...featured.map(ref => {
       const category = (ref.categories || [])[0] || 'ostatni';
-      const title = ref.headline || ref.title;
+      const title = loc(ref, 'headline') || loc(ref, 'title');
       return element('a', { class: 'project', href: detailUrl(ref), 'data-category': category }, [
         element('div', { class: 'project-image' }, [
-          picture(ref.cover, ref.title),
+          picture(ref.cover, loc(ref, 'title')),
           element('span', { class: 'image-tag', text: (labels[category] || 'Realizace').toUpperCase() }),
           element('span', { class: 'project-arrow' }, spriteIcon('up-right'))
         ]),
         element('div', { class: 'project-meta' }, [
-          element('span', { text: ref.location || labels[category] || 'Realizace' }),
+          element('span', { text: loc(ref, 'location') || labels[category] || 'Realizace' }),
           element('span', { text: dateLabel(ref.date) })
         ]),
         element('h3', { text: title }),
-        element('p', { text: ref.summary || '' })
+        element('p', { text: loc(ref, 'summary') || '' })
       ]);
     }));
     // Filtr nabízí jen kategorie, které mezi vybranými referencemi opravdu jsou.
@@ -260,7 +273,7 @@
       const used = settings.categories.filter(item => featured.some(ref => ((ref.categories || [])[0] || 'ostatni') === item.key));
       filters.replaceChildren(
         element('button', { class: 'active', 'data-filter': 'all', 'aria-pressed': 'true', type: 'button', text: 'Všechny realizace' }),
-        ...(used.length > 1 ? used.map(item => element('button', { 'data-filter': item.key, 'aria-pressed': 'false', type: 'button', text: item.label })) : [])
+        ...(used.length > 1 ? used.map(item => element('button', { 'data-filter': item.key, 'aria-pressed': 'false', type: 'button', text: categoryLabel(item) })) : [])
       );
     }
     announce('cr:home-projects-rendered');
@@ -269,20 +282,21 @@
   // ---------- Stránka Realizace: celý výpis ----------
   function referenceCard(ref, labels) {
     const categories = (ref.categories || []).length ? ref.categories : ['ostatni'];
-    const facts = (ref.facts || []).filter(fact => fact && fact.label && fact.value).slice(0, 3);
+    const facts = (ref.facts || []).filter(fact => fact && fact.label && fact.value).slice(0, 3)
+      .map(fact => ({ label: tr(fact.label), value: tr(fact.value) }));
     return element('a', {
       class: 'content-card project-card', href: detailUrl(ref), 'data-reference-card': true,
       'data-categories': categories.join(' '),
-      'data-search': [ref.title, ref.location, ref.summary, ref.description, facts.map(fact => fact.value).join(' ')].filter(Boolean).join(' ')
+      'data-search': [loc(ref, 'title'), loc(ref, 'location'), loc(ref, 'summary'), loc(ref, 'description'), facts.map(fact => fact.value).join(' ')].filter(Boolean).join(' ')
     }, [
       element('div', { class: 'card-picture' }, [
-        picture(ref.cover, ref.title),
+        picture(ref.cover, loc(ref, 'title')),
         element('span', { text: labels[categories[0]] || 'Realizace' }),
         element('b', { class: 'card-round-arrow', 'aria-hidden': 'true' }, arrowIcon())
       ]),
       element('div', { class: 'card-meta', text: metaLine(ref) || 'Realizace' }),
-      element('h2', { text: ref.title }),
-      element('p', { text: ref.summary || '' }),
+      element('h2', { text: loc(ref, 'title') }),
+      element('p', { text: loc(ref, 'summary') || '' }),
       element('dl', { class: 'project-card-facts' }, facts.map(fact => element('div', {}, [
         element('dt', { text: fact.label }), element('dd', { text: fact.value })
       ]))),
@@ -300,7 +314,7 @@
       const used = settings.categories.filter(item => references.some(ref => (ref.categories || []).includes(item.key)));
       filters.replaceChildren(
         element('button', { 'data-content-filter': 'all', 'aria-pressed': 'true', type: 'button', text: 'Všechny projekty' }),
-        ...used.map(item => element('button', { 'data-content-filter': item.key, 'aria-pressed': 'false', type: 'button', text: item.label }))
+        ...used.map(item => element('button', { 'data-content-filter': item.key, 'aria-pressed': 'false', type: 'button', text: categoryLabel(item) }))
       );
     }
     const count = document.querySelector('.ed-count b');
@@ -315,10 +329,10 @@
     const href = detailUrl(ref);
     block.querySelectorAll('a').forEach(link => { link.href = href; });
     const image = block.querySelector('.featured-image img');
-    image.src = assetUrl(ref.cover.url || ref.cover.thumb); image.alt = ref.title;
+    image.src = assetUrl(ref.cover.url || ref.cover.thumb); image.alt = loc(ref, 'title');
     block.querySelector('.ed-kicker').textContent = metaLine(ref) || 'Z našich projektů';
-    block.querySelector('h2').textContent = ref.headline || ref.title;
-    block.querySelector('.featured-copy > p:not(.ed-kicker)').textContent = ref.summary || '';
+    block.querySelector('h2').textContent = loc(ref, 'headline') || loc(ref, 'title');
+    block.querySelector('.featured-copy > p:not(.ed-kicker)').textContent = loc(ref, 'summary') || '';
   }
 
   // ---------- Galerie: skrytí smazaných a doplnění nových fotografií ----------
@@ -344,7 +358,7 @@
       const photos = (ref.photos || []).filter(photo => photo && photo.url && !existing.has(assetUrl(photo.url)));
       if (!photos.length) continue;
       photos.forEach((photo, index) => {
-        const caption = `${ref.title} — fotografie ${index + 1}`;
+        const caption = `${loc(ref, 'title')} — fotografie ${index + 1}`;
         additions.push(element('a', { class: 'media-item', href: assetUrl(photo.url), 'data-lightbox': true, 'data-caption': caption, 'data-gallery-project': key }, [
           element('figure', {}, [
             picture(photo, caption, [1200, 900]),
@@ -354,7 +368,7 @@
         ]));
       });
       if (select && ![...select.options].some(option => option.value === key)) {
-        select.insertBefore(element('option', { value: key, text: ref.title }), select.options[1] || null);
+        select.insertBefore(element('option', { value: key, text: loc(ref, 'title') }), select.options[1] || null);
       }
     }
     grid.prepend(...additions);
@@ -378,23 +392,24 @@
     const categories = (ref.categories || []).map(key => labels[key]).filter(Boolean);
     const photos = (ref.photos || []).filter(photo => photo && photo.url);
     const cover = ref.cover && (ref.cover.url || ref.cover.thumb) ? ref.cover : photos[0];
-    const paragraphs = String(ref.description || '').split(/\n\s*\n/).map(part => part.trim()).filter(Boolean);
-    const lead = ref.summary || (paragraphs[0] || '').slice(0, 220);
+    const title = loc(ref, 'title');
+    const paragraphs = String(loc(ref, 'description') || '').split(/\n\s*\n/).map(part => part.trim()).filter(Boolean);
+    const lead = loc(ref, 'summary') || (paragraphs[0] || '').slice(0, 220);
     const set = (selector, value) => { const node = rootNode.querySelector(selector); if (node) node.textContent = value; return node; };
 
-    document.title = `${ref.title} | Čistá řešení`;
+    document.title = `${title} | Čistá řešení`;
     document.querySelector('meta[name="description"]')?.setAttribute('content', lead);
-    set('[data-detail-title]', ref.title);
-    set('[data-detail-crumb]', ref.title);
+    set('[data-detail-title]', title);
+    set('[data-detail-crumb]', title);
     set('[data-detail-lead]', lead);
     rootNode.querySelector('[data-detail-tags]').replaceChildren(
-      ...[...categories, dateLabel(ref.date), ref.location].filter(Boolean).map(value => element('span', { text: value }))
+      ...[...categories, dateLabel(ref.date), loc(ref, 'location')].filter(Boolean).map(value => element('span', { text: value }))
     );
 
     const visual = rootNode.querySelector('[data-detail-visual]');
     if (cover) {
       visual.replaceChildren(
-        element('img', { src: assetUrl(cover.url || cover.thumb), alt: `Fotografie z realizace: ${ref.title}`, width: cover.w || 1200, height: cover.h || 900, fetchpriority: 'high', decoding: 'async' }),
+        element('img', { src: assetUrl(cover.url || cover.thumb), alt: `Fotografie z realizace: ${title}`, width: cover.w || 1200, height: cover.h || 900, fetchpriority: 'high', decoding: 'async' }),
         element('figcaption', { text: 'Fotografie z realizace' })
       );
     } else {
@@ -403,9 +418,9 @@
 
     const facts = [];
     if (categories.length) facts.push(['Oblast řešení', categories.join(' / ')]);
-    if (ref.location) facts.push(['Místo', ref.location]);
+    if (ref.location) facts.push(['Místo', loc(ref, 'location')]);
     if (dateLabel(ref.date)) facts.push(['Období realizace', dateLabel(ref.date)]);
-    (ref.facts || []).forEach(fact => { if (fact && fact.label && fact.value) facts.push([fact.label, fact.value]); });
+    (ref.facts || []).forEach(fact => { if (fact && fact.label && fact.value) facts.push([tr(fact.label), tr(fact.value)]); });
     rootNode.querySelector('[data-detail-facts]').replaceChildren(...facts.map(([label, value]) => element('div', {}, [
       element('dt', { text: label }), element('dd', { text: value })
     ])));
@@ -425,9 +440,9 @@
     const gallerySection = rootNode.querySelector('[data-detail-gallery-section]');
     gallerySection.hidden = !photos.length;
     if (photos.length) {
-      set('[data-detail-gallery-count]', `${photos.length} ${photos.length === 1 ? 'snímek' : photos.length < 5 ? 'snímky' : 'snímků'}`);
+      set('[data-detail-gallery-count]', `${photos.length} ${plural(photos.length, 'snímek|snímky|snímků')}`);
       gallery.replaceChildren(...photos.map((photo, index) => {
-        const caption = photo.alt || `${ref.title} — fotografie ${index + 1}`;
+        const caption = photo.alt || `${title} — fotografie ${index + 1}`;
         return element('a', { class: 'media-item', href: assetUrl(photo.url), 'data-lightbox': true, 'data-caption': caption }, [
           element('figure', {}, [
             picture(photo, caption, [1200, 900]),
@@ -451,7 +466,7 @@
   async function guardLegacyDetail(id) {
     try {
       const ref = await getReference(id);
-      if (ref.published && ref.dynamic) location.replace(`${siteRoot}realizace/detail.html?id=${encodeURIComponent(id)}`);
+      if (ref.published && ref.dynamic && translated(ref)) location.replace(`${siteRoot}realizace/detail.html?id=${encodeURIComponent(id)}`);
     } catch (error) {
       // 403/404 = reference byla skryta nebo smazána. Než návštěvníka přesměrujeme, ověříme,
       // že databáze jinak odpovídá — výpadek ani chyba konfigurace nesmí stránku schovat.

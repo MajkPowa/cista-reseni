@@ -265,6 +265,8 @@ inquiryServiceSelect.addEventListener('change', renderInquiries);
 $('#inquiry-search').addEventListener('input', renderInquiries);
 const serviceLabel = inquiry => config.services[inquiry.service] || inquiry.serviceLabel || 'Poptávka';
 const kindLabel = inquiry => (config.inquiryKinds || {})[inquiry.kind] || '';
+// Poptávka z anglické nebo maďarské verze webu: jazyk se pozná z adresy stránky, ze které přišla.
+const languageLabel = inquiry => ({ en: 'angličtina', hu: 'maďarština' })[(/\/(en|hu)\//.exec(inquiry.page || '') || [])[1]] || '';
 const programLabel = inquiry => (config.programs || {})[inquiry.program] || '';
 
 function renderInquiries() {
@@ -296,7 +298,7 @@ function renderInquiries() {
     h('span', { class: `status-pill status-${inquiry.status}`, text: statusLabel[inquiry.status] || inquiry.status }),
     h('span', { class: 'row-main' }, [
       h('strong', { text: inquiry.name || 'Bez jména' }),
-      h('span', { class: 'row-sub', text: [serviceLabel(inquiry), programLabel(inquiry), inquiry.location, (inquiry.attachments || []).length ? `příloh: ${inquiry.attachments.length}` : ''].filter(Boolean).join(' · ') })
+      h('span', { class: 'row-sub', text: [serviceLabel(inquiry), programLabel(inquiry), inquiry.location, languageLabel(inquiry), (inquiry.attachments || []).length ? `příloh: ${inquiry.attachments.length}` : ''].filter(Boolean).join(' · ') })
     ]),
     h('span', { class: 'row-text', text: inquiry.message || '' }),
     h('span', { class: 'row-date', text: formatDate(inquiry.createdAt) })
@@ -312,7 +314,7 @@ function openInquiry(id) {
   activeInquiry = inquiry;
   $('#inquiry-title').textContent = inquiry.name || 'Poptávka';
   $('#inquiry-date').textContent = `Přijato ${formatDate(inquiry.createdAt)}`;
-  const fields = [['Typ poptávky', kindLabel(inquiry)], ['Služba', serviceLabel(inquiry)], ['Servisní program', programLabel(inquiry)], ['Obec', inquiry.location], ['Výrobce', inquiry.manufacturer], ['Typ zařízení', inquiry.deviceType],
+  const fields = [['Jazyk webu', languageLabel(inquiry)], ['Typ poptávky', kindLabel(inquiry)], ['Služba', serviceLabel(inquiry)], ['Servisní program', programLabel(inquiry)], ['Obec', inquiry.location], ['Výrobce', inquiry.manufacturer], ['Typ zařízení', inquiry.deviceType],
     ['E-mail', inquiry.email], ['Telefon', inquiry.phone], ['Zpráva', inquiry.message]].filter(([, value]) => value);
   $('#inquiry-fields').replaceChildren(...fields.flatMap(([label, value]) => [h('dt', { text: label }), h('dd', { text: value })]));
   // Přílohy jsou neveřejné; odkaz ke stažení vznikne až po kliknutí přihlášeného správce.

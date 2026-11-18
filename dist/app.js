@@ -141,7 +141,7 @@ function renderFiles(error = '') {
     const name = document.createElement('span'); name.textContent = file.name;
     const size = document.createElement('small'); size.textContent = sizeLabel(file.size);
     const remove = document.createElement('button');
-    remove.type = 'button'; remove.textContent = '×'; remove.setAttribute('aria-label', 'Odebrat soubor ' + file.name);
+    remove.type = 'button'; remove.textContent = '×'; remove.setAttribute('aria-label', `Odebrat soubor ${file.name}`);
     remove.addEventListener('click', () => { files.splice(index, 1); renderFiles(); });
     item.append(name, size, remove);
     return item;
@@ -157,7 +157,7 @@ attachInput.addEventListener('change', () => {
     const accepted = file.type.startsWith('image/') || file.type === 'application/pdf' || /\.(heic|heif)$/i.test(file.name);
     if (!accepted) { error = 'Přiložit lze jen fotografie a PDF.'; continue; }
     // Fotografie se před odesláním zmenší, limit proto hlídáme jen u PDF.
-    if (file.type === 'application/pdf' && file.size > MAX_BYTES) { error = 'Soubor ' + file.name + ' je větší než 10 MB.'; continue; }
+    if (file.type === 'application/pdf' && file.size > MAX_BYTES) { error = `Soubor ${file.name} je větší než 10 MB.`; continue; }
     if (files.length >= MAX_FILES) { error = 'Přiložit lze nejvýše 5 souborů.'; break; }
     files.push(file);
   }
@@ -215,7 +215,7 @@ form.addEventListener('submit', async event => {
       const id = data.newId();
       const attachments = [];
       for (const [index, file] of files.entries()) {
-        setSending(true, 'Nahrávám přílohy ' + (index + 1) + ' / ' + files.length + '…');
+        setSending(true, `Nahrávám přílohy ${index + 1} / ${files.length}…`);
         attachments.push(await data.uploadAttachment(id, index, file));
       }
       setSending(true);
@@ -243,7 +243,7 @@ form.addEventListener('submit', async event => {
     return [dt, dd];
   }));
   $('#form-result-note').textContent = window.CR_CMS?.confirmationEmail
-    ? 'Potvrzení jsme vám poslali na e-mail ' + $('#email').value.trim() + '. Ozveme se co nejdříve.'
+    ? `Potvrzení jsme vám poslali na e-mail ${$('#email').value.trim()}. Ozveme se co nejdříve.`
     : 'Ozveme se vám co nejdříve na uvedený e-mail nebo telefon.';
   form.hidden = true; $('.form-kinds').hidden = true; $('#form-result').hidden = false; $('#step-indicator').textContent = 'ODESLÁNO';
   $('#form-result h3').setAttribute('tabindex', '-1');
@@ -283,7 +283,7 @@ document.addEventListener('click', event => {
     const show = button.dataset.filter === 'all' || item.dataset.category === button.dataset.filter;
     item.hidden = !show; if (show) count++;
   });
-  $('#filter-status').textContent = 'Počet zobrazených realizací: ' + count + '.';
+  $('#filter-status').textContent = `Počet zobrazených realizací: ${count}.`;
 });
 
 // ---------- Úvodní video: načte se až po kliknutí ----------

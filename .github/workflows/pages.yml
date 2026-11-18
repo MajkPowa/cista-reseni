@@ -33,6 +33,7 @@ jobs:
           node --check dist/cms-config.js
           node --check dist/site-data.js
           node --check dist/polish.js
+          for file in dist/en/*.js dist/hu/*.js; do node --check "$file"; done
           node --check dist/admin/admin.js
           node --check dist/crm/crm.js
           node --check functions/index.js

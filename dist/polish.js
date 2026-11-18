@@ -33,6 +33,19 @@
   }
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(updateScrollState); } }, { passive: true });
 
+  // ---------- Přepínač jazyků ----------
+  // Odkazy vedou na stejnou stránku v jiném jazyce; doplní se parametry adresy (např. ?id= u detailu reference).
+  const langSwitch = document.querySelector('.lang-switch');
+  if (langSwitch) {
+    langSwitch.querySelectorAll('a[data-lang-link]').forEach(link => {
+      link.addEventListener('click', () => { link.href = link.href.split(/[?#]/)[0] + location.search + location.hash; });
+    });
+    document.addEventListener('click', event => { if (langSwitch.open && !langSwitch.contains(event.target)) langSwitch.open = false; });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && langSwitch.open) { langSwitch.open = false; langSwitch.querySelector('summary').focus(); }
+    });
+  }
+
   // ---------- 3) Telefon v mobilní nabídce ----------
   const nav = document.getElementById('navigation');
   if (nav && !nav.querySelector('.nav-call')) {

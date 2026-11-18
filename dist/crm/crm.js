@@ -324,6 +324,8 @@ const INQUIRY_KIND_LABEL = { realizace: 'Realizace', servis: 'Servis', pravideln
 const SERVICES = Object.entries(config.services);
 const serviceName = key => config.services[key] || '';
 const inquiryService = inquiry => config.services[inquiry.service] || inquiry.serviceLabel || 'Poptávka';
+// Poptávka z anglické nebo maďarské verze webu: jazyk se pozná z adresy stránky, ze které přišla.
+const inquiryLanguage = inquiry => ({ en: 'angličtina', hu: 'maďarština' })[(/\/(en|hu)\//.exec(inquiry.page || '') || [])[1]] || '';
 
 const me = () => auth.currentUser?.email || '';
 const find = (name, id) => id ? state[name].find(item => item.id === id) || null : null;
@@ -661,7 +663,7 @@ function taskRow(task, { showCustomer = true } = {}) {
 function inquiryRow(inquiry) {
   return h('a', { class: `row inquiry-row${inquiry.status === 'new' ? ' is-new' : ''}`, href: `#/poptavky/${inquiry.id}` }, [
     h('span', { class: 'job-top' }, [h('strong', { text: inquiry.name || 'Bez jména' }), statusPill(inquiry.status)]),
-    h('span', { class: 'row-sub', text: [inquiryService(inquiry), inquiry.location].filter(Boolean).join(' · ') }),
+    h('span', { class: 'row-sub', text: [inquiryService(inquiry), inquiry.location, inquiryLanguage(inquiry)].filter(Boolean).join(' · ') }),
     inquiry.message && h('span', { class: 'row-text', text: inquiry.message }),
     h('span', { class: 'row-date', text: formatDateTime(inquiry.createdAt) })
   ]);
@@ -1441,7 +1443,7 @@ function screenInquiry(id) {
     ]);
 
     detailList(fields, [
-      ['Služba', inquiryService(inquiry)], ['Druh poptávky', INQUIRY_KIND_LABEL[inquiry.kind]], ['Servisní program', inquiry.program && (PROGRAM_LABEL[inquiry.program] || inquiry.program)],
+      ['Jazyk webu', inquiryLanguage(inquiry)], ['Služba', inquiryService(inquiry)], ['Druh poptávky', INQUIRY_KIND_LABEL[inquiry.kind]], ['Servisní program', inquiry.program && (PROGRAM_LABEL[inquiry.program] || inquiry.program)],
       ['Obec', inquiry.location], ['Výrobce', inquiry.manufacturer], ['Typ zařízení', inquiry.deviceType],
       ['Jméno', inquiry.name], ['E-mail', inquiry.email], ['Telefon', inquiry.phone], ['Zpráva', inquiry.message]
     ]);

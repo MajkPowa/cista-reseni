@@ -221,3 +221,34 @@ Zatím nastavené není.
 - Záznam `admins/<e-mail>` s `role: "demo"` dává přístup jen do CRM nad kolekcemi `demoCustomers`, `demoDevices`, `demoJobs`, `demoTasks`, `demoActivities` a `demoInquiries`. Pravidla (`isAdmin` vyžaduje jinou roli než `demo`) mu ostrá data, seznam uživatelů, statistiky i Storage uzavírají.
 - Ukázkový účet nepotvrzuje e-mail, takže jeho heslo chrání jen smyšlená data. Nikdy tuto roli nedávejte účtu, který má vidět skutečné zákazníky.
 - Smyšlená data naplní nebo obnoví `python scripts/seed_demo.py` (smaže stávající ukázková data a zapíše výchozí); `--demo-user <e-mail>` rovnou přidá ukázkového uživatele. Totéž jde v administraci v záložce Správci.
+
+## 12. Jazykové verze (angličtina, maďarština)
+
+Zdrojem je vždy český web v `dist/`. Anglická a maďarská verze se z něj **sestavují** do `dist/en/` a `dist/hu/`
+skriptem `scripts/i18n.py`; ručně se v těchto složkách nic neupravuje (při každém sestavení se přepíší).
+
+- **Jak to funguje:** skript projde každou veřejnou stránku, rozdělí text na bloky (odstavec, nadpis, popisek
+  obrázku, text tlačítka…) a každý blok vyhledá ve slovníku `i18n/en.json` / `i18n/hu.json` (český text → překlad).
+  Vložené značky jsou v překladu zapsané jako `<a1>…</a1>`, `<br2/>` apod. a musí zůstat zachované. Opakované texty
+  („Název — fotografie 3“) se skládají ze vzorů (`PATTERNS` ve skriptu).
+- **Sdílené soubory:** styly, obrázky, písma a dokumenty jsou jen jednou (české). Skripty s viditelnými texty
+  (`app.js`, `site-data.js`, `cms-config.js`…) dostávají přeloženou kopii ve složce jazyka.
+- **Přepínač jazyků a `hreflang`:** vkládá je stejný skript do všech stránek včetně českých.
+- **Sestavení:** `python scripts/build_content.py` na konci sám spustí `scripts/i18n.py build`. Když po úpravě
+  českého textu chybí překlad, sestavení **skončí chybou** a chybějící texty vypíše do `i18n/missing-en.json` /
+  `i18n/missing-hu.json`. Doplňte je do slovníků a spusťte znovu. Rychlý náhled bez překladu:
+  `python scripts/build_content.py --draft` (chybějící texty zůstanou česky).
+- **Reference z administrace:** původních 41 realizací má přeložené stránky i texty ve výpisech (slovník se přenáší
+  do prohlížeče v přeložené kopii `cms-config.js`). Reference **přidané nebo přepsané v administraci** se
+  v jazykových verzích zobrazí česky, dokud jejich texty nepřibudou do slovníků (stejný český text → překlad).
+  Úprava původní reference v administraci se v jazykových verzích neprojeví – zůstává přeložená statická stránka.
+  Skrytí nebo smazání reference platí ve všech jazycích.
+- **Kategorie:** přejmenování kategorie v administraci platí pro češtinu; jazykové verze používají přeložené
+  výchozí názvy z `dist/cms-config.js`.
+- **Poptávky:** formulář je přeložený, poptávka se ukládá stejně. V administraci a v CRM je u ní řádek
+  **Jazyk webu** (angličtina / maďarština), aby bylo jasné, v jakém jazyce odpovědět. Automatické e-maily
+  (až budou zapnuté) jsou zatím jen česky.
+- **Video:** jazykové verze používají `dist/assets/video/cista-reseni-16x9-en.mp4`, `-hu.mp4` (a `9x16`, plakáty
+  `poster-16x9-en.jpg`…). Když soubor pro jazyk chybí, použije se český.
+- **Telefon:** v jazykových verzích se číslo zobrazuje s předvolbou +420.
+- **Administrace a CRM** zůstávají jen česky.

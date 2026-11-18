@@ -222,3 +222,58 @@ html.is-scrolled .header{box-shadow:0 10px 30px -22px rgba(4,39,82,.5)}
   .content-card:hover,.project:hover{transform:none}
 }
 @media print{.mobile-actions{display:none!important}}
+
+/* ---------- Přepínač jazyků (vkládá scripts/i18n.py) ---------- */
+.lang-switch{position:relative;flex:none}
+.lang-switch>summary{display:flex;align-items:center;gap:7px;min-height:44px;padding:8px 13px 8px 11px;border:1px solid var(--line);border-radius:100px;background:var(--white);color:var(--ink);font-size:14px;font-weight:700;letter-spacing:.04em;cursor:pointer;list-style:none;user-select:none;transition:background-color .15s ease,border-color .15s ease}
+.lang-switch>summary::-webkit-details-marker{display:none}
+.lang-switch>summary svg{width:19px;height:19px;fill:none;stroke:var(--green-ink);stroke-width:1.6}
+.lang-switch>summary:hover,.lang-switch[open]>summary{background:#edf7e7;border-color:#cfe6c2}
+.lang-switch>summary:focus-visible,.lang-menu a:focus-visible{outline:3px solid var(--green-ink);outline-offset:3px}
+.lang-menu{position:absolute;z-index:70;top:calc(100% + 8px);right:0;min-width:184px;padding:6px;border:1px solid var(--line);border-radius:14px;background:var(--white);box-shadow:0 18px 40px -18px rgba(4,39,82,.35)}
+.lang-menu a{display:flex;align-items:center;gap:12px;min-height:46px;padding:10px 12px;border-radius:9px;color:var(--ink);font-size:15.5px;font-weight:600;text-decoration:none}
+.lang-menu a b{min-width:26px;font-size:12.5px;font-weight:800;letter-spacing:.05em;color:var(--muted)}
+.lang-menu a:hover{background:#edf7e7}
+.lang-menu a[aria-current]{background:var(--sky);color:var(--green-ink)}
+.lang-menu a[aria-current] b{color:var(--green-ink)}
+@media (min-width:1241px){
+  .header .site-nav{margin-left:auto}
+  .header .lang-switch{order:3;margin-left:-12px}
+}
+@media (max-width:1240px){
+  .header .lang-switch{margin-left:auto;margin-right:10px}
+  .header .lang-switch>summary{min-height:48px}
+}
+@media (max-width:370px){
+  .header .lang-switch{margin-right:6px}
+  .header .lang-switch>summary{padding-inline:9px 10px;gap:5px}
+}
+/* Angličtina a maďarština mají delší položky nabídky: na užších obrazovkách počítače jsou sevřenější. */
+@media (min-width:1241px) and (max-width:1540px){
+  html:not([lang=cs]) .header .header-inner{gap:12px}
+  html:not([lang=cs]) .header .site-nav{gap:0}
+  html:not([lang=cs]) .header .site-nav>a:not(.button),html:not([lang=cs]) .header .nav-group>summary{padding-inline:8px;gap:6px;font-size:14.5px}
+  html:not([lang=cs]) .header .site-nav>.button{padding-inline:15px;margin-left:5px;gap:9px;font-size:14.5px}
+  html:not([lang=cs]) .header .lang-switch{margin-left:-2px}
+  html:not([lang=cs]) .header .lang-switch>summary{padding-inline:9px 11px;gap:5px}
+}
+@media (min-width:1241px) and (max-width:1400px){
+  html:not([lang=cs]) .header .brand.brand-full{flex-basis:200px;width:200px}
+  html:not([lang=cs]).is-scrolled .header .brand.brand-full{flex-basis:176px;width:176px}
+  html:not([lang=cs]) .header .site-nav>a:not(.button),html:not([lang=cs]) .header .nav-group>summary{padding-inline:6px;font-size:14px}
+  html:not([lang=cs]) .header .site-nav>.button{padding-inline:13px;font-size:14px}
+}
+/* Dlouhá slova (hlavně maďarská) se v nadpisech smějí rozdělit, aby stránka na telefonu nepřetékala. */
+html:not([lang=cs]) :is(h1,h2,h3,h4,.eyebrow,.ed-kicker){overflow-wrap:anywhere;hyphens:auto}
+@media (max-width:780px){
+  html[lang=hu] .home-page #hero-title{font-size:clamp(29px,9.3vw,42px)}
+  html[lang=hu] .editorial-title h1{font-size:clamp(29px,9.4vw,44px)}
+  /* Slovo delší než řádek se na telefonu raději rozdělí, než aby roztáhlo stránku do strany. */
+  html:not([lang=cs]) body{overflow-wrap:anywhere;hyphens:auto}
+  html:not([lang=cs]) :is(.hero-copy,.editorial-title,.editorial-title>div,.editorial-intro,.section-heading>div){min-width:0}
+  /* Delší texty tlačítek se smějí zalomit, místo aby roztáhly stránku. */
+  html:not([lang=cs]) :is(.button,.text-link){white-space:normal;text-align:left}
+  /* Čísla a krátké údaje se nedělí. */
+  html:not([lang=cs]) :is(.hero-stat strong,.ed-count b,.proof-capacity strong,.program-visits strong,time){overflow-wrap:normal;hyphens:manual;flex-shrink:0}
+}
+@media print{.lang-switch{display:none}}

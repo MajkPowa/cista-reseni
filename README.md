@@ -109,3 +109,10 @@ Obsahové stránky obnoví `python scripts/build_content.py` (vyžaduje také be
 Vektorové schéma služeb je ilustrační, nikoli projekt konkrétní stavby. Animace má konečný průběh, lze ji přehrát znovu a respektuje omezený pohyb. Rozcestník se opakovaně sestavuje z `scripts/templates/services.html` a `water-systems.inline.svg`; návrhové poznámky jsou v `docs/services-redesign.txt`.
 
 Navigace od 9. 11. 2026 používá větší písmo a klikací plochy, animované nabídky a klávesové ovládání. Sdílené `motion.js` a `motion.css` přidávají na všech stránkách postupný nástup a jednorázové odhalování sekcí. Obsah je dostupný bez JavaScriptu; omezený pohyb používá krátké prolnutí bez posunu. Animace nezdržují fokus ani kliknutí a nečekají na stažení fotografií.
+
+## Jazykové verze
+
+Web je česky, anglicky (`dist/en/`) a maďarsky (`dist/hu/`). Zdrojem je český web; jazykové verze sestavuje
+`scripts/i18n.py` (spouští ho `scripts/build_content.py`) ze slovníků `i18n/en.json` a `i18n/hu.json`.
+Pravidla a terminologie pro překladatele: `i18n/glossary-en.md`, `i18n/glossary-hu.md`. Podrobnosti:
+`docs/manualy/02-technicka-sprava.md`, kapitola 12.
