@@ -248,32 +248,49 @@ html.is-scrolled .header{box-shadow:0 10px 30px -22px rgba(4,39,82,.5)}
   .header .lang-switch{margin-right:6px}
   .header .lang-switch>summary{padding-inline:9px 10px;gap:5px}
 }
-/* Angličtina a maďarština mají delší položky nabídky: na užších obrazovkách počítače jsou sevřenější. */
-@media (min-width:1241px) and (max-width:1540px){
-  html:not([lang=cs]) .header .header-inner{gap:12px}
+/* Angličtina a maďarština mají delší položky nabídky: hlavička je širší a nabídka sevřenější,
+   aby nikdy nezasahovala do loga ani do přepínače jazyků. */
+@media (min-width:1241px){
+  html:not([lang=cs]) .header .header-inner{width:min(1400px,calc(100% - 48px));gap:14px}
   html:not([lang=cs]) .header .site-nav{gap:0}
-  html:not([lang=cs]) .header .site-nav>a:not(.button),html:not([lang=cs]) .header .nav-group>summary{padding-inline:8px;gap:6px;font-size:14.5px}
-  html:not([lang=cs]) .header .site-nav>.button{padding-inline:15px;margin-left:5px;gap:9px;font-size:14.5px}
-  html:not([lang=cs]) .header .lang-switch{margin-left:-2px}
+  html:not([lang=cs]) .header .site-nav>a:not(.button),html:not([lang=cs]) .header .nav-group>summary{padding-inline:9px;gap:6px;font-size:16px}
+  html:not([lang=cs]) .header .site-nav>.button{padding-inline:18px;margin-left:6px;gap:10px;font-size:15.5px}
+  html:not([lang=cs]) .header .lang-switch{margin-left:0}
   html:not([lang=cs]) .header .lang-switch>summary{padding-inline:9px 11px;gap:5px}
 }
-@media (min-width:1241px) and (max-width:1400px){
-  html:not([lang=cs]) .header .brand.brand-full{flex-basis:200px;width:200px}
-  html:not([lang=cs]).is-scrolled .header .brand.brand-full{flex-basis:176px;width:176px}
-  html:not([lang=cs]) .header .site-nav>a:not(.button),html:not([lang=cs]) .header .nav-group>summary{padding-inline:6px;font-size:14px}
-  html:not([lang=cs]) .header .site-nav>.button{padding-inline:13px;font-size:14px}
+@media (min-width:1241px) and (max-width:1480px){
+  html:not([lang=cs]) .header .brand.brand-full{flex-basis:240px;width:240px}
+  html:not([lang=cs]).is-scrolled .header .brand.brand-full{flex-basis:180px;width:180px}
+  html:not([lang=cs]) .header .site-nav>a:not(.button),html:not([lang=cs]) .header .nav-group>summary{padding-inline:8px;font-size:15px}
+  html:not([lang=cs]) .header .site-nav>.button{padding-inline:15px;font-size:15px}
 }
-/* Dlouhá slova (hlavně maďarská) se v nadpisech smějí rozdělit, aby stránka na telefonu nepřetékala. */
-html:not([lang=cs]) :is(h1,h2,h3,h4,.eyebrow,.ed-kicker){overflow-wrap:anywhere;hyphens:auto}
+@media (min-width:1241px) and (max-width:1340px){
+  html:not([lang=cs]) .header .brand.brand-full{flex-basis:220px;width:220px}
+  html:not([lang=cs]) .header .site-nav>a:not(.button),html:not([lang=cs]) .header .nav-group>summary{padding-inline:7px;font-size:14.5px}
+  html:not([lang=cs]) .header .site-nav>.button{padding-inline:13px;font-size:14.5px}
+}
+/* Pojistka (polish.js): když se nabídka přesto nevejde (delší text, větší písmo v prohlížeči), ještě se zúží. */
+@media (min-width:1241px){
+  html.nav-tight .header .site-nav>a:not(.button),html.nav-tight .header .nav-group>summary{padding-inline:5px!important;font-size:13.5px!important}
+  html.nav-tight .header .site-nav>.button{padding-inline:11px!important;font-size:13.5px!important}
+  html.nav-tight .header .brand.brand-full{flex-basis:180px!important;width:180px!important}
+}
+/* Nadpisy se na počítači nedělí spojovníkem; slovo delší než řádek jen přejde na další řádek. */
+html:not([lang=cs]) :is(h1,h2,h3,h4){overflow-wrap:break-word}
+@media (min-width:781px){
+  html:not([lang=cs]) .home-page #hero-title{font-size:clamp(40px,4.2vw,61px)}
+}
 @media (max-width:780px){
   html[lang=hu] .home-page #hero-title{font-size:clamp(29px,9.3vw,42px)}
   html[lang=hu] .editorial-title h1{font-size:clamp(29px,9.4vw,44px)}
-  /* Slovo delší než řádek se na telefonu raději rozdělí, než aby roztáhlo stránku do strany. */
-  html:not([lang=cs]) body{overflow-wrap:anywhere;hyphens:auto}
+  /* Na telefonu smí dlouhé slovo přejít na další řádek; maďarské nadpisy se dělí spojovníkem. */
+  html:not([lang=cs]) :is(h1,h2,h3,h4,.eyebrow,.ed-kicker){overflow-wrap:anywhere}
+  html[lang=hu] :is(h1,h2,h3,h4,.eyebrow,.ed-kicker){hyphens:auto}
+  html:not([lang=cs]) body{overflow-wrap:anywhere}
   html:not([lang=cs]) :is(.hero-copy,.editorial-title,.editorial-title>div,.editorial-intro,.section-heading>div){min-width:0}
   /* Delší texty tlačítek se smějí zalomit, místo aby roztáhly stránku. */
   html:not([lang=cs]) :is(.button,.text-link){white-space:normal;text-align:left}
   /* Čísla a krátké údaje se nedělí. */
-  html:not([lang=cs]) :is(.hero-stat strong,.ed-count b,.proof-capacity strong,.program-visits strong,time){overflow-wrap:normal;hyphens:manual;flex-shrink:0}
+  html:not([lang=cs]) :is(.hero-stat strong,.ed-count b,.proof-capacity strong,.program-visits strong,time){overflow-wrap:normal;flex-shrink:0}
 }
 @media print{.lang-switch{display:none}}

@@ -46,6 +46,26 @@
     });
   }
 
+  // ---------- Pojistka: nabídka na počítači nesmí přetéct přes logo ----------
+  const headerInner = document.querySelector('.header .header-inner');
+  const desktopNav = matchMedia('(min-width: 1241px)');
+  function fitNavigation() {
+    root.classList.remove('nav-tight');
+    if (!headerInner || !desktopNav.matches) return;
+    const brand = headerInner.querySelector('.brand'), menu = headerInner.querySelector('.site-nav');
+    const items = menu ? [...menu.children].filter(item => item.offsetWidth) : [];
+    if (!brand || !items.length) return;
+    const left = Math.min(...items.map(item => item.getBoundingClientRect().left));
+    const right = Math.max(...items.map(item => item.getBoundingClientRect().right));
+    const limit = (headerInner.querySelector('.lang-switch') || headerInner).getBoundingClientRect();
+    if (left < brand.getBoundingClientRect().right + 4 || right > (limit.left || limit.right) + 1) root.classList.add('nav-tight');
+  }
+  let fitQueued = false;
+  const queueFit = () => { if (!fitQueued) { fitQueued = true; requestAnimationFrame(() => { fitQueued = false; fitNavigation(); }); } };
+  addEventListener('resize', queueFit, { passive: true });
+  document.fonts?.ready.then(queueFit);
+  queueFit();
+
   // ---------- 3) Telefon v mobilní nabídce ----------
   const nav = document.getElementById('navigation');
   if (nav && !nav.querySelector('.nav-call')) {

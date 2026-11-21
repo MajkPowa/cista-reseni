@@ -68,8 +68,10 @@ UI = {
 }
 # Shorter wording for the main menu only (the full wording is used everywhere else).
 NAV_SHORT = {
-    'en': {'Commissioning and training': 'Commissioning & training'},
-    'hu': {'Szennyvíztisztító-szerviz': 'Szerviz', 'Üzembe helyezés és oktatás': 'Beüzemelés és oktatás'},
+    'en': {'WWTP servicing': 'Servicing', 'Commissioning and training': 'Commissioning & training',
+           'WWTPs for businesses and municipalities': 'Business & municipal WWTPs'},
+    'hu': {'Szennyvíztisztító-szerviz': 'Szerviz', 'Üzembe helyezés és oktatás': 'Beüzemelés és oktatás',
+           'Szennyvíztisztító cégeknek és önkormányzatoknak': 'Cégeknek és önkormányzatoknak'},
 }
 PHONE_LOCAL = re.compile(r'(?<![+\d] )(?<![+\d])736 403 795')
 
@@ -598,7 +600,7 @@ def build_language(lang: str, draft: bool, site_url: str, indexable: bool) -> di
                 errors.append(f'{rel}: {error} — {unit.source[:80]}')
         if soup.html is not None:
             soup.html['lang'] = LANGS[lang][1]
-        for tag in soup.select('header.header .site-nav > a, header.header .nav-group > summary'):
+        for tag in soup.select('header.header .site-nav > a, header.header .nav-group > summary, header.header .nav-dropdown > a'):
             for node in tag.find_all(string=True, recursive=False):
                 if norm(str(node)) in NAV_SHORT.get(lang, {}):
                     node.replace_with(NavigableString(NAV_SHORT[lang][norm(str(node))]))
