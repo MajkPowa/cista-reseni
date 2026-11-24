@@ -1,0 +1,108 @@
+# Vygenerováno skriptem scripts/publish_files.py, ručně neupravujte.
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+AddDefaultCharset utf-8
+AddType video/mp4 .mp4
+AddType image/webp .webp
+AddType image/svg+xml .svg
+AddType font/woff2 .woff2
+
+# Stavový soubor nahrávání (production.yml) není pro návštěvníky.
+<Files ".ftp-deploy-sync-state.json">
+<IfModule mod_authz_core.c>
+Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+Order allow,deny
+Deny from all
+</IfModule>
+</Files>
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+# Jediná adresa webu: https://www.cistareseni.cz/
+RewriteCond %{HTTP_HOST} ^cistareseni\.cz$ [NC]
+RewriteRule ^ https://www.cistareseni.cz%{REQUEST_URI} [R=301,L]
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^ https://www.cistareseni.cz%{REQUEST_URI} [R=301,L]
+# Úvodní stránka bez index.html
+RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.html[\s?] [NC]
+RewriteRule ^(.*/)?index\.html$ /$1 [R=301,L]
+# Adresy původního webu
+RewriteRule ^produkty-a-sluzby/cerpaci\-sachty\.html$ /sluzby/cerpaci-sachty.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/cisteni\-odpadnich\-vod\.html$ /sluzby/cisteni-odpadnich-vod.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/cov\-pro\-firmy\-a\-obce\.html$ /sluzby/cov-pro-firmy-a-obce.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/hospodareni\-s\-destovou\-vodou\.html$ /sluzby/hospodareni-s-destovou-vodou.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/konzultace\-a\-poradenstvi\.html$ /sluzby/konzultace-a-poradenstvi.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/montaz\-a\-instalace\-technologii\.html$ /sluzby/montaz-a-instalace-technologii.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/prodej\-cov\-a\-destovych\-nadrzi\.html$ /sluzby/prodej-cov-a-destovych-nadrzi.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/prodej\-nahradnich\-dilu\.html$ /sluzby/prodej-nahradnich-dilu.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/rekonstrukce\-a\-modernizace\-cov\.html$ /sluzby/rekonstrukce-a-modernizace-cov.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/servis\-a\-udrzba\.html$ /sluzby/servis-a-udrzba.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/skoleni\-obsluhy\-cov\.html$ /sluzby/skoleni-obsluhy-cov.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/zajisteni\-povoleni\-stavby\.html$ /sluzby/zajisteni-povoleni-stavby.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/zpracovani\-projektove\-dokumentace\.html$ /sluzby/zpracovani-projektove-dokumentace.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/zprovozneni\-cov\.html$ /sluzby/zprovozneni-cov.html [R=301,L]
+RewriteRule ^produkty-a-sluzby/?$ /sluzby.html [R=301,L]
+RewriteRule ^reference/1-[^/]*\.html$ /realizace/1-servisujeme-take-cistirny-asio-vcetne-starsich-typu.html [R=301,L]
+RewriteRule ^reference/10-[^/]*\.html$ /realizace/10-dcov-vydri-11-2024.html [R=301,L]
+RewriteRule ^reference/11-[^/]*\.html$ /realizace/11-dcov-libenice-10-2024.html [R=301,L]
+RewriteRule ^reference/12-[^/]*\.html$ /realizace/12-destovka-melnik-09-2024.html [R=301,L]
+RewriteRule ^reference/13-[^/]*\.html$ /realizace/13-cerpaci-jimka-splaskove-kanalizace-bechyne-08-2024.html [R=301,L]
+RewriteRule ^reference/14-[^/]*\.html$ /realizace/14-destovka-pisek-08-2024.html [R=301,L]
+RewriteRule ^reference/15-[^/]*\.html$ /realizace/15-dcov-javornik-05-2024.html [R=301,L]
+RewriteRule ^reference/16-[^/]*\.html$ /realizace/16-dcov-sazava-12-2023.html [R=301,L]
+RewriteRule ^reference/17-[^/]*\.html$ /realizace/17-dcov-nove-hrady-04-2024.html [R=301,L]
+RewriteRule ^reference/18-[^/]*\.html$ /realizace/18-dcov-roudna-03-2024.html [R=301,L]
+RewriteRule ^reference/19-[^/]*\.html$ /realizace/19-destovka-vresina-u-opavy-07-2022.html [R=301,L]
+RewriteRule ^reference/2-[^/]*\.html$ /realizace/2-druhy-zivot-pro-starou-cistirnu-rekonstrukce-technologie-po-.html [R=301,L]
+RewriteRule ^reference/20-[^/]*\.html$ /realizace/20-destovka-tabor-10-2023.html [R=301,L]
+RewriteRule ^reference/21-[^/]*\.html$ /realizace/21-dcov-bechyne-09-2023.html [R=301,L]
+RewriteRule ^reference/22-[^/]*\.html$ /realizace/22-rekonstrukce-jimky-pro-splasky-s-rotomouldingovou-nadrzi-08-.html [R=301,L]
+RewriteRule ^reference/23-[^/]*\.html$ /realizace/23-instalace-a-zprovozneni-dcov-bc-6-optima-rychnov-nad-kneznou.html [R=301,L]
+RewriteRule ^reference/24-[^/]*\.html$ /realizace/24-instalace-a-zprovozneni-dcov-bc-4-optima-suchdol-nad-luznici.html [R=301,L]
+RewriteRule ^reference/25-[^/]*\.html$ /realizace/25-instalace-a-zprovozneni-dcov-bc-4-optima-pojbuky-u-pelhrimov.html [R=301,L]
+RewriteRule ^reference/26-[^/]*\.html$ /realizace/26-servis-zprovozneni-a-zaskoleni-pro-dcov-asio-as-monocomp-4.html [R=301,L]
+RewriteRule ^reference/27-[^/]*\.html$ /realizace/27-servis-a-znovuzprovozneni-dcov-bc-12-po-zaplavach-bechyne-07.html [R=301,L]
+RewriteRule ^reference/28-[^/]*\.html$ /realizace/28-servis-pro-dcov-asio-as-variocomp-5k-proc-se-nevyplaci-insta.html [R=301,L]
+RewriteRule ^reference/29-[^/]*\.html$ /realizace/29-instalace-a-zprovozneni-asio-as-monocomp-4-pisek-07-2025.html [R=301,L]
+RewriteRule ^reference/3-[^/]*\.html$ /realizace/3-dcov-rasna-04-2025.html [R=301,L]
+RewriteRule ^reference/30-[^/]*\.html$ /realizace/30-instalace-a-zprovozneni-dcov-bc-4-optima-s-akumulacni-nadrzi.html [R=301,L]
+RewriteRule ^reference/31-[^/]*\.html$ /realizace/31-bc-20-comfort-penzion-straz-nad-nezarkou-11-2025.html [R=301,L]
+RewriteRule ^reference/32-[^/]*\.html$ /realizace/32-chlum-u-trebone-kanalizace-a-cov-pro-dva-rodinne-domy-12-202.html [R=301,L]
+RewriteRule ^reference/33-[^/]*\.html$ /realizace/33-zdar-u-pisku-kombinace-dcov-a-hospodareni-s-destovou-vodou-1.html [R=301,L]
+RewriteRule ^reference/34-[^/]*\.html$ /realizace/34-reseni-odpadnich-a-destovych-vod-pro-individualni-bydleni-01.html [R=301,L]
+RewriteRule ^reference/35-[^/]*\.html$ /realizace/35-bc-10-sbr-pro-materskou-skolku-tyn-nad-vltavou-02-2026.html [R=301,L]
+RewriteRule ^reference/36-[^/]*\.html$ /realizace/36-uprava-vody-z-pozdemniho-zdroje-pro-rodinny-dum-05-2026.html [R=301,L]
+RewriteRule ^reference/37-[^/]*\.html$ /realizace/37-realizace-domovni-cistirny-odpadnich-vod-v-hrusove-lhote-06-.html [R=301,L]
+RewriteRule ^reference/38-[^/]*\.html$ /realizace/38-prehorov-u-sobeslavi-domovni-cistirna-odpadnich-vod-bc-4-com.html [R=301,L]
+RewriteRule ^reference/39-[^/]*\.html$ /realizace/39-komplexni-reseni-odvadeni-splaskovych-vod-vyrobni-areal-pise.html [R=301,L]
+RewriteRule ^reference/4-[^/]*\.html$ /realizace/4-dcov-bernartice-04-2025.html [R=301,L]
+RewriteRule ^reference/40-[^/]*\.html$ /realizace/40-od-problemu-se-zapachem-ke-spravne-fungujici-domovni-cov-8-2.html [R=301,L]
+RewriteRule ^reference/41-[^/]*\.html$ /realizace/41-bc-50-po-25-letech-provozu-kompletni-obnova-technologie-a-no.html [R=301,L]
+RewriteRule ^reference/5-[^/]*\.html$ /realizace/5-dcov-dynin-03-2025.html [R=301,L]
+RewriteRule ^reference/6-[^/]*\.html$ /realizace/6-dcov-myslkovice-02-2025.html [R=301,L]
+RewriteRule ^reference/7-[^/]*\.html$ /realizace/7-dcov-volary-11-2024.html [R=301,L]
+RewriteRule ^reference/8-[^/]*\.html$ /realizace/8-dcov-kamen-11-2024.html [R=301,L]
+RewriteRule ^reference/9-[^/]*\.html$ /realizace/9-dcov-smilkov-11-2024.html [R=301,L]
+RewriteRule ^reference/?$ /reference.html [R=301,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+Header always set X-Content-Type-Options "nosniff"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set Strict-Transport-Security "max-age=31536000"
+<FilesMatch "\.(html|xml|txt)$">
+Header set Cache-Control "no-cache"
+</FilesMatch>
+<FilesMatch "\.(css|js|svg|webp|jpg|jpeg|png|woff2|ttf|mp4|pdf)$">
+Header set Cache-Control "public, max-age=604800"
+</FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json application/xml image/svg+xml
+</IfModule>

@@ -277,11 +277,7 @@ html.is-scrolled .header{box-shadow:0 10px 30px -22px rgba(4,39,82,.5)}
 }
 /* Nadpisy se na počítači nedělí spojovníkem; slovo delší než řádek jen přejde na další řádek. */
 html:not([lang=cs]) :is(h1,h2,h3,h4){overflow-wrap:break-word}
-@media (min-width:781px){
-  html:not([lang=cs]) .home-page #hero-title{font-size:clamp(40px,4.2vw,61px)}
-}
 @media (max-width:780px){
-  html[lang=hu] .home-page #hero-title{font-size:clamp(29px,9.3vw,42px)}
   html[lang=hu] .editorial-title h1{font-size:clamp(29px,9.4vw,44px)}
   /* Na telefonu smí dlouhé slovo přejít na další řádek; maďarské nadpisy se dělí spojovníkem. */
   html:not([lang=cs]) :is(h1,h2,h3,h4,.eyebrow,.ed-kicker){overflow-wrap:anywhere}
@@ -294,3 +290,36 @@ html:not([lang=cs]) :is(h1,h2,h3,h4){overflow-wrap:break-word}
   html:not([lang=cs]) :is(.hero-stat strong,.ed-count b,.proof-capacity strong,.program-visits strong,time){overflow-wrap:normal;flex-shrink:0}
 }
 @media print{.lang-switch{display:none}}
+
+/* Úvod: fotografie přes celou šířku, hlavní nadpis a dvě tlačítka. */
+.hero-full{position:relative;isolation:isolate;display:flex;align-items:flex-end;min-height:clamp(560px,calc(100svh - var(--nav-height,132px)),920px);overflow:hidden;background:#0b2a3f;color:#fff}
+.hero-full .hero-photo{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;object-position:62% 50%}
+.hero-full::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,rgba(2,20,42,.82) 0%,rgba(2,20,42,.58) 40%,rgba(2,20,42,.12) 74%,rgba(2,20,42,0) 100%),linear-gradient(0deg,rgba(2,20,42,.6) 0%,rgba(2,20,42,0) 48%)}
+.hero-full-inner{padding-block:110px 96px}
+.home-page .hero-full #hero-title{margin:0;max-width:14ch;color:#fff;font-size:clamp(48px,5.7vw,92px);line-height:1.02;letter-spacing:-.045em;text-wrap:balance;text-shadow:0 2px 30px rgba(2,20,42,.35)}
+.home-page .hero-full #hero-title span{color:var(--accent)}
+.hero-full .hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:42px}
+.hero-full .hero-actions .button{margin:0;min-height:58px;padding-inline:28px;font-size:15px;font-weight:700}
+.hero-full .hero-actions .button:not(.button-outline){background:var(--green);border-color:var(--green);color:var(--ink)}
+.hero-full .hero-actions .button:not(.button-outline):hover{background:var(--green-hover);border-color:var(--green-hover)}
+.hero-full .hero-actions .button-outline{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.9);color:#fff;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.hero-full .hero-actions .button-outline:hover{background:#fff;color:var(--ink)}
+.hero-full .hero-actions .button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.hero-full-caption{position:absolute;right:18px;bottom:12px;margin:0;font-size:11px;letter-spacing:.02em;color:rgba(255,255,255,.72)}
+.about-image{position:relative}
+.about-image .about-play{top:22px;bottom:auto;left:22px;right:auto}
+@media (max-width:780px){
+  .hero-full{min-height:clamp(520px,calc(100svh - var(--nav-height,78px)),760px)}
+  .hero-full .hero-photo{object-position:70% 50%}
+  .hero-full::before{background:linear-gradient(0deg,rgba(2,20,42,.88) 0%,rgba(2,20,42,.62) 45%,rgba(2,20,42,.15) 80%,rgba(2,20,42,.05) 100%)}
+  .hero-full-inner{padding-block:80px 52px}
+  .home-page .hero-full #hero-title{font-size:clamp(36px,10.6vw,52px);max-width:none}
+  .hero-full .hero-actions{flex-direction:column;align-items:stretch;gap:10px;margin-top:30px}
+  .hero-full .hero-actions .button{width:100%;justify-content:space-between;min-height:54px;font-size:14px}
+  .hero-full-caption{right:12px;bottom:8px;font-size:10px}
+  .about-image .about-play{top:14px;left:14px}
+}
+@media (max-width:370px){.home-page .hero-full #hero-title{font-size:34px}}
+html:not([lang=cs]) .home-page .hero-full #hero-title{max-width:21ch}
+html[lang=hu] .home-page .hero-full #hero-title{font-size:clamp(40px,4.6vw,74px)}
+@media (max-width:780px){html[lang=hu] .home-page .hero-full #hero-title{font-size:clamp(30px,8.8vw,44px)}}

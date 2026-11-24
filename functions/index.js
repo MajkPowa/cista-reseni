@@ -25,7 +25,7 @@ setGlobalOptions({ region: 'europe-west3', maxInstances: 5 });
 const SMTP_URL = defineSecret('SMTP_URL');
 const MAIL_FROM = defineString('MAIL_FROM', { default: 'Čistá řešení <info@cistareseni.cz>' });
 const NOTIFY_TO = defineString('NOTIFY_TO', { default: 'info@cistareseni.cz' });
-const ADMIN_URL = defineString('ADMIN_URL', { default: 'https://majkpowa.github.io/cista-reseni/admin/' });
+const ADMIN_URL = defineString('ADMIN_URL', { default: 'https://www.cistareseni.cz/admin/' });
 
 // Ochrana proti zneužití formuláře k rozesílání pošty: strop na počet e-mailů za hodinu.
 const HOURLY_LIMIT = { notify: 60, confirm: 30 };

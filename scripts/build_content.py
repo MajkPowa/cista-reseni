@@ -15,10 +15,10 @@ from PIL import Image
 
 sys.stdout.reconfigure(encoding='utf-8')
 ROOT=Path(__file__).resolve().parents[1]; DIST=ROOT/'dist'; DOC=ROOT/'docs'/'source-inventory'
-# Zveřejnění pro vyhledávače: po přechodu na ostrou doménu nastavte SITE_URL a INDEXABLE=True.
-# Stránky pak dostanou index,follow a kanonickou adresu a vznikne sitemap.xml a robots.txt.
-SITE_URL='https://majkpowa.github.io/cista-reseni/'
-INDEXABLE=False
+# Ostrá doména. Stránky mají index,follow a kanonickou adresu; robots.txt, sitemap.xml a .htaccess
+# vytváří scripts/publish_files.py. Náhled na GitHub Pages dostane noindex až při nasazení (pages.yml).
+SITE_URL='https://www.cistareseni.cz/'
+INDEXABLE=True
 ROBOTS='index, follow' if INDEXABLE else 'noindex, nofollow'
 BUILT=[]
 DATA=json.loads((DOC/'content.json').read_text(encoding='utf-8'))
@@ -103,13 +103,13 @@ def page(current,title,body,description='',has_gallery=False,reference_id=None):
     # Datová vrstva je na všech stránkách: reference z administrace a anonymní počítání návštěv.
     cms_assets=f'<link rel="stylesheet" href="{rel("cms.css",current)}">'
     cms_assets+=f'<script src="{rel("cms-config.js",current)}" defer></script><script src="{rel("site-data.js",current)}" defer></script>'
-    if INDEXABLE and current!='realizace/detail.html':
+    if INDEXABLE and current not in ('realizace/detail.html','404.html'):
         cms_assets+=f'<link rel="canonical" href="{SITE_URL}{current}">'
     reference_attr=f' data-reference-id="{esc(reference_id)}"' if reference_id else ''
     cms_assets+=f'<link rel="stylesheet" href="{rel("polish.css",current)}"><script src="{rel("polish.js",current)}" defer></script>'
     body_class='content-page experience-page'+(' solutions-page' if current=='sluzby.html' else '')+(' service-detail' if current.startswith('sluzby/') else ' reference-detail' if current.startswith('realizace/') else '')
     progress='<div class="reading-progress" aria-hidden="true"></div>' if is_detail else ''
-    document=f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="{ROBOTS if current!="realizace/detail.html" else "noindex, follow"}"><meta name="theme-color" content="#042752"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="https://majkpowa.github.io/cista-reseni/assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.woff2',current)}" as="font" type="font/woff2" crossorigin><link rel="preload" href="{rel('assets/BricolageGrotesque.woff2',current)}" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script>{service_assets}{detail_assets}{experience_assets}{extension_assets}{shell_assets}{cms_assets}</head><body class="{body_class}"{reference_attr}>{progress}{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
+    document=f'''<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="{ROBOTS if current not in ("realizace/detail.html","404.html") else "noindex, follow"}"><meta name="theme-color" content="#042752"><title>{esc(title)} | Čistá řešení</title><meta name="description" content="{meta}"><meta property="og:title" content="{esc(title)} | Čistá řešení"><meta property="og:description" content="{meta}"><meta property="og:type" content="website"><meta property="og:image" content="{SITE_URL}assets/hero-garden.webp"><link rel="icon" href="{rel('assets/brand-symbol.svg',current)}" type="image/svg+xml"><link rel="preload" href="{rel('assets/Manrope.woff2',current)}" as="font" type="font/woff2" crossorigin><link rel="preload" href="{rel('assets/BricolageGrotesque.woff2',current)}" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="{rel('styles.css',current)}"><link rel="stylesheet" href="{rel('content.css',current)}"><script src="{rel('content.js',current)}" defer></script>{service_assets}{detail_assets}{experience_assets}{extension_assets}{shell_assets}{cms_assets}</head><body class="{body_class}"{reference_attr}>{progress}{header(current)}<main id="main">{body}</main>{footer(current)}{lightbox() if has_gallery else ''}</body></html>'''
     return stamp_assets(iconize(document),current)
 def save(current,title,body,description='',has_gallery=False,reference_id=None):
     document=page(current,title,body,description,has_gallery,reference_id)
@@ -176,6 +176,7 @@ for current,meta in EXTENSION_PAGES.items():
 
 # Pages of the content management system: detail filled from the database and privacy information.
 save('realizace/detail.html','Detail realizace',render_dynamic_detail('realizace/detail.html',CTX),'Realizace z naší práce: popis, parametry a fotografie.',has_gallery=True)
+save('404.html','Stránka nenalezena',hero('404.html','Stránka nenalezena','Chyba 404','Tuhle stránku jsme nenašli. Možná byla přesunuta, nebo je v adrese překlep.')+f'<section class="container content-cta"><div><h2>Kam dál?</h2><p>Začněte na úvodní stránce, nebo nám rovnou napište.</p></div><a class="button" href="{rel("index.html","404.html")}">Na úvodní stránku {icon()}</a></section>','Požadovaná stránka na webu Čistá řešení neexistuje.')
 save('zpracovani-udaju.html','Zpracování osobních údajů',render_privacy('zpracovani-udaju.html',CTX),'Jak Čistá řešení zpracovávají osobní údaje z poptávkového formuláře.')
 
 current='reference.html'
@@ -291,4 +292,8 @@ if '--skip-home' not in sys.argv:
 # --draft keeps Czech text where a translation is missing instead of failing.
 if '--skip-i18n' not in sys.argv:
     import i18n
-    raise SystemExit(i18n.main(['i18n','build']+(['--draft'] if '--draft' in sys.argv else [])))
+    status=i18n.main(['i18n','build']+(['--draft'] if '--draft' in sys.argv else []))
+    if not status:
+        import publish_files
+        publish_files.write(SITE_URL,INDEXABLE)
+    raise SystemExit(status)

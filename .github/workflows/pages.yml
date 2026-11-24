@@ -51,6 +51,12 @@ jobs:
         run: python scripts/restore_media.py
       - name: Check pages and local links
         run: python3 scripts/check_site.py
+      - name: Keep the preview out of search engines
+        run: |
+          # Ostrý web je www.cistareseni.cz; náhled na GitHub Pages se nemá indexovat.
+          find dist -name '*.html' -exec sed -i 's/"index, follow"/"noindex, nofollow"/' {} +
+          printf 'User-agent: *\nDisallow: /\n' > dist/robots.txt
+          rm -f dist/sitemap.xml dist/.htaccess
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
