@@ -3,7 +3,8 @@ name: Publish to cistareseni.cz
 # Přístup: tajné hodnoty repozitáře FTP_USER a FTP_PASSWORD (Settings → Secrets and variables → Actions).
 # Režimy ručního spuštění:
 #   probe   – jen vypíše složky na FTP (ověření přístupu a kořenové složky webu),
-#   go-live – jednorázově přesune původní web do chráněné složky _puvodni-web/ a nahraje nový,
+#   go-live – jednorázově nahraje nový web do _novy-web/, pak přesune původní web do chráněné
+#             složky _puvodni-web/ a nový web na jeho místo (výpadek jen pár sekund),
 #   deploy  – nahraje jen změněné soubory (to samé dělá každý push do main).
 on:
   workflow_dispatch:
@@ -70,14 +71,6 @@ jobs:
           sed -i 's#<head>#<head><base href="/">#' dist/404.html
       - name: Verify the FTP server certificate
         run: bash scripts/ftp_ca.sh "$FTP_HOST" "$FTP_CA"
-      - name: Move the previous website into a protected folder
-        if: inputs.mode == 'go-live'
-        env:
-          FTP_USER: ${{ secrets.FTP_USER }}
-          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq lftp
-          bash scripts/ftp_backup_old_site.sh
       - name: Upload changed files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         env:
@@ -89,8 +82,17 @@ jobs:
           protocol: ftps
           security: strict
           local-dir: dist/
-          server-dir: ${{ env.WEB_ROOT }}
+          # go-live nahrává nejdřív vedle (do _novy-web/), aby původní web běžel až do přepnutí.
+          server-dir: ${{ inputs.mode == 'go-live' && format('{0}_novy-web/', env.WEB_ROOT) || env.WEB_ROOT }}
           timeout: 120000
+      - name: Switch the previous website into _puvodni-web/ and the new one into the web root
+        if: inputs.mode == 'go-live'
+        env:
+          FTP_USER: ${{ secrets.FTP_USER }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+          bash scripts/ftp_backup_old_site.sh
       - name: Check the live website
         run: |
           sleep 5
