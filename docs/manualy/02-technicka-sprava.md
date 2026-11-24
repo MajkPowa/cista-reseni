@@ -165,17 +165,31 @@ Verzování bucketu s fotografiemi zatím zapnuté není.
 Doporučeno nastavit v Google Cloud rozpočtové upozornění na projekt (Billing → Budgets & alerts).
 Zatím nastavené není.
 
-## 9. Přechod na ostrou doménu
+## 9. Ostrá doména www.cistareseni.cz (od 24. 11. 2026)
 
-1. Dokončit obsah a nechat klienta zkontrolovat `zpracovani-udaju.html` (pracovní text).
-2. Odstranit `noindex, nofollow` a pruh „Návrh nového webu“ (`scripts/build_content.py`,
-   `scripts/site_shell.py`, `dist/index.html`), upravit `og:image` adresy.
-3. V repozitáři nastavit vlastní doménu (Settings → Pages) a u registrátora DNS záznamy
-   podle dokumentace GitHub Pages.
-4. Přidat doménu mezi autorizované domény Firebase Authentication
-   (konzole → Authentication → Settings → Authorized domains).
-5. Upravit `ADMIN_URL` ve `functions/.env` a nasadit funkce.
-6. Zapnout e-maily (kapitola 5).
+Web běží na hostingu nd-webs.cz (Apache, server `vm1720.cust.netio.cz`, IP 185.25.184.178);
+veřejná složka je `/www/`, kód původního PHP webu leží mimo ni.
+
+- **Nasazení:** každý push do `main` spustí `.github/workflows/production.yml`, který přes FTPS
+  nahraje jen změněné soubory z `dist/` (stav drží `/www/.ftp-deploy-sync-state.json`, pro
+  návštěvníky zavřený). Ručně: Actions → „Publish to cistareseni.cz“ → režim `deploy`;
+  `probe` jen vypíše složky na FTP.
+- **Přístup:** tajné hodnoty repozitáře `FTP_USER` a `FTP_PASSWORD`. Po změně hesla u hostingu
+  stačí `gh secret set FTP_PASSWORD --repo MajkPowa/cista-reseni` (heslo se vloží na výzvu).
+- **Certifikát FTP:** server posílá jen vlastní certifikát Let's Encrypt (na jméno serveru, ne
+  domény). `scripts/ftp_ca.sh` dohledá mezilehlé certifikáty a ověří řetězec i jméno serveru;
+  kontrola certifikátu je tedy zapnutá.
+- **Původní web:** je celý ve `/www/_puvodni-web/` (přístup zakázán, původní `.htaccess` je
+  `puvodni.htaccess`). Obnova = přesunout položky zpět do `/www/`. Původní složka `/www/assets/`
+  zůstala na místě: staré odkazy na obrázky a PDF fungují a `scripts/restore_media.py` z ní dál
+  načítá zdrojová média.
+- **Soubory pro ostrou doménu** (`robots.txt`, `sitemap.xml`, `.htaccess`, `404.html`) vytváří
+  build (`scripts/publish_files.py`). `.htaccess` přesměruje http a adresu bez www na
+  https://www.cistareseni.cz/ a adresy původního webu (`/produkty-a-sluzby/…`, `/reference/N-…`)
+  na nové stránky.
+- **Náhled na GitHub Pages** zůstává, ale při nasazení dostane `noindex` a nemá sitemapu.
+- Firebase: domény `cistareseni.cz` a `www.cistareseni.cz` jsou mezi autorizovanými doménami,
+  `ADMIN_URL` ve funkcích míří na https://www.cistareseni.cz/admin/.
 
 ## 10. Řešení potíží
 

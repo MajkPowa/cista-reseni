@@ -7,6 +7,8 @@ name: Publish to cistareseni.cz
 #             složky _puvodni-web/ a nový web na jeho místo (výpadek jen pár sekund),
 #   deploy  – nahraje jen změněné soubory (to samé dělá každý push do main).
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       mode:

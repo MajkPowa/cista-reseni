@@ -1,10 +1,10 @@
-# Čistá řešení — návrh nového webu
+# Čistá řešení — web
 
-Responzivní český návrh pro firmu Čistá řešení (WHITE ELEPHANT s.r.o.). Nabídka pokrývá domácnosti, firmy, obce i průmyslové provozy. Publikováno samostatně na GitHub Pages; původní doména není měněna.
+Responzivní český návrh pro firmu Čistá řešení (WHITE ELEPHANT s.r.o.). Nabídka pokrývá domácnosti, firmy, obce i průmyslové provozy. Ostrý web: https://www.cistareseni.cz/ (nasazení: `.github/workflows/production.yml`, viz `docs/manualy/02-technicka-sprava.md`, kapitola 9).
 
 ## Náhled
 
-https://majkpowa.github.io/cista-reseni/
+https://majkpowa.github.io/cista-reseni/ (neindexuje se)
 
 ## Co funguje
 

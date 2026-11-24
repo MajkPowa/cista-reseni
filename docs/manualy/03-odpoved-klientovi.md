@@ -10,8 +10,8 @@ Dobrý den,
 děkuji za zpětnou vazbu, jsem rád, že se Vám návrh líbí. Většinu bodů jsme rovnou zapracovali,
 níže posílám přehled.
 
-Náhled webu: https://majkpowa.github.io/cista-reseni/
-Administrace: https://majkpowa.github.io/cista-reseni/admin/
+Web: https://www.cistareseni.cz/
+Administrace: https://www.cistareseni.cz/admin/
 
 ## 1. Administrace referencí — hotovo
 

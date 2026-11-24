@@ -96,11 +96,12 @@ Deny from all
 <IfModule mod_rewrite.c>
 RewriteEngine On
 # Jediná adresa webu: https://{host}/
+# (cesta z RewriteRule, ne REQUEST_URI: hosting přes http mapuje web do /www/)
 RewriteCond %{{HTTP_HOST}} ^{re.escape(bare)}$ [NC]
-RewriteRule ^ https://{host}%{{REQUEST_URI}} [R=301,L]
+RewriteRule ^(.*)$ https://{host}/$1 [R=301,L]
 RewriteCond %{{HTTPS}} !=on
 RewriteCond %{{HTTP:X-Forwarded-Proto}} !https
-RewriteRule ^ https://{host}%{{REQUEST_URI}} [R=301,L]
+RewriteRule ^(.*)$ https://{host}/$1 [R=301,L]
 # Úvodní stránka bez index.html
 RewriteCond %{{THE_REQUEST}} \\s/+(.*/)?index\\.html[\\s?] [NC]
 RewriteRule ^(.*/)?index\\.html$ /$1 [R=301,L]
