@@ -5,13 +5,13 @@
 # The previous assets/ folder stays in place: old image and PDF addresses keep working and
 # scripts/restore_media.py keeps reading the original media from there.
 #
-# Needs: lftp; FTP_HOST, FTP_USER, LFTP_PASSWORD, WEB_ROOT (ends with /), FTP_VERIFY (yes|no).
+# Needs: lftp; FTP_HOST, FTP_USER, LFTP_PASSWORD, WEB_ROOT (ends with /), FTP_CA (from scripts/ftp_ca.sh).
 set -euo pipefail
 BACKUP=_puvodni-web
 KEEP=". .. assets $BACKUP .well-known cgi-bin"
 
 ftp() {
-  lftp --env-password -u "$FTP_USER" "$FTP_HOST" -e "set ftp:ssl-force true; set ssl:verify-certificate ${FTP_VERIFY:-yes}; set net:max-retries 2; set net:timeout 30; $1; bye"
+  lftp --env-password -u "$FTP_USER" "$FTP_HOST" -e "set ftp:ssl-force true; set ssl:ca-file $FTP_CA; set net:max-retries 2; set net:timeout 30; $1; bye"
 }
 
 listing=$(ftp "cls -1a '$WEB_ROOT'")

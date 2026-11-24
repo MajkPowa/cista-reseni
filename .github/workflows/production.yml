@@ -19,27 +19,25 @@ concurrency:
   group: production
   cancel-in-progress: false
 env:
-  FTP_HOST: cistareseni.cz
-  WEB_ROOT: /
-  FTP_VERIFY: 'yes'
+  # Jméno, na které zní certifikát FTP serveru (stejný server jako cistareseni.cz, 185.25.184.178).
+  FTP_HOST: vm1720.cust.netio.cz
+  WEB_ROOT: /www/
+  FTP_CA: ${{ github.workspace }}/../ftp-ca.pem
 jobs:
   probe:
     if: inputs.mode == 'probe'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - uses: actions/checkout@v4
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+      - name: Verify the FTP server certificate
+        run: bash scripts/ftp_ca.sh "$FTP_HOST" "$FTP_CA"
       - name: List folders on the FTP server
         env:
           FTP_USER: ${{ secrets.FTP_USER }}
           LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          for verify in yes no; do
-            echo "== FTPS, certificate verification: $verify"
-            if lftp --env-password -u "$FTP_USER" "$FTP_HOST" -e "set ftp:ssl-force true; set ssl:verify-certificate $verify; set net:max-retries 1; set net:timeout 20; pwd; cls -1aF /; bye"; then
-              echo "== works with certificate verification: $verify"; break
-            fi
-          done
+        run: lftp --env-password -u "$FTP_USER" "$FTP_HOST" -e "set ftp:ssl-force true; set ssl:ca-file $FTP_CA; set net:max-retries 1; set net:timeout 20; cls -1aF / $WEB_ROOT; bye"
 
   deploy:
     if: inputs.mode != 'probe'
@@ -70,6 +68,8 @@ jobs:
           ! grep -rl 'majkpowa.github.io' dist --include=*.html
           # Stránka 404 se zobrazuje i na hlubších adresách: odkazy v ní se počítají od kořene webu.
           sed -i 's#<head>#<head><base href="/">#' dist/404.html
+      - name: Verify the FTP server certificate
+        run: bash scripts/ftp_ca.sh "$FTP_HOST" "$FTP_CA"
       - name: Move the previous website into a protected folder
         if: inputs.mode == 'go-live'
         env:
@@ -80,12 +80,14 @@ jobs:
           bash scripts/ftp_backup_old_site.sh
       - name: Upload changed files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        env:
+          NODE_EXTRA_CA_CERTS: ${{ github.workspace }}/../ftp-ca-intermediates.pem
         with:
           server: ${{ env.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
-          security: ${{ env.FTP_VERIFY == 'yes' && 'strict' || 'loose' }}
+          security: strict
           local-dir: dist/
           server-dir: ${{ env.WEB_ROOT }}
           timeout: 120000
