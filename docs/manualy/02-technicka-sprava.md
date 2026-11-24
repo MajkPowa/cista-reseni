@@ -108,15 +108,19 @@ Funkce `onInquiryCreated` po každé nové poptávce pošle upozornění na `NOT
 a potvrzení zákazníkovi. Dokud má tajný údaj `SMTP_URL` hodnotu `unset`, jen k poptávce
 zapíše `mail: not_configured` a v administraci je u ní poznámka, že e-mail neodešel.
 
-1. Získejte SMTP přístup ke schránce, ze které se má odesílat (ideálně `info@cistareseni.cz`
-   po přechodu na Google Workspace nebo Microsoft 365; u obou je potřeba heslo aplikace
-   nebo SMTP relay).
-2. Nastavte tajný údaj — hodnotu zadáváte vy, do repozitáře nepatří:
+E-maily odcházejí ze schránky `web@cistareseni.cz` na hostingu nd-webs.cz (SMTP server
+`mail.nd-webs.cz:465`, webmail https://mail.nd-webs.cz/). Upozornění chodí na `info@cistareseni.cz`,
+odpověď zákazníka na potvrzení míří tamtéž.
+
+1. Schránku založí správce hostingu (administrace nd-webs.cz).
+2. Spusťte v terminálu a zadejte heslo ke schránce — skript ověří přihlášení, pošle zkušební
+   e-mail do té samé schránky a teprve pak uloží přístup jako tajný údaj `SMTP_URL`:
    ```sh
-   firebase functions:secrets:set SMTP_URL --project cista-reseni-20261112
+   node scripts/smtp_setup.js
    ```
-   Tvar: `smtps://UZIVATEL:HESLO@SERVER:465` (znak `@` v uživateli zapište jako `%40`).
-   Příklady serverů: `smtp.gmail.com:465`, `smtp.office365.com:587` (pak `smtp://…:587`).
+   Po změně hesla ke schránce stačí skript spustit znovu (a znovu nasadit funkce).
+   Jiný poskytovatel: `firebase functions:secrets:set SMTP_URL`, tvar
+   `smtps://UZIVATEL:HESLO@SERVER:465` (znak `@` v uživateli zapište jako `%40`).
 3. Případně upravte odesílatele a příjemce v `functions/.env` (`MAIL_FROM`, `NOTIFY_TO`, `ADMIN_URL`).
 4. Nasaďte funkce: `firebase deploy --only functions --project cista-reseni-20261112`.
 5. Odešlete zkušební poptávku a ověřte, že dorazily oba e-maily.

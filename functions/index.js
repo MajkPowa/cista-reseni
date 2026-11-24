@@ -6,7 +6,7 @@
  * 2) onReferenceDeleted – po smazání reference odstraní její fotografie z úložiště.
  *
  * Odesílání e-mailů se zapíná tajným údajem SMTP_URL (Secret Manager), např.
- *   smtps://info%40cistareseni.cz:HESLO@smtp.example.com:465
+ *   smtps://web%40cistareseni.cz:HESLO@mail.nd-webs.cz:465  (nastaví scripts/smtp_setup.js)
  * Dokud má hodnotu "unset", poptávky se jen ukládají a v administraci je u nich
  * uvedeno, že e-mail nebyl odeslán. Postup je v docs/manualy/02-technicka-sprava.md.
  */
@@ -23,7 +23,7 @@ initializeApp();
 setGlobalOptions({ region: 'europe-west3', maxInstances: 5 });
 
 const SMTP_URL = defineSecret('SMTP_URL');
-const MAIL_FROM = defineString('MAIL_FROM', { default: 'Čistá řešení <info@cistareseni.cz>' });
+const MAIL_FROM = defineString('MAIL_FROM', { default: 'Čistá řešení <web@cistareseni.cz>' });
 const NOTIFY_TO = defineString('NOTIFY_TO', { default: 'info@cistareseni.cz' });
 const ADMIN_URL = defineString('ADMIN_URL', { default: 'https://www.cistareseni.cz/admin/' });
 
