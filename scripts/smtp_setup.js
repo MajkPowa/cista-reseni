@@ -13,6 +13,7 @@
  */
 const { spawnSync } = require('node:child_process');
 const path = require('node:path');
+const tls = require('node:tls');
 const nodemailer = require(path.join(__dirname, '..', 'functions', 'node_modules', 'nodemailer'));
 
 const PROJECT = 'cista-reseni-20261112';
@@ -41,10 +42,41 @@ function askHidden(question) {
         }
         if (ch === '\u0003') { process.stdout.write('\n'); process.exit(130); }
         if (ch === '\u007f' || ch === '\b') { value = value.slice(0, -1); continue; }
+        if (ch < ' ') continue; // ostatní řídicí znaky (např. Ctrl+V, který nevložil text)
         value += ch;
       }
     };
     stdin.on('data', onData);
+  });
+}
+
+// Heslo zkopírované do schránky Windows (Ctrl+C) – obejde problémy s psaním do terminálu.
+function clipboardText() {
+  if (process.platform !== 'win32') return '';
+  const r = spawnSync('powershell.exe', ['-NoProfile', '-Command',
+    '[Console]::OutputEncoding=[Text.Encoding]::UTF8; Get-Clipboard -Raw'], { encoding: 'utf8' });
+  return (r.stdout || '').replace(/\r?\n$/, '');
+}
+
+// Přihlášení stejnou cestou jako webmail (IMAP): odliší špatně zadané heslo od problému s odesíláním.
+function imapLogin(user, pass) {
+  return new Promise(resolve => {
+    const socket = tls.connect({ host: SMTP_HOST, port: 993, servername: SMTP_HOST });
+    let buffer = '';
+    let sent = false;
+    const done = ok => { socket.destroy(); resolve(ok); };
+    socket.setTimeout(20000, () => done(null));
+    socket.on('error', () => done(null));
+    socket.on('data', data => {
+      buffer += data.toString('utf8');
+      if (!sent && /^\* OK/m.test(buffer)) {
+        sent = true;
+        const token = Buffer.from(`\0${user}\0${pass}`, 'utf8').toString('base64');
+        socket.write(`a1 AUTHENTICATE PLAIN ${token}\r\n`);
+      }
+      const m = buffer.match(/^a1 (OK|NO|BAD)/m);
+      if (m) done(m[1] === 'OK');
+    });
   });
 }
 
@@ -54,8 +86,20 @@ function askHidden(question) {
     process.exit(1);
   }
   console.log(`Schránka: ${mailbox}  (server ${SMTP_HOST}:${SMTP_PORT})`);
-  const password = await askHidden('Heslo ke schránce (nezobrazuje se), pak Enter: ');
+  let password = await askHidden('Napište heslo a Enter – nebo heslo zkopírujte (Ctrl+C) a stiskněte jen Enter: ');
+  if (!password) {
+    password = clipboardText();
+    if (password) console.log('Heslo vzato ze zkopírovaného textu.');
+  }
   if (!password) { console.error('Heslo je prázdné, nic se nezměnilo.'); process.exit(1); }
+  console.log(`Zadáno ${password.length} znaků.`);
+  const imap = await imapLogin(mailbox, password);
+  if (imap === false) {
+    console.error('✗ Stejné jméno a heslo nepustí ani do webmailu (IMAP). Heslo se do terminálu dostalo jinak,');
+    console.error('  než ho píšete do webmailu – zkuste ho zkopírovat a stisknout jen Enter. Ve Firebase se nic nezměnilo.');
+    process.exit(1);
+  }
+  if (imap) console.log('✓ Jméno a heslo platí (přihlášení jako ve webmailu prošlo).');
 
   const url = `smtps://${encodeURIComponent(mailbox)}:${encodeURIComponent(password)}@${SMTP_HOST}:${SMTP_PORT}`;
   const transport = nodemailer.createTransport(url);
@@ -71,7 +115,9 @@ function askHidden(question) {
     console.log(`✓ Zkušební e-mail odeslán do ${mailbox}.`);
   } catch (error) {
     console.error(`✗ Nepodařilo se: ${error && error.message || error}`);
-    console.error('Zkontrolujte, že schránka existuje a heslo je správné. Ve Firebase se nic nezměnilo.');
+    console.error(imap
+      ? 'Heslo platí, ale server nepovolil odesílání přes SMTP – je potřeba ho zapnout u hostingu. Ve Firebase se nic nezměnilo.'
+      : 'Zkontrolujte, že schránka existuje a heslo je správné. Ve Firebase se nic nezměnilo.');
     process.exit(1);
   }
 
