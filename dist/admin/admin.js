@@ -1,7 +1,7 @@
 /*
  * Čistá řešení — administrace webu.
- * Přihlášení (Firebase Auth), reference s fotografiemi (Firestore + Storage),
- * poptávky se stavy, kategorie a správci. Bez sestavovacího kroku: čistý ES modul.
+ * Přihlášení (Firebase Auth), reference s fotografiemi (Firestore + Storage), dokumenty ke stažení,
+ * recenze, poptávky se stavy, kategorie a správci. Bez sestavovacího kroku: čistý ES modul.
  */
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js';
 import {
@@ -10,7 +10,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js';
 import {
   getFirestore, connectFirestoreEmulator, collection, doc, getDoc, setDoc, updateDoc, deleteDoc,
-  onSnapshot, query, orderBy, limit, where, serverTimestamp, documentId
+  onSnapshot, query, orderBy, limit, where, serverTimestamp, documentId, writeBatch
 } from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-firestore.js';
 import {
   getStorage, connectStorageEmulator, ref as storageRef, uploadBytes, getDownloadURL, deleteObject
@@ -76,7 +76,7 @@ function explain(error) {
     'auth/too-many-requests': 'Příliš mnoho pokusů. Zkuste to prosím za chvíli.',
     'auth/network-request-failed': 'Nepodařilo se připojit. Zkontrolujte internet.',
     'permission-denied': 'K této akci nemáte oprávnění.',
-    'storage/unauthorized': 'Fotografii se nepodařilo nahrát – chybí oprávnění.',
+    'storage/unauthorized': 'Soubor se nepodařilo nahrát – chybí oprávnění nebo je soubor příliš velký.',
     'unavailable': 'Služba je dočasně nedostupná. Zkuste to znovu.'
   };
   return messages[code] || 'Něco se nepovedlo. Zkuste to prosím znovu.';
@@ -198,6 +198,8 @@ const state = {
   categories: config.categories.map(item => ({ ...item })),
   categoryDraft: null,
   references: [],
+  documents: [],
+  reviews: [],
   inquiries: [],
   stats: [],
   admins: [],
@@ -223,6 +225,14 @@ function startListening() {
     state.references = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort(compareReferences);
     renderReferences(); renderCategories();
   }, fail));
+  unsubscribers.push(onSnapshot(collection(db, 'documents'), snapshot => {
+    state.documents = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort(byOrder);
+    renderDocuments();
+  }, fail));
+  unsubscribers.push(onSnapshot(collection(db, 'reviews'), snapshot => {
+    state.reviews = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort(byOrder);
+    renderReviews();
+  }, fail));
   unsubscribers.push(onSnapshot(query(collection(db, 'inquiries'), orderBy('createdAt', 'desc'), limit(500)), snapshot => {
     state.inquiries = snapshot.docs.map(item => ({ id: item.id, ...item.data({ serverTimestamps: 'estimate' }) }));
     renderInquiries(); renderStats();
@@ -238,6 +248,7 @@ function startListening() {
     renderAdmins();
   }, fail));
 }
+const byOrder = (a, b) => (a.order || 0) - (b.order || 0) || (toDate(a.createdAt)?.getTime() || 0) - (toDate(b.createdAt)?.getTime() || 0);
 function compareReferences(a, b) {
   const first = b.sortDate || b.date || '', second = a.sortDate || a.date || '';
   if (first !== second) return first < second ? -1 : 1;
@@ -249,7 +260,7 @@ function openTab(name) {
   state.tab = name;
   $$('[data-tab]').forEach(button => button.toggleAttribute('aria-current', button.dataset.tab === name));
   $$('[data-tab]').forEach(button => { if (button.dataset.tab === name) button.setAttribute('aria-current', 'page'); });
-  ['inquiries', 'references', 'categories', 'stats', 'admins'].forEach(tab => { $(`#tab-${tab}`).hidden = tab !== name; });
+  ['inquiries', 'references', 'documents', 'reviews', 'categories', 'stats', 'admins'].forEach(tab => { $(`#tab-${tab}`).hidden = tab !== name; });
   try { sessionStorage.setItem('crAdminTab', name); } catch { /* bez úložiště */ }
 }
 $$('[data-tab]').forEach(button => button.addEventListener('click', () => openTab(button.dataset.tab)));
@@ -657,6 +668,364 @@ async function removeReference(ref) {
 }
 $('#reference-delete').addEventListener('click', async () => {
   if (editor.original && await removeReference(editor.original)) referenceDialog.close();
+});
+
+// =====================================================================
+// DOKUMENTY A RECENZE – společné
+// =====================================================================
+const safeFileName = name => String(name || 'soubor').normalize('NFD').replace(/[̀-ͯ]/g, '')
+  .replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '').slice(-70) || 'soubor';
+const stamp = () => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+const fileSize = bytes => !bytes ? '' : bytes > 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1).replace('.', ',')} MB` : `${Math.max(1, Math.round(bytes / 1024))} kB`;
+const storedPaths = item => [item?.file?.path, item?.cover?.path, item?.logo?.path].filter(Boolean);
+const dropFiles = (zone, handler) => {
+  ['dragenter', 'dragover'].forEach(name => zone.addEventListener(name, event => { event.preventDefault(); zone.classList.add('is-over'); }));
+  ['dragleave', 'drop'].forEach(name => zone.addEventListener(name, event => { event.preventDefault(); zone.classList.remove('is-over'); }));
+  zone.addEventListener('drop', event => { if (event.dataTransfer.files[0]) handler(event.dataTransfer.files[0]); });
+};
+async function upload(path, blob, contentType, downloadName) {
+  const target = storageRef(storage, path);
+  const meta = { contentType, cacheControl: 'public, max-age=31536000, immutable' };
+  if (downloadName) meta.contentDisposition = `inline; filename="${safeFileName(downloadName)}"`;
+  await uploadBytes(target, blob, meta);
+  return { url: await getDownloadURL(target), path: target.fullPath };
+}
+// Pořadí na webu: posun o jedno místo, pak se všem položkám přečíslí pořadí po desítkách.
+async function moveItem(collectionName, items, index, step) {
+  const list = [...items];
+  const [item] = list.splice(index, 1);
+  list.splice(index + step, 0, item);
+  const batch = writeBatch(db);
+  list.forEach((entry, position) => {
+    const order = (position + 1) * 10;
+    if (entry.order !== order) batch.update(doc(db, collectionName, entry.id), { order });
+  });
+  try { await batch.commit(); } catch (error) { toast(explain(error), 'error'); }
+}
+const nextOrder = items => Math.max(0, ...items.map(item => item.order || 0)) + 10;
+function orderButtons(collectionName, items, index, title) {
+  return [
+    h('button', { type: 'button', class: 'btn btn-small order-btn', text: '↑', title: 'Posunout výš', 'aria-label': `Posunout výš: ${title}`, disabled: index === 0, onclick: () => moveItem(collectionName, items, index, -1) }),
+    h('button', { type: 'button', class: 'btn btn-small order-btn', text: '↓', title: 'Posunout níž', 'aria-label': `Posunout níž: ${title}`, disabled: index === items.length - 1, onclick: () => moveItem(collectionName, items, index, 1) })
+  ];
+}
+
+// =====================================================================
+// DOKUMENTY
+// =====================================================================
+const documentCategories = config.documentCategories || { ostatni: 'Ostatní' };
+$('#doc-category').append(...Object.entries(documentCategories).map(([key, label]) => h('option', { value: key, text: label })));
+
+function renderDocuments() {
+  const items = state.documents;
+  $('#document-count').textContent = `${items.length} ${items.length === 1 ? 'dokument' : items.length > 1 && items.length < 5 ? 'dokumenty' : 'dokumentů'}`;
+  const list = $('#document-list');
+  if (!items.length) {
+    list.replaceChildren(h('p', { class: 'empty', text: 'Zatím tu není žádný dokument. Začněte tlačítkem „Přidat dokument“.' }));
+    return;
+  }
+  list.replaceChildren(...items.map((item, index) => {
+    const cover = item.cover && item.cover.url;
+    const type = /pdf/i.test(item.file?.type || '') ? 'PDF' : 'Obrázek';
+    return h('div', { class: `row row-reference${item.published ? '' : ' is-hidden'}` }, [
+      h('span', { class: `row-thumb ${cover ? 'is-contain' : 'is-empty'}` }, cover ? h('img', { src: assetUrl(cover), alt: '', loading: 'lazy' }) : type.toUpperCase()),
+      h('span', { class: 'row-main' }, [
+        h('strong', { text: item.title }),
+        h('span', { class: 'row-sub', text: [item.kind, documentCategories[item.category], type, fileSize(item.file?.size)].filter(Boolean).join(' · ') })
+      ]),
+      h('span', { class: 'row-tags' }, [
+        h('span', { class: `tag ${item.published ? 'tag-live' : 'tag-off'}`, text: item.published ? 'Zveřejněno' : 'Skryto' })
+      ]),
+      h('span', { class: 'row-actions' }, [
+        ...orderButtons('documents', items, index, item.title),
+        h('a', { class: 'btn btn-small', href: assetUrl(item.file?.url), target: '_blank', rel: 'noopener', text: 'Otevřít' }),
+        h('button', { type: 'button', class: 'btn btn-small', text: 'Upravit', 'aria-label': `Upravit: ${item.title}`, onclick: () => openDocument(item.id) }),
+        h('button', { type: 'button', class: 'btn btn-small btn-danger-ghost', text: 'Smazat', 'aria-label': `Smazat: ${item.title}`, onclick: () => removeDocument(item) })
+      ])
+    ]);
+  }));
+}
+
+const documentDialog = $('#document-dialog');
+const docEditor = { id: null, original: null, file: null, cover: null, preview: '', processing: false };
+
+function renderDocumentPreview() {
+  const box = $('#doc-preview');
+  const file = docEditor.file;
+  const current = docEditor.original?.file;
+  if (!file && !current) { fill(box); return; }
+  const image = docEditor.preview || (docEditor.original?.cover?.url ? assetUrl(docEditor.original.cover.url) : '');
+  fill(box,
+    image ? h('img', { src: image, alt: 'Náhled první strany' }) : null,
+    h('p', {}, file
+      ? [h('strong', { text: file.name }), `${fileSize(file.size)} · nahraje se po uložení`]
+      : [h('strong', { text: 'Současný soubor' }), h('a', { href: assetUrl(current.url), target: '_blank', rel: 'noopener', text: 'Otevřít' }), ` · ${fileSize(current.size)} · novým souborem ho nahradíte`])
+  );
+}
+
+// Náhled první strany PDF vykreslí knihovna PDF.js (načte se jen při nahrání PDF).
+let pdfjs = null;
+async function pdfCover(file) {
+  if (!pdfjs) {
+    pdfjs = await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs');
+    pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs';
+  }
+  const pdf = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+  try {
+    const page = await pdf.getPage(1);
+    const base = page.getViewport({ scale: 1 });
+    const viewport = page.getViewport({ scale: Math.min(3, 640 / base.width) });
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(viewport.width); canvas.height = Math.round(viewport.height);
+    const context = canvas.getContext('2d');
+    context.fillStyle = '#fff'; context.fillRect(0, 0, canvas.width, canvas.height);
+    await page.render({ canvasContext: context, viewport }).promise;
+    return await renderJpeg(canvas, 640, 0.84);
+  } finally { pdf.destroy(); }
+}
+
+async function chooseDocumentFile(file) {
+  const status = $('#doc-file-status');
+  const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+  const isImage = ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
+  if (!isPdf && !isImage) { status.textContent = 'Nahrát jde PDF nebo obrázek JPG, PNG či WebP. Výkres z CADu prosím nejdřív uložte jako PDF.'; return; }
+  if (file.size >= 40 * 1024 * 1024) { status.textContent = `Soubor má ${fileSize(file.size)}, nejvýše jde 40 MB. Zkuste ho zmenšit (např. „Zmenšit velikost PDF“).`; return; }
+  docEditor.processing = true;
+  status.textContent = 'Připravuji náhled…';
+  if (docEditor.preview) URL.revokeObjectURL(docEditor.preview);
+  docEditor.preview = ''; docEditor.cover = null;
+  docEditor.file = isPdf && file.type !== 'application/pdf' ? new File([file], file.name, { type: 'application/pdf' }) : file;
+  if (!$('#doc-title').value.trim()) $('#doc-title').value = file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').trim();
+  try {
+    docEditor.cover = isPdf ? await pdfCover(file) : await renderJpeg(await decodeImage(file), 640, 0.84);
+    docEditor.preview = URL.createObjectURL(docEditor.cover.blob);
+    status.textContent = '';
+  } catch (error) {
+    console.warn(error);
+    status.textContent = 'Náhled se nepodařilo vytvořit; dokument se na webu ukáže s názvem místo obrázku.';
+  }
+  docEditor.processing = false;
+  renderDocumentPreview();
+}
+$('#doc-file').addEventListener('change', event => { if (event.target.files[0]) chooseDocumentFile(event.target.files[0]); event.target.value = ''; });
+dropFiles($('#doc-dropzone'), chooseDocumentFile);
+
+function openDocument(id) {
+  const item = id ? state.documents.find(entry => entry.id === id) : null;
+  docEditor.id = item ? item.id : doc(collection(db, 'documents')).id;
+  docEditor.original = item;
+  docEditor.file = null; docEditor.cover = null; docEditor.processing = false;
+  if (docEditor.preview) URL.revokeObjectURL(docEditor.preview);
+  docEditor.preview = '';
+  $('#document-dialog-title').textContent = item ? 'Upravit dokument' : 'Nový dokument';
+  $('#doc-title').value = item?.title || '';
+  $('#doc-kind').value = item?.kind || '';
+  $('#doc-category').value = item?.category && documentCategories[item.category] ? item.category : Object.keys(documentCategories)[0];
+  $('#doc-published').checked = item ? !!item.published : true;
+  $('#document-delete').hidden = !item;
+  $('#document-progress').textContent = '';
+  $('#doc-file-status').textContent = '';
+  renderDocumentPreview();
+  documentDialog.showModal();
+  $('#doc-title').focus();
+}
+$('#add-document').addEventListener('click', () => openDocument(null));
+
+$('#form-document').addEventListener('submit', event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  if (!form.reportValidity()) return;
+  if (docEditor.processing) return toast('Počkejte prosím, až se připraví náhled.', 'error');
+  const original = docEditor.original;
+  if (!docEditor.file && !original?.file?.url) return toast('Vyberte soubor dokumentu.', 'error');
+  busy($('#document-save'), async () => {
+    const progress = $('#document-progress');
+    try {
+      let file = original?.file || null;
+      let cover = original?.cover || null;
+      if (docEditor.file) {
+        progress.textContent = 'Nahrávám soubor…';
+        const name = `${stamp()}-${safeFileName(docEditor.file.name)}`;
+        const uploaded = await upload(`documents/${docEditor.id}/${name}`, docEditor.file, docEditor.file.type, docEditor.file.name);
+        file = { ...uploaded, size: docEditor.file.size, type: docEditor.file.type, name: docEditor.file.name.slice(0, 160) };
+        cover = null;
+        if (docEditor.cover) {
+          progress.textContent = 'Nahrávám náhled…';
+          cover = { ...await upload(`documents/${docEditor.id}/${stamp()}_cover.jpg`, docEditor.cover.blob, 'image/jpeg'), w: docEditor.cover.w, h: docEditor.cover.h };
+        }
+      }
+      progress.textContent = 'Ukládám…';
+      const data = {
+        title: $('#doc-title').value.trim(), kind: $('#doc-kind').value.trim(), category: $('#doc-category').value,
+        file, cover, published: $('#doc-published').checked,
+        order: original ? (original.order || 0) : nextOrder(state.documents),
+        updatedAt: serverTimestamp(), updatedBy: auth.currentUser.email
+      };
+      if (!original) data.createdAt = serverTimestamp();
+      await setDoc(doc(db, 'documents', docEditor.id), data, { merge: true });
+      // Nahrazený soubor a jeho náhled už nejsou potřeba.
+      const kept = new Set(storedPaths(data));
+      await Promise.all(storedPaths(original).filter(path => !kept.has(path)).map(path => deleteObject(storageRef(storage, path)).catch(() => {})));
+      documentDialog.close();
+      toast(data.published ? 'Dokument uložen a je na webu.' : 'Dokument uložen (skrytý).');
+    } catch (error) {
+      console.error(error);
+      progress.textContent = '';
+      toast(explain(error), 'error');
+    }
+  });
+});
+
+async function removeDocument(item) {
+  if (!await confirmDialog('Smazat dokument?', `„${item.title}“ zmizí ze stránky Dokumenty. Pokud ho chcete jen dočasně schovat, vypněte raději „Zveřejnit na webu“.`)) return false;
+  try {
+    await deleteDoc(doc(db, 'documents', item.id));
+    await Promise.all(storedPaths(item).map(path => deleteObject(storageRef(storage, path)).catch(() => {})));
+    toast('Dokument smazán.');
+    return true;
+  } catch (error) { toast(explain(error), 'error'); return false; }
+}
+$('#document-delete').addEventListener('click', async () => {
+  if (docEditor.original && await removeDocument(docEditor.original)) documentDialog.close();
+});
+
+// =====================================================================
+// RECENZE
+// =====================================================================
+function renderReviews() {
+  const items = state.reviews;
+  $('#review-count').textContent = `${items.length} ${items.length === 1 ? 'recenze' : items.length > 1 && items.length < 5 ? 'recenze' : 'recenzí'}`;
+  const list = $('#review-list');
+  if (!items.length) {
+    list.replaceChildren(h('p', { class: 'empty', text: 'Zatím tu není žádná recenze. Bez recenzí se sekce na webu nezobrazí.' }));
+    return;
+  }
+  list.replaceChildren(...items.map((item, index) => h('div', { class: `row row-reference${item.published ? '' : ' is-hidden'}` }, [
+    h('span', { class: `row-thumb ${item.logo?.url ? 'is-contain' : 'is-empty'}` }, item.logo?.url ? h('img', { src: assetUrl(item.logo.url), alt: '', loading: 'lazy' }) : '„“'),
+    h('span', { class: 'row-main' }, [
+      h('strong', { text: item.name }),
+      h('span', { class: 'row-sub row-quote', text: `„${item.text}“` })
+    ]),
+    h('span', { class: 'row-tags' }, [
+      h('span', { class: `tag ${item.published ? 'tag-live' : 'tag-off'}`, text: item.published ? 'Zveřejněno' : 'Skryto' })
+    ]),
+    h('span', { class: 'row-actions' }, [
+      ...orderButtons('reviews', items, index, item.name),
+      h('button', { type: 'button', class: 'btn btn-small', text: 'Upravit', 'aria-label': `Upravit recenzi: ${item.name}`, onclick: () => openReview(item.id) }),
+      h('button', { type: 'button', class: 'btn btn-small btn-danger-ghost', text: 'Smazat', 'aria-label': `Smazat recenzi: ${item.name}`, onclick: () => removeReview(item) })
+    ])
+  ])));
+}
+
+const reviewDialog = $('#review-dialog');
+const reviewEditor = { id: null, original: null, logo: undefined, preview: '' };
+
+function renderLogoPreview() {
+  const box = $('#review-logo-preview');
+  const current = reviewEditor.logo === undefined ? reviewEditor.original?.logo : null;
+  const image = reviewEditor.preview || (current?.url ? assetUrl(current.url) : '');
+  if (!image) { fill(box); return; }
+  fill(box, h('img', { src: image, alt: 'Logo' }),
+    h('button', { type: 'button', class: 'btn btn-small btn-danger-ghost', text: 'Odebrat logo', onclick: () => {
+      if (reviewEditor.preview) URL.revokeObjectURL(reviewEditor.preview);
+      reviewEditor.preview = ''; reviewEditor.logo = null; renderLogoPreview();
+    } }));
+}
+async function chooseLogo(file) {
+  const status = $('#review-logo-status');
+  if (!file.type.startsWith('image/')) { status.textContent = 'Logo musí být obrázek (JPG, PNG).'; return; }
+  try {
+    const source = await decodeImage(file);
+    const width = source.width || source.naturalWidth, height = source.height || source.naturalHeight;
+    const scale = Math.min(1, 600 / Math.max(width, height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(width * scale); canvas.height = Math.round(height * scale);
+    canvas.getContext('2d').drawImage(source, 0, 0, canvas.width, canvas.height);
+    source.close?.();
+    // PNG zachová průhledné pozadí loga.
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    if (!blob) throw new Error('Převod selhal');
+    if (reviewEditor.preview) URL.revokeObjectURL(reviewEditor.preview);
+    reviewEditor.logo = { blob, w: canvas.width, h: canvas.height };
+    reviewEditor.preview = URL.createObjectURL(blob);
+    status.textContent = '';
+    renderLogoPreview();
+  } catch { status.textContent = 'Obrázek se nepodařilo načíst. Zkuste ho uložit jako PNG nebo JPG.'; }
+}
+$('#review-logo').addEventListener('change', event => { if (event.target.files[0]) chooseLogo(event.target.files[0]); event.target.value = ''; });
+dropFiles($('#review-dropzone'), chooseLogo);
+
+function openReview(id) {
+  const item = id ? state.reviews.find(entry => entry.id === id) : null;
+  reviewEditor.id = item ? item.id : doc(collection(db, 'reviews')).id;
+  reviewEditor.original = item;
+  reviewEditor.logo = undefined;
+  if (reviewEditor.preview) URL.revokeObjectURL(reviewEditor.preview);
+  reviewEditor.preview = '';
+  $('#review-dialog-title').textContent = item ? 'Upravit recenzi' : 'Nová recenze';
+  $('#review-text').value = item?.text || '';
+  $('#review-name').value = item?.name || '';
+  $('#review-url').value = item?.url || '';
+  $('#review-published').checked = item ? !!item.published : true;
+  $('#review-delete').hidden = !item;
+  $('#review-progress').textContent = '';
+  $('#review-logo-status').textContent = '';
+  renderLogoPreview();
+  reviewDialog.showModal();
+  $('#review-text').focus();
+}
+$('#add-review').addEventListener('click', () => openReview(null));
+
+$('#form-review').addEventListener('submit', event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const urlInput = $('#review-url');
+  const typed = urlInput.value.trim();
+  if (typed && !/^https?:\/\//i.test(typed)) urlInput.value = `https://${typed}`;
+  if (!form.reportValidity()) return;
+  busy($('#review-save'), async () => {
+    const progress = $('#review-progress');
+    const original = reviewEditor.original;
+    try {
+      let logo = original?.logo || null;
+      if (reviewEditor.logo === null) logo = null;
+      if (reviewEditor.logo?.blob) {
+        progress.textContent = 'Nahrávám logo…';
+        logo = { ...await upload(`reviews/${reviewEditor.id}/${stamp()}_logo.png`, reviewEditor.logo.blob, 'image/png'), w: reviewEditor.logo.w, h: reviewEditor.logo.h };
+      }
+      progress.textContent = 'Ukládám…';
+      const text = $('#review-text').value.replace(/\r\n/g, '\n').trim().replace(/^[„"“]+|[“"”]+$/g, '').trim();
+      const data = {
+        text, name: $('#review-name').value.trim(), url: urlInput.value.trim(), logo,
+        published: $('#review-published').checked,
+        order: original ? (original.order || 0) : nextOrder(state.reviews),
+        updatedAt: serverTimestamp(), updatedBy: auth.currentUser.email
+      };
+      if (!original) data.createdAt = serverTimestamp();
+      await setDoc(doc(db, 'reviews', reviewEditor.id), data, { merge: true });
+      const kept = new Set(storedPaths(data));
+      await Promise.all(storedPaths(original).filter(path => !kept.has(path)).map(path => deleteObject(storageRef(storage, path)).catch(() => {})));
+      reviewDialog.close();
+      toast(data.published ? 'Recenze uložena a je na webu.' : 'Recenze uložena (skrytá).');
+    } catch (error) {
+      console.error(error);
+      progress.textContent = '';
+      toast(explain(error), 'error');
+    }
+  });
+});
+
+async function removeReview(item) {
+  if (!await confirmDialog('Smazat recenzi?', `Recenze od „${item.name}“ zmizí z webu. Pokud ji chcete jen dočasně schovat, vypněte raději „Zveřejnit na webu“.`)) return false;
+  try {
+    await deleteDoc(doc(db, 'reviews', item.id));
+    await Promise.all(storedPaths(item).map(path => deleteObject(storageRef(storage, path)).catch(() => {})));
+    toast('Recenze smazána.');
+    return true;
+  } catch (error) { toast(explain(error), 'error'); return false; }
+}
+$('#review-delete').addEventListener('click', async () => {
+  if (reviewEditor.original && await removeReview(reviewEditor.original)) reviewDialog.close();
 });
 
 // =====================================================================

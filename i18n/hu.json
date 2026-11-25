@@ -41,7 +41,7 @@
  "8 snímků · fotografie a vyobrazení<br1/>Kliknutím otevřete větší detail.": "8 kép · fényképek és ábrák<br1/>Kattintásra nagyobb méretben nyílik meg.",
  "9 snímků · fotografie a vyobrazení<br1/>Kliknutím otevřete větší detail.": "9 kép · fényképek és ábrák<br1/>Kattintásra nagyobb méretben nyílik meg.",
  "<b1/> fotografií a vyobrazení": "<b1/> fénykép és illusztráció",
- "<b1/> původních PDF dokumentů": "<b1/> eredeti PDF-dokumentum",
+ "<b1/> dokumentů ke stažení": "<b1/> letölthető dokumentum",
  "<b1/> realizací k prozkoumání": "<b1/> megtekinthető projekt",
  "<i1/> Návrh nového webu": "<i1/> Új weboldal tervezete",
  "<span1/> NEZÁVISLÝ DODAVATEL VODOHOSPODÁŘSKÝCH TECHNOLOGIÍ": "<span1/> VÍZGAZDÁLKODÁSI TECHNOLÓGIÁK FÜGGETLEN SZÁLLÍTÓJA",
@@ -1848,5 +1848,14 @@
  "Školení vychází z vaší technologie.": "Az oktatás az Ön technológiájára épül.",
  "Žďár u Písku – kombinace DČOV a hospodaření s dešťovou vodou": "Žďár u Písku – házi szennyvíztisztító és esővíz-gazdálkodás kombinációja",
  "Žďár u Písku – kombinace DČOV a hospodaření s dešťovou vodou 12 / 2025": "Žďár u Písku – házi szennyvíztisztító és esővíz-gazdálkodás kombinációja 12 / 2025",
- "← Předchozí": "← Előző"
+ "← Předchozí": "← Előző",
+ "Ostatní": "Egyéb",
+ "{0} — otevřít dokument": "{0} – dokumentum megnyitása",
+ "Náhled první strany: {0}": "Az első oldal előnézete: {0}",
+ "ZKUŠENOSTI ZÁKAZNÍKŮ A PARTNERŮ": "ÜGYFELEINK ÉS PARTNEREINK TAPASZTALATAI",
+ "Předchozí recenze": "Előző vélemény",
+ "Další recenze": "Következő vélemény",
+ "Návod k obsluze": "Kezelési útmutató",
+ "Prohlášení o vlastnostech": "Teljesítménynyilatkozat",
+ "Přehled technologií": "Technológiai áttekintés"
 }

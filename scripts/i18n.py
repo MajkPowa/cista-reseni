@@ -394,11 +394,16 @@ def js_units() -> dict[str, str]:
 
 # ---------------------------------------------------------------- texts kept in the database
 def data_units() -> list[str]:
-    """Texts of the migrated references as stored in the database (lists are drawn from there in the browser)."""
+    """Texts of the migrated references, documents and reviews as stored in the database (drawn from there in the browser)."""
     sys.path.insert(0, str(ROOT / 'scripts'))
     from seed_firestore import build_documents
     found = []
     for path, fields in build_documents().items():
+        if path.startswith(('documents/', 'reviews/')):
+            for name in ('title', 'kind', 'text', 'name'):
+                if has_letters(fields.get(name) or ''):
+                    found.append(norm(fields[name]))
+            continue
         if not path.startswith('references/'):
             continue
         for name in ('title', 'headline', 'summary', 'location', 'coverNote'):

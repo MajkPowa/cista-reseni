@@ -243,3 +243,7 @@
 .program-card .program-visits{color:#dce8f7}
 .ext-programs .program-intro>p{color:#dce8f7}
 .ext-programs .program-note{color:#bfd0e4}
+
+/* Dokument bez náhledu (nahraný v administraci bez obrázku první strany). */
+.document-cover--plain{align-items:flex-start;justify-content:flex-start;background:linear-gradient(160deg,#e6effb 0%,#d8e7f7 100%)}
+.document-cover-title{display:block;max-width:15ch;color:var(--ink,#042752);font-size:clamp(19px,1.7vw,24px);font-weight:650;line-height:1.25;letter-spacing:-.02em;overflow-wrap:anywhere}

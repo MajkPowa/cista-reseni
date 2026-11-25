@@ -104,7 +104,34 @@ def build_documents():
             'createdAt': now, 'updatedAt': now, 'updatedBy': 'seed',
         }
     documents['settings/site'] = {'categories': [{'key': key, 'label': label} for key, label in CATEGORY_LABELS.items()], 'updatedAt': now}
+
+    # Dokumenty ke stažení z původního webu (soubory zůstávají v dist/assets, správce je může upravit nebo skrýt).
+    for index, item in enumerate(data['documents']):
+        asset = item['asset']
+        documents[f'documents/legacy-{index + 1}'] = {
+            'title': item['title'], 'kind': DOCUMENT_KINDS[min(index, 2)],
+            'category': 'cov' if index < 3 else 'destovka',
+            'file': {'url': asset['local'], 'size': asset['bytes'], 'type': 'application/pdf', 'name': Path(asset['local']).name},
+            'cover': {'url': f'assets/document-covers/{asset["sha256"][:12]}.webp', 'w': 453, 'h': 640},
+            'order': (index + 1) * 10, 'published': True, 'legacy': True,
+            'createdAt': now, 'updatedAt': now, 'updatedBy': 'seed',
+        }
+
+    # Recenze projektového partnera (dodaná 8. 11. 2026).
+    business = json.loads((ROOT / 'docs' / 'business-expansion.json').read_text(encoding='utf-8'))
+    testimonial = business.get('partner_testimonial')
+    if testimonial:
+        logo = assets.get(testimonial['logo_source']) or {}
+        documents['reviews/vodohospodar'] = {
+            'text': testimonial['text'], 'name': testimonial['author'], 'url': testimonial['url'],
+            'logo': {'url': logo['local'], 'w': logo.get('width', 0), 'h': logo.get('height', 0)} if logo.get('local') else None,
+            'order': 10, 'published': True, 'legacy': True,
+            'createdAt': now, 'updatedAt': now, 'updatedBy': 'seed',
+        }
     return documents
+
+
+DOCUMENT_KINDS = ('Návod k obsluze', 'Prohlášení o vlastnostech', 'Přehled technologií')
 
 
 class Firestore:

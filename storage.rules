@@ -1,7 +1,7 @@
 rules_version = '2';
 
-// Čistá řešení — pravidla úložiště fotografií.
-// Fotografie referencí jsou veřejně čitelné; nahrávat a mazat smí jen správci.
+// Čistá řešení — pravidla úložiště souborů.
+// Fotografie referencí, dokumenty a loga recenzí jsou veřejně čitelné; nahrávat a mazat smí jen správci.
 service firebase.storage {
   match /b/{bucket}/o {
     function isAdmin() {
@@ -27,6 +27,26 @@ service firebase.storage {
       allow list: if isAdmin();
       allow create, update: if isAdmin()
         && request.resource.size < 8 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|webp|png)');
+      allow delete: if isAdmin();
+    }
+
+    // Dokumenty ke stažení: PDF nebo obrázek do 40 MB a náhled první strany.
+    match /documents/{documentId}/{fileName} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.size < 40 * 1024 * 1024
+        && request.resource.contentType.matches('application/pdf|image/(jpeg|webp|png)');
+      allow delete: if isAdmin();
+    }
+
+    // Loga u recenzí.
+    match /reviews/{reviewId}/{fileName} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.size < 4 * 1024 * 1024
         && request.resource.contentType.matches('image/(jpeg|webp|png)');
       allow delete: if isAdmin();
     }

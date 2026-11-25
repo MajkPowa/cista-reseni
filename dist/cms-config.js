@@ -26,6 +26,9 @@ window.CR_CMS = {
     { key: 'ostatni', label: 'Další řešení' }
   ],
 
+  // Oblasti dokumentů ke stažení (filtr na stránce Dokumenty).
+  documentCategories: { cov: 'Čistírny', destovka: 'Dešťová voda', ostatni: 'Ostatní' },
+
   // Typy poptávek (shodné s formulářem na úvodní stránce a s pravidly databáze).
   services: {
     cov: 'Domovní čistírna',

@@ -2,7 +2,7 @@
 /*
  * Čistá řešení — napojení veřejného webu na redakční systém.
  *
- * Reference spravované v administraci se načítají z databáze (Firestore REST API,
+ * Reference, dokumenty a recenze spravované v administraci se načítají z databáze (Firestore REST API,
  * bez dalších knihoven). Statický obsah stránky zůstává jako záloha: když se data
  * nepodaří načíst, návštěvník uvidí původní výpis.
  *
@@ -462,6 +462,124 @@
     rootNode.querySelector('[data-detail-content]').hidden = false;
   }
 
+  // ---------- Dokumenty a recenze ze správy webu ----------
+  async function listPublished(collectionId, fields) {
+    const body = {
+      structuredQuery: {
+        from: [{ collectionId }],
+        where: { fieldFilter: { field: { fieldPath: 'published' }, op: 'EQUAL', value: { booleanValue: true } } },
+        select: { fields: fields.map(fieldPath => ({ fieldPath })) }
+      }
+    };
+    const rows = await request(`${documents}:runQuery${keyParam}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+    });
+    return rows.filter(row => row.document).map(row => decodeDocument(row.document))
+      .sort((a, b) => (a.order || 0) - (b.order || 0) || String(a.createdAt || '').localeCompare(String(b.createdAt || '')));
+  }
+  const sizeLabel = bytes => !bytes ? '' : bytes > 1024 * 1024
+    ? `${(bytes / 1024 / 1024).toFixed(1).replace('.', lang === 'hu' ? ',' : '.')} MB` : `${Math.max(1, Math.round(bytes / 1024))} kB`;
+  const fileType = file => /pdf/i.test(file.type || '') || /\.pdf($|\?)/i.test(file.url || '') ? 'PDF' : 'JPG';
+
+  function documentCard(item) {
+    const file = item.file || {};
+    const href = assetUrl(file.url);
+    const title = tr(item.title);
+    const type = fileType(file);
+    const cover = item.cover && item.cover.url;
+    return element('article', {
+      class: 'document-card', 'data-document-card': true, 'data-category': item.category || 'ostatni',
+      'data-search': [title, tr(item.kind)].filter(Boolean).join(' ')
+    }, [
+      element('a', { class: `document-cover${cover ? '' : ' document-cover--plain'}`, href, target: '_blank', rel: 'noopener', 'aria-label': `${title} – dokumentum megnyitása` }, [
+        cover
+          ? element('img', { src: assetUrl(cover), alt: `Az első oldal előnézete: ${title}`, width: item.cover.w || 453, height: item.cover.h || 640, loading: 'lazy', decoding: 'async' })
+          : element('strong', { class: 'document-cover-title', text: title }),
+        element('span', {}, [`${type} `, element('b', { 'aria-hidden': 'true' }, arrowIcon())])
+      ]),
+      element('div', { class: 'document-copy' }, [
+        element('p', { class: 'ed-kicker', text: [tr(item.kind), sizeLabel(file.size)].filter(Boolean).join(' / ') }),
+        element('h2', { text: title }),
+        element('div', {}, [
+          element('a', { class: 'text-link', href, target: '_blank', rel: 'noopener' }, ['Dokumentum megnyitása ', arrowIcon()]),
+          element('a', { class: 'document-download', href, download: true, text: 'Letöltés ↓' })
+        ])
+      ])
+    ]);
+  }
+
+  async function renderDocuments(grid) {
+    const items = (await listPublished('documents', ['title', 'kind', 'category', 'file', 'cover', 'order', 'createdAt']))
+      .filter(item => item.file && item.file.url);
+    grid.replaceChildren(...items.map(documentCard));
+    const labels = config.documentCategories || {};
+    const filters = document.querySelector('.document-toolbar .content-filters');
+    if (filters) {
+      const used = Object.keys(labels).filter(key => items.some(item => (item.category || 'ostatni') === key));
+      filters.replaceChildren(
+        element('button', { 'data-document-filter': 'all', 'aria-pressed': 'true', type: 'button', text: 'Összes' }),
+        ...(used.length > 1 ? used.map(key => element('button', { 'data-document-filter': key, 'aria-pressed': 'false', type: 'button', text: labels[key] })) : [])
+      );
+    }
+    const count = document.querySelector('.ed-count b');
+    if (count) count.textContent = items.length;
+    announce('cr:documents-rendered');
+  }
+
+  function reviewFigure(item) {
+    const name = tr(item.name);
+    let web = '';
+    try { web = /^https?:\/\//i.test(item.url || '') ? new URL(item.url).href : ''; } catch { /* neplatná adresa */ }
+    const host = web ? new URL(web).hostname.replace(/^www\./, '') : '';
+    const logo = item.logo && item.logo.url
+      ? element('img', { src: assetUrl(item.logo.url), alt: name, width: item.logo.w || 859, height: item.logo.h || 400, loading: 'lazy', decoding: 'async' })
+      : null;
+    const newWindow = () => element('span', { class: 'sr-only', text: ' (új ablakban nyílik meg)' });
+    return element('figure', { class: 'partner-testimonial-figure' }, [
+      element('blockquote', {}, element('p', { text: tr(item.text) })),
+      element('figcaption', {}, [
+        logo && (web
+          ? element('a', { class: 'partner-testimonial-logo', href: web, target: '_blank', rel: 'noopener' }, [logo, newWindow()])
+          : element('span', { class: 'partner-testimonial-logo' }, logo)),
+        element('div', { class: 'partner-testimonial-credit' }, [
+          element('cite', { text: name }),
+          web && element('a', { class: 'partner-testimonial-web', href: web, target: '_blank', rel: 'noopener' }, [`${host} `, arrowIcon(), newWindow()])
+        ])
+      ])
+    ]);
+  }
+
+  async function renderReviews(section) {
+    const items = (await listPublished('reviews', ['text', 'name', 'url', 'logo', 'order', 'createdAt'])).filter(item => item.text && item.name);
+    // Třída sekce nastavuje display:grid, atribut hidden by ji neschoval.
+    if (!items.length) { section.remove(); return; }
+    section.querySelectorAll('.partner-testimonial-figure, .partner-testimonial-stack').forEach(node => node.remove());
+    const figures = items.map(reviewFigure);
+    if (figures.length === 1) { section.append(figures[0]); return; }
+    section.classList.add('has-many');
+    const eyebrow = section.querySelector('.eyebrow');
+    if (eyebrow) eyebrow.textContent = 'ÜGYFELEINK ÉS PARTNEREINK TAPASZTALATAI';
+    const track = element('div', { class: 'partner-testimonial-track', tabindex: '0', role: 'group', 'aria-label': 'Recenze' }, figures);
+    const counter = element('span', { class: 'partner-testimonial-counter' });
+    const position = () => Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+    const go = step => track.scrollTo({ left: (position() + step) * track.clientWidth, behavior: 'smooth' });
+    const prev = element('button', { type: 'button', class: 'partner-testimonial-step', 'aria-label': 'Előző vélemény', text: '←' });
+    const next = element('button', { type: 'button', class: 'partner-testimonial-step', 'aria-label': 'Következő vélemény', text: '→' });
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+    const update = () => {
+      const index = Math.min(figures.length - 1, position());
+      counter.textContent = `${index + 1} / ${figures.length}`;
+      prev.disabled = index === 0;
+      next.disabled = index === figures.length - 1;
+      figures.forEach((figure, i) => figure.toggleAttribute('inert', i !== index));
+    };
+    let frame = 0;
+    track.addEventListener('scroll', () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update); }, { passive: true });
+    section.append(element('div', { class: 'partner-testimonial-stack' }, [track, element('div', { class: 'partner-testimonial-nav' }, [prev, counter, next])]));
+    update();
+  }
+
   // ---------- Původní (statické) detaily: respektovat změny z administrace ----------
   async function guardLegacyDetail(id) {
     try {
@@ -488,6 +606,8 @@
   run('[data-cms="reference-grid"]', renderReferenceLibrary);
   run('[data-cms="gallery-grid"]', syncGallery);
   run('[data-cms="reference-detail"]', renderReferenceDetail);
+  run('[data-cms="document-grid"]', renderDocuments);
+  run('#partner-testimonial', renderReviews);
   const legacyId = document.body.dataset.referenceId;
   if (legacyId) guardLegacyDetail(legacyId);
   countVisit();

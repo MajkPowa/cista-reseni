@@ -3,7 +3,8 @@
  * Čistá řešení — Cloud Functions
  *
  * 1) onInquiryCreated   – po uložení poptávky pošle upozornění firmě a potvrzení zákazníkovi.
- * 2) onReferenceDeleted – po smazání reference odstraní její fotografie z úložiště.
+ * 2) onReferenceDeleted, onDocumentFileDeleted, onReviewDeleted – po smazání reference,
+ *    dokumentu nebo recenze odstraní jejich soubory z úložiště.
  *
  * Odesílání e-mailů se zapíná tajným údajem SMTP_URL (Secret Manager), např.
  *   smtps://web%40cistareseni.cz:HESLO@mail.nd-webs.cz:465  (nastaví scripts/smtp_setup.js)
@@ -114,3 +115,16 @@ exports.onReferenceDeleted = onDocumentDeleted('references/{referenceId}', async
     logger.error('Fotografie smazané reference se nepodařilo odstranit.', { referenceId, error: String(error) });
   }
 });
+
+// Po smazání dokumentu nebo recenze odstraní i nahrané soubory (PDF, náhled, logo).
+for (const [name, collectionName] of [['onDocumentFileDeleted', 'documents'], ['onReviewDeleted', 'reviews']]) {
+  exports[name] = onDocumentDeleted(`${collectionName}/{itemId}`, async event => {
+    const { itemId } = event.params;
+    if (!/^[A-Za-z0-9_-]{1,80}$/.test(itemId)) return;
+    try {
+      await getStorage().bucket().deleteFiles({ prefix: `${collectionName}/${itemId}/` });
+    } catch (error) {
+      logger.error('Soubory smazané položky se nepodařilo odstranit.', { collectionName, itemId, error: String(error) });
+    }
+  });
+}

@@ -270,3 +270,24 @@ skriptem `scripts/i18n.py`; ručně se v těchto složkách nic neupravuje (při
   `poster-16x9-en.jpg`…). Když soubor pro jazyk chybí, použije se český.
 - **Telefon:** v jazykových verzích se číslo zobrazuje s předvolbou +420.
 - **Administrace a CRM** zůstávají jen česky.
+
+## 13. Dokumenty a recenze v administraci (od 25. 11. 2026)
+
+Klient si sám spravuje stránku Dokumenty (návody, letáky, výkresy) a recenze na úvodní stránce
+a na stránce O nás. Postup pro klienta je v nápovědě administrace (kapitoly 8 a 9).
+
+- **Data:** kolekce `documents` (název, druh, oblast `cov`/`destovka`/`ostatni`, soubor, náhled,
+  pořadí `order`, `published`) a `reviews` (text, jméno, web, logo, pořadí, `published`).
+  Veřejnost čte jen zveřejněné položky; zapisují správci (`firestore.rules`).
+- **Soubory:** Storage `documents/{id}/` (PDF nebo obrázek do 40 MB, náhled první strany JPEG)
+  a `reviews/{id}/` (logo PNG). Náhled PDF vykreslí administrace v prohlížeči přes PDF.js
+  (jsDelivr, `pdfjs-dist@4.10.38`). Po smazání položky uklidí soubory i funkce
+  `onDocumentFileDeleted` / `onReviewDeleted`.
+- **Web:** `dist/site-data.js` načte zveřejněné položky a nahradí jimi statický výpis
+  (`[data-cms="document-grid"]`, `#partner-testimonial`). Když se databáze nenačte, zůstane
+  statická záloha ze sestavení. Více recenzí se zobrazí jako posuvný pás se šipkami.
+- **Původní obsah:** 5 PDF a recenze Vodohospodáře jsou v databázi jako `documents/legacy-1…5`
+  a `reviews/vodohospodar` (soubory zůstávají na hostingu v `assets/`). Zakládá je
+  `scripts/seed_firestore.py`, který existující záznamy nepřepisuje.
+- **Jazykové verze:** texty původních dokumentů a recenze se překládají přes katalogy
+  (`i18n.py` je bere ze seedu); nové položky z administrace se v EN/HU zobrazí česky.

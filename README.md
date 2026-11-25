@@ -16,7 +16,7 @@ https://majkpowa.github.io/cista-reseni/ (neindexuje se)
 - Samostatné stránky pro ČOV pro firmy a obce, servis a údržbu, zprovoznění, školení obsluhy a rekonstrukce. Nové textové servisní příklady a hodnocení pocházejí z klientského zadání.
 - Reference podle typu zákazníka a služby. Technologie, skutečně provedené práce a kapacita jsou uvedené jen v doloženém rozsahu; číslo modelu se nepřevádí na EO.
 - Fotogalerie s 278 snímky a produktovými vyobrazeními, filtrem podle realizace, postupným zobrazením dalších snímků a ovládáním zvětšených fotografií klávesnicí.
-- 5 původních PDF dokumentů se skutečnými náhledy první strany, vyhledáváním a filtrem.
+- Dokumenty ke stažení s náhledy první strany, vyhledáváním a filtrem; klient je spravuje v administraci (stejně jako recenze).
 - Obrazová stránka o firmě, kontaktní karty s kopírováním údajů a volbou tématu poptávky.
 - Rozbalovací odpovědi na otázky.
 - Dvoukrokový poptávkový formulář s devíti tématy, údaji o stávajícím zařízení, validací a uložením poptávky do administrace.

@@ -41,7 +41,7 @@
  "8 snímků · fotografie a vyobrazení<br1/>Kliknutím otevřete větší detail.": "8 images · photos and illustrations<br1/>Click to enlarge.",
  "9 snímků · fotografie a vyobrazení<br1/>Kliknutím otevřete větší detail.": "9 images · photos and illustrations<br1/>Click to open a larger view.",
  "<b1/> fotografií a vyobrazení": "<b1/> photos and illustrations",
- "<b1/> původních PDF dokumentů": "<b1/> original PDF documents",
+ "<b1/> dokumentů ke stažení": "<b1/> documents to download",
  "<b1/> realizací k prozkoumání": "<b1/> projects to explore",
  "<i1/> Návrh nového webu": "<i1/> New website draft",
  "<span1/> NEZÁVISLÝ DODAVATEL VODOHOSPODÁŘSKÝCH TECHNOLOGIÍ": "<span1/> INDEPENDENT SUPPLIER OF WATER MANAGEMENT TECHNOLOGIES",
@@ -1848,5 +1848,14 @@
  "Školení vychází z vaší technologie.": "The training is based on your technology.",
  "Žďár u Písku – kombinace DČOV a hospodaření s dešťovou vodou": "Žďár u Písku – a domestic WWTP combined with rainwater management",
  "Žďár u Písku – kombinace DČOV a hospodaření s dešťovou vodou 12 / 2025": "Žďár u Písku – a domestic WWTP combined with rainwater management 12 / 2025",
- "← Předchozí": "← Previous"
+ "← Předchozí": "← Previous",
+ "Ostatní": "Other",
+ "{0} — otevřít dokument": "{0} — open document",
+ "Náhled první strany: {0}": "First page preview: {0}",
+ "ZKUŠENOSTI ZÁKAZNÍKŮ A PARTNERŮ": "WHAT CUSTOMERS AND PARTNERS SAY",
+ "Předchozí recenze": "Previous review",
+ "Další recenze": "Next review",
+ "Návod k obsluze": "Operating manual",
+ "Prohlášení o vlastnostech": "Declaration of performance",
+ "Přehled technologií": "Technology overview"
 }

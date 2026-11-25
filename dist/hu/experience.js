@@ -58,17 +58,18 @@
     updateReading();
   }
 
-  const documents = [...document.querySelectorAll('[data-document-card]')];
-  if (documents.length) {
-    const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  // Dokumenty: karty se po načtení z administrace vymění (událost cr:documents-rendered), proto se hledají vždy znovu.
+  if (document.querySelector('[data-document-card], .document-grid')) {
+    const normalize = value => value.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
     const search = document.getElementById('document-search');
-    const filters = [...document.querySelectorAll('[data-document-filter]')];
     let category = 'all';
+    const markFilters = () => document.querySelectorAll('[data-document-filter]').forEach(item => item.setAttribute('aria-pressed', String(item.dataset.documentFilter === category)));
     const apply = () => {
+      const documents = [...document.querySelectorAll('[data-document-card]')];
       const query = normalize(search?.value.trim() || '');
       let count = 0;
       documents.forEach(card => {
-        const show = (category === 'all' || card.dataset.category === category) && normalize(card.dataset.search).includes(query);
+        const show = (category === 'all' || card.dataset.category === category) && normalize(card.dataset.search || '').includes(query);
         card.hidden = !show;
         if (show) count++;
       });
@@ -76,11 +77,18 @@
       document.getElementById('document-empty').hidden = count > 0;
     };
     search?.addEventListener('input', apply);
-    filters.forEach(button => button.addEventListener('click', () => {
+    document.addEventListener('click', event => {
+      const button = event.target.closest('[data-document-filter]');
+      if (!button) return;
       category = button.dataset.documentFilter;
-      filters.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      markFilters();
       apply();
-    }));
+    });
+    document.addEventListener('cr:documents-rendered', () => {
+      if (!document.querySelector(`[data-document-filter="${CSS.escape(category)}"]`)) category = 'all';
+      markFilters();
+      apply();
+    });
     apply();
   }
 

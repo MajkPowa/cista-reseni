@@ -1,7 +1,7 @@
 rules_version = '2';
 
 // Čistá řešení — pravidla databáze.
-// Veřejnost: čte zveřejněné reference a nastavení webu, smí založit poptávku.
+// Veřejnost: čte zveřejněné reference, dokumenty, recenze a nastavení webu, smí založit poptávku.
 // Správci: ověřený e-mail uvedený v kolekci admins/{e-mail}.
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -36,6 +36,36 @@ service cloud.firestore {
         && request.resource.data.categories is list
         && request.resource.data.photos is list
         && request.resource.data.photos.size() <= 60;
+      allow delete: if isAdmin();
+    }
+
+    // ---------- Dokumenty ke stažení (návody, letáky, výkresy) ----------
+    match /documents/{id} {
+      allow get, list: if resource.data.published == true || isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 200
+        && request.resource.data.published is bool
+        && request.resource.data.order is number
+        && request.resource.data.file is map
+        && request.resource.data.file.url is string
+        && request.resource.data.file.url.size() > 0;
+      allow delete: if isAdmin();
+    }
+
+    // ---------- Recenze zákazníků a partnerů ----------
+    match /reviews/{id} {
+      allow get, list: if resource.data.published == true || isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 3000
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 200
+        && request.resource.data.published is bool
+        && request.resource.data.order is number;
       allow delete: if isAdmin();
     }
 

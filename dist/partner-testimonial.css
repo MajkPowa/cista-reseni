@@ -23,3 +23,15 @@
 @media(max-width:440px){.partner-testimonial{padding:30px 24px;gap:24px}.partner-testimonial-intro{padding-right:35px}.partner-testimonial .eyebrow{font-size:11px;letter-spacing:.11em}.partner-testimonial h2{font-size:28px;max-width:17ch}.partner-testimonial-mark{right:-7px;bottom:-12px;font-size:72px;height:54px}.partner-testimonial blockquote p{font-size:19px;line-height:1.75}.partner-testimonial figcaption{flex-direction:column;align-items:flex-start;gap:18px}.partner-testimonial-logo{flex-basis:auto;width:139px;min-height:74px}.partner-testimonial cite{font-size:13px}.partner-testimonial-web{font-size:12.5px}}
 @media(max-width:360px){.partner-testimonial{padding:28px 21px}.partner-testimonial h2{font-size:26px}.partner-testimonial-intro{padding-right:24px}.partner-testimonial-mark{font-size:60px;right:-7px;bottom:-10px;height:48px}.partner-testimonial blockquote p{font-size:18px}.partner-testimonial .eyebrow{font-size:11px;letter-spacing:.07em}}
 @media(prefers-reduced-motion:reduce){.partner-testimonial,.partner-testimonial *,.partner-testimonial *:before,.partner-testimonial *:after{animation:none!important;transition:none!important}}
+
+/* Více recenzí: posuvný pás s tlačítky (vykreslí site-data.js). */
+.partner-testimonial-stack{min-width:0}
+.partner-testimonial-track{display:grid;grid-auto-flow:column;grid-auto-columns:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.partner-testimonial-track::-webkit-scrollbar{display:none}
+.partner-testimonial-track>.partner-testimonial-figure{scroll-snap-align:start;padding-right:2px}
+.partner-testimonial-nav{display:flex;align-items:center;gap:14px;margin-top:26px}
+.partner-testimonial-step{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:1px solid #3e6183;background:transparent;color:#fff;font-size:18px;cursor:pointer;transition:background .2s ease-out,border-color .2s ease-out}
+.partner-testimonial-step:hover:not(:disabled){background:#ffffff14;border-color:#a5e384}
+.partner-testimonial-step:disabled{opacity:.35;cursor:default}
+.partner-testimonial-counter{color:#a9c3de;font-size:13px;font-variant-numeric:tabular-nums;min-width:4ch;text-align:center}
+@media(prefers-reduced-motion:reduce){.partner-testimonial-track{scroll-behavior:auto}}

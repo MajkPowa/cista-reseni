@@ -92,6 +92,8 @@
     <nav class="tabs" aria-label="Části administrace">
       <button type="button" data-tab="inquiries" aria-current="page">Poptávky <span class="badge" id="badge-new" hidden></span></button>
       <button type="button" data-tab="references">Reference</button>
+      <button type="button" data-tab="documents">Dokumenty</button>
+      <button type="button" data-tab="reviews">Recenze</button>
       <button type="button" data-tab="categories">Kategorie</button>
       <button type="button" data-tab="stats">Statistiky</button>
       <button type="button" data-tab="admins">Správci</button>
@@ -129,6 +131,26 @@
       </div>
       <p class="list-count" id="reference-count"></p>
       <div class="list" id="reference-list"></div>
+    </section>
+
+    <!-- Dokumenty -->
+    <section class="panel" id="tab-documents" hidden>
+      <div class="panel-head">
+        <div><h2>Dokumenty ke stažení</h2><p class="panel-note">Návody, letáky, výkresy a další podklady na stránce <a href="../dokumenty.html" target="_blank" rel="noopener">Dokumenty</a>. Nahrajte PDF nebo obrázek, náhled první strany se vytvoří sám. Šipkami změníte pořadí na webu.</p></div>
+        <button type="button" class="btn btn-primary" id="add-document">+ Přidat dokument</button>
+      </div>
+      <p class="list-count" id="document-count"></p>
+      <div class="list" id="document-list"></div>
+    </section>
+
+    <!-- Recenze -->
+    <section class="panel" id="tab-reviews" hidden>
+      <div class="panel-head">
+        <div><h2>Recenze</h2><p class="panel-note">Zkušenosti zákazníků a partnerů na <a href="../index.html#partner-testimonial" target="_blank" rel="noopener">úvodní stránce</a> a na stránce O nás. Při více recenzích se na webu dají listovat. Šipkami změníte pořadí.</p></div>
+        <button type="button" class="btn btn-primary" id="add-review">+ Přidat recenzi</button>
+      </div>
+      <p class="list-count" id="review-count"></p>
+      <div class="list" id="review-list"></div>
     </section>
 
     <!-- Kategorie -->
@@ -227,6 +249,62 @@
       <span class="saved-note" id="reference-progress" role="status"></span>
       <button type="button" class="btn" data-close>Zrušit</button>
       <button type="submit" class="btn btn-primary" id="reference-save">Uložit</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Editor dokumentu -->
+<dialog class="editor" id="document-dialog" aria-labelledby="document-dialog-title">
+  <form id="form-document" novalidate>
+    <div class="drawer-head"><h2 id="document-dialog-title">Nový dokument</h2><button type="button" class="icon-btn" data-close aria-label="Zavřít bez uložení">×</button></div>
+    <div class="editor-body">
+      <div class="field"><label for="doc-title">Název dokumentu</label><input id="doc-title" maxlength="200" required placeholder="Např. Leták – domovní ČOV BC 4 OPTIMA"></div>
+      <div class="field-row">
+        <div class="field"><label for="doc-kind">Druh <small>(zobrazí se nad názvem)</small></label><input id="doc-kind" maxlength="60" list="doc-kinds" placeholder="Např. Leták"><datalist id="doc-kinds"><option value="Leták"><option value="Výkres"><option value="Návod k obsluze"><option value="Technický list"><option value="Prohlášení o vlastnostech"><option value="Přehled technologií"><option value="Ceník"></datalist></div>
+        <div class="field"><label for="doc-category">Oblast <small>(filtr na webu)</small></label><select id="doc-category"></select></div>
+      </div>
+      <fieldset class="field"><legend>Soubor</legend>
+        <label class="dropzone" id="doc-dropzone" for="doc-file"><strong>Vybrat soubor</strong><span>PDF nebo obrázek (JPG, PNG) do 40 MB, případně ho sem přetáhněte.</span></label>
+        <input id="doc-file" class="visually-hidden" type="file" accept="application/pdf,.pdf,image/jpeg,image/png,image/webp">
+        <p class="hint" id="doc-file-status" role="status"></p>
+        <div class="doc-preview" id="doc-preview"></div>
+      </fieldset>
+      <fieldset class="field switches"><legend>Zobrazení na webu</legend>
+        <label class="switch"><input id="doc-published" type="checkbox" checked><span><strong>Zveřejnit na webu</strong><small>Vypnutím dokument skryjete, aniž byste ho mazali.</small></span></label>
+      </fieldset>
+    </div>
+    <div class="drawer-foot">
+      <button type="button" class="btn btn-danger-ghost" id="document-delete">Smazat dokument</button>
+      <span class="saved-note" id="document-progress" role="status"></span>
+      <button type="button" class="btn" data-close>Zrušit</button>
+      <button type="submit" class="btn btn-primary" id="document-save">Uložit</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Editor recenze -->
+<dialog class="editor" id="review-dialog" aria-labelledby="review-dialog-title">
+  <form id="form-review" novalidate>
+    <div class="drawer-head"><h2 id="review-dialog-title">Nová recenze</h2><button type="button" class="icon-btn" data-close aria-label="Zavřít bez uložení">×</button></div>
+    <div class="editor-body">
+      <div class="field"><label for="review-text">Text recenze <small>(bez uvozovek, doplní se samy)</small></label><textarea id="review-text" rows="7" maxlength="3000" required></textarea></div>
+      <div class="field"><label for="review-name">Kdo recenzi napsal <small>(jméno, firma nebo obec)</small></label><input id="review-name" maxlength="200" required placeholder="Např. Ing. Jan Novák, obec Planá nad Lužnicí"></div>
+      <div class="field"><label for="review-url">Web <small>(nepovinné)</small></label><input id="review-url" type="url" maxlength="300" placeholder="https://www.example.cz/"></div>
+      <fieldset class="field"><legend>Logo <small>(nepovinné)</small></legend>
+        <label class="dropzone" id="review-dropzone" for="review-logo"><strong>Vybrat logo</strong><span>obrázek JPG nebo PNG; zmenší se automaticky.</span></label>
+        <input id="review-logo" class="visually-hidden" type="file" accept="image/*">
+        <p class="hint" id="review-logo-status" role="status"></p>
+        <div class="logo-preview" id="review-logo-preview"></div>
+      </fieldset>
+      <fieldset class="field switches"><legend>Zobrazení na webu</legend>
+        <label class="switch"><input id="review-published" type="checkbox" checked><span><strong>Zveřejnit na webu</strong><small>Vypnutím recenzi skryjete, aniž byste ji mazali.</small></span></label>
+      </fieldset>
+    </div>
+    <div class="drawer-foot">
+      <button type="button" class="btn btn-danger-ghost" id="review-delete">Smazat recenzi</button>
+      <span class="saved-note" id="review-progress" role="status"></span>
+      <button type="button" class="btn" data-close>Zrušit</button>
+      <button type="submit" class="btn btn-primary" id="review-save">Uložit</button>
     </div>
   </form>
 </dialog>

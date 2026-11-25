@@ -236,3 +236,15 @@ dialog::backdrop{background:rgba(4,39,82,.45)}
 
 .check-inline{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;font-weight:500;color:var(--muted)}
 .check-inline input{width:18px;height:18px;accent-color:var(--blue)}
+
+/* Dokumenty a recenze */
+.row-thumb.is-contain img{object-fit:contain;background:var(--white)}
+.row-thumb.is-empty{display:grid;place-items:center;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--blue)}
+.row-quote{font-style:italic}
+.order-btn{min-width:36px;padding-inline:0}
+.doc-preview,.logo-preview{display:flex;align-items:center;gap:16px;margin-top:14px}
+.doc-preview:empty,.logo-preview:empty{display:none}
+.doc-preview img{width:110px;height:auto;max-height:156px;object-fit:contain;border:1px solid var(--line);border-radius:6px;background:var(--white)}
+.logo-preview img{width:160px;height:80px;object-fit:contain;border:1px solid var(--line);border-radius:6px;background:var(--white);padding:8px}
+.doc-preview p,.logo-preview p{margin:0;font-size:13.5px;color:var(--muted);overflow-wrap:anywhere}
+.doc-preview strong{display:block;color:var(--ink);font-weight:650}
